@@ -8,8 +8,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 351810308581668915}
     m_Modifications:
     - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
+      propertyPath: m_text
+      value: play
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 1537648558345304734, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
       propertyPath: m_Name
@@ -109,16 +117,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2065062422105738155, guid: a6f243e03b2588440a0ebde95dbb6fcd, type: 3}
-      propertyPath: m_Type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2065062422105738155, guid: a6f243e03b2588440a0ebde95dbb6fcd, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 3786e80c7a5941847ad68d3ef74aa400, type: 3}
     - target: {fileID: 2065062422105738164, guid: a6f243e03b2588440a0ebde95dbb6fcd, type: 3}
       propertyPath: m_Name
-      value: Button With Text
+      value: Button With Text Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2065062422105738165, guid: a6f243e03b2588440a0ebde95dbb6fcd, type: 3}
       propertyPath: m_Pivot.x
@@ -138,7 +142,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2065062422105738165, guid: a6f243e03b2588440a0ebde95dbb6fcd, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2065062422105738165, guid: a6f243e03b2588440a0ebde95dbb6fcd, type: 3}
       propertyPath: m_AnchorMin.x
@@ -146,7 +150,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2065062422105738165, guid: a6f243e03b2588440a0ebde95dbb6fcd, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2065062422105738165, guid: a6f243e03b2588440a0ebde95dbb6fcd, type: 3}
       propertyPath: m_SizeDelta.x
@@ -190,7 +194,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2065062422105738165, guid: a6f243e03b2588440a0ebde95dbb6fcd, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 539
       objectReference: {fileID: 0}
     - target: {fileID: 2065062422105738165, guid: a6f243e03b2588440a0ebde95dbb6fcd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
