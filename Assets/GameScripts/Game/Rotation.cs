@@ -1,5 +1,6 @@
 namespace GameScripts.Game
 {
+    [System.Serializable]
     public enum Rotation
     {
         Deg0 = 0,

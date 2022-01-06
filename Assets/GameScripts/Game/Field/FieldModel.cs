@@ -2,11 +2,11 @@ namespace GameScripts.Game
 {
     public class FieldModel
     {
-        public int[,] FieldMatrix;
+        public Cell[,] FieldMatrix;
 
         public FieldModel()
         {
-            FieldMatrix = new int[9, 9];
+            FieldMatrix = new Cell[9, 9];
         }
     }
 }
