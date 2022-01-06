@@ -65,6 +65,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 2b13b2156dc1e154d9c7009fb22cfd4c, type: 3}
   - {fileID: 21300000, guid: 43db8f3537b440c43a1ed8d46274241e, type: 3}
   - {fileID: 21300000, guid: 7479ab75dcb26aa41811ea254fe0726f, type: 3}
+  - {fileID: 21300000, guid: 853b4e06ae807f243a0afb367b7e2058, type: 3}
   - {fileID: 21300000, guid: b19c4e9613fa8e94e8667f305238f43a, type: 3}
   - {fileID: 21300000, guid: 3d607f679ba7dae4db80e4fd02f9cf23, type: 3}
   - {fileID: 21300000, guid: 61296697f5a41cb4dba66efba50760fc, type: 3}
@@ -88,6 +89,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 5b047b2ef176a6640b846c22b162bc88, type: 3}
   - {fileID: 21300000, guid: be81425ed0af98d4ea2e39e0c33d0304, type: 3}
   - {fileID: 21300000, guid: e826536ff0ddde24687e718c015950dc, type: 3}
+  - {fileID: 21300000, guid: 758314df0dce4324ba5dd473ce3d2167, type: 3}
   m_PackedSpriteNamesToIndex:
   - close
   - plate_score
@@ -104,6 +106,7 @@ SpriteAtlas:
   - daily_reminder
   - chest
   - shop
+  - cell_occupied
   - figure_rotation
   - arrow
   - star
@@ -127,6 +130,7 @@ SpriteAtlas:
   - statistics
   - plate_bundle
   - field
+  - cell_empty
   m_RenderDataMap: {}
   m_Tag: UIAtlas
   m_IsVariant: 0
