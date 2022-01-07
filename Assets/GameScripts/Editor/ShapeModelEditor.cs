@@ -16,15 +16,15 @@ namespace GameScripts.Game
             var pointsProp = property.FindPropertyRelative("points");
             var rotationProp = property.FindPropertyRelative("rotation");
             
-            var xProp = rectProp.FindPropertyRelative(nameof(Vector2IntS.x));
-            var yProp = rectProp.FindPropertyRelative(nameof(Vector2IntS.y));
+            var xProp = rectProp.FindPropertyRelative(nameof(Vector2Int.x));
+            var yProp = rectProp.FindPropertyRelative(nameof(Vector2Int.y));
             
             EditorGUILayout.PropertyField(uidProp);
             var rectValue = EditorGUILayout.Vector2IntField("Rect", new Vector2Int(xProp.intValue, yProp.intValue));
             xProp.intValue = Math.Clamp(rectValue.x, 1, 9);
             yProp.intValue = Math.Clamp(rectValue.y, 1, 9);
 
-            var list = SerializedFieldHelper.GetTargetObjectOfProperty(pointsProp) as List<Vector2IntS>;
+            var list = SerializedFieldHelper.GetTargetObjectOfProperty(pointsProp) as List<Vector2Int>;
             RemoveEntriesOutOfRectBounds(list, xProp.intValue, yProp.intValue);
 
             EditorGUILayout.BeginHorizontal(GUILayout.Width(6));
@@ -33,12 +33,12 @@ namespace GameScripts.Game
                 EditorGUILayout.BeginVertical();
                 for (int y = yProp.intValue - 1; y >= 0; y--)
                 {
-                    bool pointExists = list.Contains(new Vector2IntS(x, y));
+                    bool pointExists = list.Contains(new Vector2Int(x, y));
                     var newToggle = GUILayout.Toggle(pointExists, $"{x},{y}", new GUIStyle("Button"), GUILayout.Height(30), GUILayout.Width(30));
                     if (pointExists && newToggle == false)
-                        list.Remove(new Vector2IntS(x, y));
+                        list.Remove(new Vector2Int(x, y));
                     if (!pointExists && newToggle)
-                        list.Add(new Vector2IntS(x, y));
+                        list.Add(new Vector2Int(x, y));
                 }
                 EditorGUILayout.EndVertical();
             }
@@ -50,7 +50,7 @@ namespace GameScripts.Game
             GUI.enabled = true;
         }
 
-        private void RemoveEntriesOutOfRectBounds(List<Vector2IntS> list, int x, int y)
+        private void RemoveEntriesOutOfRectBounds(List<Vector2Int> list, int x, int y)
         {
             for (int i = list.Count - 1; i >= 0; i--)
             {
