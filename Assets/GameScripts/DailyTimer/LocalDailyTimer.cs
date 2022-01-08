@@ -34,7 +34,7 @@ namespace GameScripts.DailyTimer
 
             Observable.EveryApplicationFocus().Subscribe(OnApplicationFocus).AddTo(_disposables);
             Observable.OnceApplicationQuit().Subscribe(OnApplicationQuit).AddTo(_disposables);
-            Observable.Timer(new TimeSpan(0, 1, 0)).Repeat().Subscribe(OnMinuteLeft).AddTo(_disposables);
+            Observable.Timer(new TimeSpan(0, 1, 0)).RepeatSafe().Subscribe(OnMinuteLeft).AddTo(_disposables);
             
             UpdateUniqGameDaysCount();
         }
