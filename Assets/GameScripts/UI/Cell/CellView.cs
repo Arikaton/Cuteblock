@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace GameScripts
 {
+    [RequireComponent(typeof(CellAnimator))]
     public class CellView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
         private CellAnimator _cellAnimator;

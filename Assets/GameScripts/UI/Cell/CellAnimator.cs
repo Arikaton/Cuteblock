@@ -1,21 +1,22 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GameScripts.UI
 {
-    [RequireComponent(typeof(SpriteRenderer))]
+    [RequireComponent(typeof(Image))]
     public class CellAnimator : MonoBehaviour
     {
-        [SerializeField] private Color _highlightedColor = Color.white;
-        [SerializeField] private Color _busyColor = Color.white;
+        [SerializeField] private Color _highlightedColor = Color.grey;
+        [SerializeField] private Color _busyColor = Color.blue;
         [SerializeField] private float _duration = 0.4f;
 
-        private SpriteRenderer _spriteRenderer;
+        private Image _image;
         private Sequence _sequence;
 
         private void Awake()
         {
-            _spriteRenderer = GetComponent<SpriteRenderer>();
+            _image = GetComponent<Image>();
         }
 
         public void AnimateHighlight()
@@ -37,7 +38,7 @@ namespace GameScripts.UI
         {
             _sequence?.Kill();
             _sequence = DOTween.Sequence();
-            _sequence.Append(_spriteRenderer.DOColor(targetColor, _duration));
+            _sequence.Append(_image.DOColor(targetColor, _duration));
         }
     }
 }
