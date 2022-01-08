@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Moq;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -7,6 +9,7 @@ namespace GameScripts.Game.Tests
     {
         private ShapeModel _shapeT;
         private ShapeViewModel _shapeTViewModel;
+        private IShapeCatalog _shapeCatalog;
         private FieldModel _fieldModel;
         private FieldViewModel _fieldViewModel;
         private const int TestId = 100;
@@ -18,7 +21,10 @@ namespace GameScripts.Game.Tests
             _shapeT.uid = TestId;
             _shapeTViewModel = new ShapeViewModel(_shapeT);
             _fieldModel = new FieldModel();
-            _fieldViewModel = new FieldViewModel(_fieldModel);
+            var shapeCatalogMock = new Mock<IShapeCatalog>();
+            shapeCatalogMock.Setup(x => x.Shapes).Returns(new List<ShapeModel> {_shapeT});
+            _shapeCatalog = shapeCatalogMock.Object;
+            _fieldViewModel = new FieldViewModel(_fieldModel, _shapeCatalog);
         }
     
         [Test]
@@ -34,9 +40,21 @@ namespace GameScripts.Game.Tests
             _fieldViewModel.PlaceShape(_shapeTViewModel, new Vector2Int(0, 0));
             foreach (var point in _shapeTViewModel.PointsAfterRotation())
             {
-                Assert.AreEqual(_fieldModel.FieldMatrix[point.x, point.y].uid, TestId);
-                Assert.AreEqual(_fieldModel.FieldMatrix[point.x, point.y].positionInShape, point);
+                Assert.AreEqual(TestId, _fieldModel.FieldMatrix[point.x, point.y].uid);
+                Assert.AreEqual(point, _fieldModel.FieldMatrix[point.x, point.y].positionInShape);
             }
+        }
+        
+        [Test]
+        public void FindBrokenCells_CorrectCellsFound()
+        {
+            _fieldViewModel.PlaceShape(_shapeTViewModel, new Vector2Int(0, 0));
+            _fieldModel.FieldMatrix[0, 0].uid = 0;
+            var brokenShapesCells = _fieldViewModel.FindBrokenShapesCells();
+            Assert.IsTrue(brokenShapesCells.Contains(new Vector2Int(1,0)));
+            Assert.IsTrue(brokenShapesCells.Contains(new Vector2Int(2,0)));
+            Assert.IsTrue(brokenShapesCells.Contains(new Vector2Int(1,1)));
+            Assert.IsTrue(brokenShapesCells.Count == 3);
         }
     
         [TearDown]

@@ -2,11 +2,15 @@ namespace GameScripts.Game
 {
     public class FieldModel
     {
-        public Cell[,] FieldMatrix;
+        public Flat2DArray<Cell> FieldMatrix;
 
         public FieldModel()
         {
-            FieldMatrix = new Cell[9, 9];
+            FieldMatrix = new Flat2DArray<Cell>(9, 9);
+            for (int i = 0; i < 81; i++)
+            {
+                FieldMatrix.array[i] = new Cell();
+            }
         }
     }
 }

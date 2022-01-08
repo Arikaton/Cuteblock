@@ -7,11 +7,13 @@ namespace GameScripts.Game
     public class FieldViewModel
     {
         private FieldModel _fieldModel;
+        private IShapeCatalog _shapeCatalog;
         private RectInt _rect;
 
-        public FieldViewModel(FieldModel fieldModel)
+        public FieldViewModel(FieldModel fieldModel, IShapeCatalog shapeCatalog)
         {
             _fieldModel = fieldModel;
+            _shapeCatalog = shapeCatalog;
             _rect = new RectInt(0, 0, 8, 8);
         }
 
@@ -70,7 +72,60 @@ namespace GameScripts.Game
 
             return cellsToDelete;
         }
-        
+
+        public void DestroyCells(HashSet<Vector2Int> cells)
+        {
+            foreach (var cell in cells)
+            {
+                DestroyCell(cell);
+            }
+        }
+
+        public HashSet<Vector2Int> FindBrokenShapesCells()
+        {
+            var visitedCells = new HashSet<Vector2Int>();
+            var brokenShapesCells = new HashSet<Vector2Int>();
+            var potentiallyBrokenParts = new List<Vector2Int>();
+            
+            for (int x = 0; x < 9; x++)
+            {
+                for (int y = 0; y < 9; y++)
+                {
+                    var cell = _fieldModel.FieldMatrix[x, y];
+                    if(cell.uid == 0 || visitedCells.Contains(new Vector2Int(x, y))) 
+                        continue;
+                    
+                    var shape = _shapeCatalog.Shapes.Find(s => s.uid == cell.uid);
+                    shape.rotation = cell.shapeRotation;
+                    var shapeOrigin = new Vector2Int(x, y) - cell.positionInShape;
+                    potentiallyBrokenParts.Clear();
+                    bool shapeIsBroken = false;
+                    foreach (var positionInShape in shape.points)
+                    {
+                        var pointPositionOnGrid = shapeOrigin + positionInShape;
+                        if (_fieldModel.FieldMatrix[pointPositionOnGrid].uid == shape.uid)
+                            potentiallyBrokenParts.Add(pointPositionOnGrid);
+                        else
+                            shapeIsBroken = true;
+                    }
+                    visitedCells.UnionWith(potentiallyBrokenParts);
+                    if (shapeIsBroken) brokenShapesCells.UnionWith(potentiallyBrokenParts);
+                }
+            }
+            return brokenShapesCells;
+        }
+
+        private void DestroyCell(Vector2Int cell)
+        {
+            if (_fieldModel.FieldMatrix[cell.x, cell.y].hp > 1)
+            {
+                _fieldModel.FieldMatrix[cell.x, cell.y].hp -= 1;
+                return;
+            }
+            _fieldModel.FieldMatrix[cell.x, cell.y].uid = 0;
+            _fieldModel.FieldMatrix[cell.x, cell.y].hp = 0;
+        }
+
         private int GetSubgridId(int x, int y)
         {
             return x / 3 + y / 3 * 3;
