@@ -75,6 +75,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: f0871ab7fce5e29418bf75892f46445d, type: 3}
   - {fileID: 21300000, guid: cf4abec7e7bb0054b93e0c43a8574f0f, type: 3}
   - {fileID: 21300000, guid: 617dabe7ecf457843994509ef72dd8f9, type: 3}
+  - {fileID: 21300000, guid: 84884ad8efd6e9a47be00459098e88b0, type: 3}
   - {fileID: 21300000, guid: 114900798e926aa4f88162d205cbf6a1, type: 3}
   - {fileID: 21300000, guid: 31254199f84ff3f47ae00f2ddb0be0e1, type: 3}
   - {fileID: 21300000, guid: 7c5922f9fb70b6046851f338315c81ad, type: 3}
@@ -124,6 +125,7 @@ SpriteAtlas:
   - next_goal_panel
   - ellipse_shop
   - coin_gem_counter
+  - popup_name
   - plus
   - next_goal
   - Round50

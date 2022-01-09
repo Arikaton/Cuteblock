@@ -2,7 +2,7 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 
-namespace GameScripts.UIManagement
+namespace GameScripts.UIManagement.Animations
 {
     public abstract class UIAnimationBase : UIAnimation
     {

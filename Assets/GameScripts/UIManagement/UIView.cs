@@ -1,4 +1,5 @@
 using System;
+using GameScripts.UIManagement.Animations;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -72,6 +73,7 @@ namespace GameScripts.UIManagement
 
         [ButtonGroup]
         [Button]
+        [HideInEditorMode]
         public void Show()
         {
             if (!_showAnimation)
@@ -100,6 +102,7 @@ namespace GameScripts.UIManagement
 
         [ButtonGroup]
         [Button]
+        [HideInEditorMode]
         public void Hide()
         {
             if (!_hideAnimation)
@@ -128,6 +131,7 @@ namespace GameScripts.UIManagement
 
         [ButtonGroup]
         [Button]
+        [HideInEditorMode]
         public void InstantShow()
         {
             ChangeVisibility(true);
@@ -138,6 +142,7 @@ namespace GameScripts.UIManagement
 
         [ButtonGroup]
         [Button]
+        [HideInEditorMode]
         public void InstantHide()
         {
             ChangeVisibility(false);

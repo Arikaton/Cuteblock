@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace GameScripts.UIManagement
+namespace GameScripts.UIManagement.Animations
 {
     public abstract class UIAnimation : MonoBehaviour, IUIAnimation
     {

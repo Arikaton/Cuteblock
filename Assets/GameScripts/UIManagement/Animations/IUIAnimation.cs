@@ -1,6 +1,6 @@
 using System;
 
-namespace GameScripts.UIManagement
+namespace GameScripts.UIManagement.Animations
 {
     public interface IUIAnimation
     {
