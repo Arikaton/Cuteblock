@@ -17,9 +17,10 @@ namespace GameScripts.Game
             _rect = new RectInt(0, 0, 8, 8);
         }
 
-        public bool CanPlaceShape(ShapeViewModel shape, Vector2Int cell)
+        public bool CanPlaceShape(int uid, Rotation rotation, Vector2Int cell)
         {
-            foreach (var point in shape.PointsAfterRotation())
+            var shapeData = _shapeCatalog.Shapes[uid];
+            foreach (var point in shapeData.PointsAfterRotation(rotation))
             {
                 var pointPositionOnGrid = cell + point;
                 if (!_rect.Contains(pointPositionOnGrid))
@@ -30,15 +31,16 @@ namespace GameScripts.Game
             return true;
         }
 
-        public void PlaceShape(ShapeViewModel shape, Vector2Int cell)
+        public void PlaceShape(int uid, Rotation rotation, Vector2Int cell)
         {
-            if (!CanPlaceShape(shape, cell))
+            if (!CanPlaceShape(uid, rotation, cell))
                 return;
-            foreach (var point in shape.PointsAfterRotation())
+            var shapeData = _shapeCatalog.Shapes[uid];
+            foreach (var point in shapeData.PointsAfterRotation(rotation))
             {
                 var pointPositionOnGrid = cell + point;
-                _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].uid = shape.Uid;
-                _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].shapeRotation = shape.Rotation;
+                _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].uid = shapeData.uid;
+                _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].shapeRotation = rotation;
                 _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].positionInShape = point;
             }
         }
@@ -73,14 +75,6 @@ namespace GameScripts.Game
             return cellsToDelete;
         }
 
-        public void DestroyCells(HashSet<Vector2Int> cells)
-        {
-            foreach (var cell in cells)
-            {
-                DestroyCell(cell);
-            }
-        }
-
         public HashSet<Vector2Int> FindBrokenShapesCells()
         {
             var visitedCells = new HashSet<Vector2Int>();
@@ -94,16 +88,15 @@ namespace GameScripts.Game
                     var cell = _fieldModel.FieldMatrix[x, y];
                     if(cell.uid == 0 || visitedCells.Contains(new Vector2Int(x, y))) 
                         continue;
-                    
-                    var shape = _shapeCatalog.Shapes.Find(s => s.uid == cell.uid);
-                    shape.rotation = cell.shapeRotation;
+
+                    var shapeData = _shapeCatalog.Shapes[cell.uid];
                     var shapeOrigin = new Vector2Int(x, y) - cell.positionInShape;
                     potentiallyBrokenParts.Clear();
                     bool shapeIsBroken = false;
-                    foreach (var positionInShape in shape.points)
+                    foreach (var positionInShape in shapeData.PointsAfterRotation(cell.shapeRotation))
                     {
                         var pointPositionOnGrid = shapeOrigin + positionInShape;
-                        if (_fieldModel.FieldMatrix[pointPositionOnGrid].uid == shape.uid)
+                        if (_fieldModel.FieldMatrix[pointPositionOnGrid].uid == shapeData.uid)
                             potentiallyBrokenParts.Add(pointPositionOnGrid);
                         else
                             shapeIsBroken = true;
@@ -113,6 +106,14 @@ namespace GameScripts.Game
                 }
             }
             return brokenShapesCells;
+        }
+
+        public void DestroyCells(HashSet<Vector2Int> cells)
+        {
+            foreach (var cell in cells)
+            {
+                DestroyCell(cell);
+            }
         }
 
         private void DestroyCell(Vector2Int cell)
@@ -133,7 +134,7 @@ namespace GameScripts.Game
 
         private int GetSubgridId(Vector2Int cell)
         {
-            return cell.x / 3 + cell.y / 3 * 3;
+            return GetSubgridId(cell.x, cell.y);
         }
 
         private HashSet<Vector2Int> AllCellsInColumn(int column)

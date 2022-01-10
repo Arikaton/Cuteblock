@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GameScripts.Game
 {
-    [CustomPropertyDrawer(typeof(ShapeModel))]
+    [CustomPropertyDrawer(typeof(ShapeData))]
     public class ShapeModelEditor : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

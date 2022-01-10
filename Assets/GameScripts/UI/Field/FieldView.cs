@@ -9,6 +9,7 @@ namespace GameScripts.Game
         [SerializeField] private CellView cellViewPrefab;
         [SerializeField] private RectTransform cellContainerRect;
         [SerializeField] private GridLayoutGroup gridLayout;
+        [SerializeField] private ActiveShapeContainer shapeContainer;
 
         private CellView[,] _cellViews;
 

@@ -1,32 +1,18 @@
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+using UniRx;
 
 namespace GameScripts.Game
 {
     public class ShapeViewModel
     {
-        private ShapeModel _model;
+        public int Uid { get; set; }
+        public IReactiveProperty<Rotation> Rotation;
+        
+        private CompositeDisposable _disposable = new CompositeDisposable();
 
-        public int Uid
+        public ShapeViewModel(int uid, Rotation rotation)
         {
-            get => _model.uid;
-        }
-
-        public Rotation Rotation
-        {
-            get => _model.rotation;
-            set => _model.rotation = value;
-        }
-
-        public ShapeViewModel(ShapeModel model)
-        {
-            _model = model;
-        }
-
-        public List<Vector2Int> PointsAfterRotation()
-        {
-            return _model.points.Select(point => point.RotateBy(_model.rotation)).ToList();
+            Uid = uid;
+            Rotation = new ReactiveProperty<Rotation>(rotation).AddTo(_disposable);
         }
     }
 }

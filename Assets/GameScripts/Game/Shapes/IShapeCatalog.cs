@@ -4,6 +4,6 @@ namespace GameScripts.Game
 {
     public interface IShapeCatalog
     {
-        List<ShapeModel> Shapes { get; }
+        Dictionary<int, ShapeData> Shapes { get; }
     }
 }
