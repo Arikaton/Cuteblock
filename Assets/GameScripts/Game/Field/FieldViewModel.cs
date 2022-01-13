@@ -6,6 +6,8 @@ namespace GameScripts.Game
 {
     public class FieldViewModel
     {
+        public ShapeViewModelsContainer shapeViewModelsContainer;
+        
         private FieldModel _fieldModel;
         private IShapeCatalog _shapeCatalog;
         private RectInt _rect;
@@ -15,6 +17,7 @@ namespace GameScripts.Game
             _fieldModel = fieldModel;
             _shapeCatalog = shapeCatalog;
             _rect = new RectInt(0, 0, 8, 8);
+            shapeViewModelsContainer = new ShapeViewModelsContainer();
         }
 
         public bool CanPlaceShape(int uid, Rotation rotation, Vector2Int cell)

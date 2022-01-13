@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8995719702238596639}
   m_Layer: 5
   m_Name: CellView
-  m_TagString: Untagged
+  m_TagString: Cell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,6 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b656772b784ef5982a77a662ec63ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  position: {x: 0, y: 0}
 --- !u!114 &5010158346757571899
 MonoBehaviour:
   m_ObjectHideFlags: 0

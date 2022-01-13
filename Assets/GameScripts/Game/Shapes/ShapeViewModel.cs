@@ -4,15 +4,15 @@ namespace GameScripts.Game
 {
     public class ShapeViewModel
     {
-        public int Uid { get; set; }
-        public IReactiveProperty<Rotation> Rotation;
+        private ShapeModel _model;
         
-        private CompositeDisposable _disposable = new CompositeDisposable();
+        public IReadOnlyReactiveProperty<Rotation> Rotation;
+        public int Uid => _model.Uid;
 
-        public ShapeViewModel(int uid, Rotation rotation)
+        public ShapeViewModel(ShapeModel model)
         {
-            Uid = uid;
-            Rotation = new ReactiveProperty<Rotation>(rotation).AddTo(_disposable);
+            _model = model;
+            Rotation = _model.Rotation;
         }
     }
 }

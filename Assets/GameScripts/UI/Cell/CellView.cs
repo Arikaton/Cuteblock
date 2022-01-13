@@ -7,6 +7,8 @@ namespace GameScripts
     [RequireComponent(typeof(CellAnimator))]
     public class CellView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
+        public Vector2Int position;
+        
         private CellAnimator _cellAnimator;
 
         private void Awake()

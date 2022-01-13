@@ -7,9 +7,10 @@ namespace GameScripts.Game
     [System.Serializable]
     public class ShapeData
     {
-        public int uid;
-        public Vector2Int rect;
-        public List<Vector2Int> points;
+        public readonly int uid;
+        public readonly Vector2Int rect;
+        public readonly List<Vector2Int> points;
+        public readonly Rotation rotation;
 
         public ShapeData(int uid, Vector2Int rect, params (int x, int y)[] points)
         {
@@ -19,14 +20,14 @@ namespace GameScripts.Game
                 this.points.Add(new Vector2Int(point.x, point.y));
             }
 
-            this.uid = 0;
+            this.uid = uid;
             this.rect = rect;
+            rotation = Rotation.Deg0;
         }
         
-        public List<Vector2Int> PointsAfterRotation(Rotation rotation)
+        public List<Vector2Int> PointsAfterRotation(Rotation rot)
         {
-            return points.Select(point => point.RotateBy(rotation)).ToList();
+            return points.Select(point => point.RotateBy(rot)).ToList();
         }
-        
     }
 }

@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,10 +13,26 @@ namespace GameScripts.Game
         [SerializeField] private ActiveShapeContainer shapeContainer;
 
         private CellView[,] _cellViews;
+        private CompositeDisposable _disposables;
 
         private void Awake()
         {
             _cellViews = new CellView[9, 9];
+            var corners = new Vector3[4];
+            cellContainerRect.GetWorldCorners(corners);
+            _disposables = new CompositeDisposable();
+        }
+
+        private void Start()
+        {
+            shapeContainer.HoveredCell.DistinctUntilChanged()
+                .Subscribe(x => Debug.Log("Текущая клетка: " + x))
+                .AddTo(_disposables);
+        }
+
+        private void OnDestroy()
+        {
+            _disposables.Dispose();
         }
 
         [Button, DisableInEditorMode]
@@ -40,6 +57,7 @@ namespace GameScripts.Game
         private void InstantiateCellViewAt(int x, int y)
         {
             var cellView = Instantiate(cellViewPrefab, cellContainerRect);
+            cellView.position = new Vector2Int(x, y);
             _cellViews[x, y] = cellView;
         }
     }

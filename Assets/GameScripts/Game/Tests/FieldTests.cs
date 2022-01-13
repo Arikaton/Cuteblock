@@ -18,7 +18,6 @@ namespace GameScripts.Game.Tests
         public void Setup()
         {
             _shapeT = new ShapeData(TestId, new Vector2Int(3, 2), (0, 0), (1, 0), (1, 1), (2, 0));
-            _shapeT.uid = TestId;
             _fieldModel = new FieldModel();
             var shapeCatalogMock = new Mock<IShapeCatalog>();
             shapeCatalogMock.Setup(x => x.Shapes).Returns(new Dictionary<int, ShapeData> {{_shapeT.uid, _shapeT}});
