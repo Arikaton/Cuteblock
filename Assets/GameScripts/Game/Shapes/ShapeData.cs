@@ -7,10 +7,15 @@ namespace GameScripts.Game
     [System.Serializable]
     public class ShapeData
     {
-        public readonly int uid;
-        public readonly Vector2Int rect;
-        public readonly List<Vector2Int> points;
-        public readonly Rotation rotation;
+        [SerializeField] private int uid;
+        [SerializeField] private Vector2Int rect;
+        [SerializeField] private List<Vector2Int> points;
+        [SerializeField] private Rotation rotation;
+
+        public int Uid => uid;
+        private Vector2Int Rect => rect;
+        private List<Vector2Int> Points => points;
+        private Rotation Rotation => rotation;
 
         public ShapeData(int uid, Vector2Int rect, params (int x, int y)[] points)
         {

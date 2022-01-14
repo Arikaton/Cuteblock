@@ -1,14 +1,11 @@
 using GameScripts.UI;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-namespace GameScripts
+namespace GameScripts.UI
 {
     [RequireComponent(typeof(CellAnimator))]
-    public class CellView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+    public class CellView : MonoBehaviour
     {
-        public Vector2Int position;
-        
         private CellAnimator _cellAnimator;
 
         private void Awake()
@@ -16,19 +13,19 @@ namespace GameScripts
             _cellAnimator = GetComponent<CellAnimator>();
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
+        public void AnimateNormal()
         {
-            _cellAnimator.AnimateHighlight();
+            _cellAnimator.AnimateNormal();
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        public void AnimateShadow()
         {
-            _cellAnimator.AnimateClear();
+            _cellAnimator.AnimateShadow();
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public void AnimateOccupied()
         {
-            _cellAnimator.AnimateBusy();
+            _cellAnimator.AnimateOccupied();
         }
     }
 }

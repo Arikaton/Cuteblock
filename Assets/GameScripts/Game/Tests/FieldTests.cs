@@ -20,7 +20,7 @@ namespace GameScripts.Game.Tests
             _shapeT = new ShapeData(TestId, new Vector2Int(3, 2), (0, 0), (1, 0), (1, 1), (2, 0));
             _fieldModel = new FieldModel();
             var shapeCatalogMock = new Mock<IShapeCatalog>();
-            shapeCatalogMock.Setup(x => x.Shapes).Returns(new Dictionary<int, ShapeData> {{_shapeT.uid, _shapeT}});
+            shapeCatalogMock.Setup(x => x.Shapes).Returns(new Dictionary<int, ShapeData> {{_shapeT.Uid, _shapeT}});
             _shapeCatalog = shapeCatalogMock.Object;
             _fieldViewModel = new FieldViewModel(_fieldModel, _shapeCatalog);
         }

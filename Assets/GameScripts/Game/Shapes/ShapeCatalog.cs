@@ -16,7 +16,7 @@ namespace GameScripts.Game
                 if (_shapes == null)
                 {
                     _shapes = new Dictionary<int, ShapeData>();
-                    foreach (var shape in shapes) Shapes.Add(shape.uid, shape);
+                    foreach (var shape in shapes) Shapes.Add(shape.Uid, shape);
                 }
 
                 return _shapes;
@@ -28,7 +28,7 @@ namespace GameScripts.Game
             _shapes = new Dictionary<int, ShapeData>();
             foreach (var shape in shapes)
             {
-                _shapes.Add(shape.uid, shape);
+                _shapes.Add(shape.Uid, shape);
             }
         }
     }

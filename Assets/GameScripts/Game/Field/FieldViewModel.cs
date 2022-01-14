@@ -16,7 +16,7 @@ namespace GameScripts.Game
         {
             _fieldModel = fieldModel;
             _shapeCatalog = shapeCatalog;
-            _rect = new RectInt(0, 0, 8, 8);
+            _rect = new RectInt(0, 0, 9, 9);
             shapeViewModelsContainer = new ShapeViewModelsContainer();
         }
 
@@ -42,7 +42,7 @@ namespace GameScripts.Game
             foreach (var point in shapeData.PointsAfterRotation(rotation))
             {
                 var pointPositionOnGrid = cell + point;
-                _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].uid = shapeData.uid;
+                _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].uid = shapeData.Uid;
                 _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].shapeRotation = rotation;
                 _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].positionInShape = point;
             }
@@ -99,7 +99,7 @@ namespace GameScripts.Game
                     foreach (var positionInShape in shapeData.PointsAfterRotation(cell.shapeRotation))
                     {
                         var pointPositionOnGrid = shapeOrigin + positionInShape;
-                        if (_fieldModel.FieldMatrix[pointPositionOnGrid].uid == shapeData.uid)
+                        if (_fieldModel.FieldMatrix[pointPositionOnGrid].uid == shapeData.Uid)
                             potentiallyBrokenParts.Add(pointPositionOnGrid);
                         else
                             shapeIsBroken = true;
@@ -173,6 +173,21 @@ namespace GameScripts.Game
                 }
             }
             return cells;
+        }
+
+        public bool PreviewShapePlacement(int uid, Rotation rotation, Vector2Int cell, out List<Vector2Int> occupiedCells)
+        {
+            occupiedCells = new List<Vector2Int>();
+            if (!CanPlaceShape(uid, rotation, cell)) 
+                return false;
+
+            var shapeData = _shapeCatalog.Shapes[uid];
+            foreach (var point in shapeData.PointsAfterRotation(rotation))
+            {
+                var pointPositionOnGrid = cell + point;
+                occupiedCells.Add(pointPositionOnGrid);
+            }
+            return true;
         }
     }
 }

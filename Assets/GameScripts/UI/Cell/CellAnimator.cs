@@ -7,9 +7,11 @@ namespace GameScripts.UI
     [RequireComponent(typeof(Image))]
     public class CellAnimator : MonoBehaviour
     {
-        [SerializeField] private Color _highlightedColor = Color.grey;
-        [SerializeField] private Color _busyColor = Color.blue;
         [SerializeField] private float _duration = 0.4f;
+        
+        private Color _normalColor = Color.white;
+        private Color _shadowedColor = Color.grey;
+        private Color _occupiedColor = Color.blue;
 
         private Image _image;
         private Sequence _sequence;
@@ -19,19 +21,19 @@ namespace GameScripts.UI
             _image = GetComponent<Image>();
         }
 
-        public void AnimateHighlight()
+        public void AnimateNormal()
         {
-            AnimateInternal(_highlightedColor);
+            AnimateInternal(_normalColor);
         }
 
-        public void AnimateBusy()
+        public void AnimateShadow()
         {
-            AnimateInternal(_busyColor);
+            AnimateInternal(_shadowedColor);
         }
 
-        public void AnimateClear()
+        public void AnimateOccupied()
         {
-            AnimateInternal(Color.white);
+            AnimateInternal(_occupiedColor);
         }
 
         private void AnimateInternal(Color targetColor)

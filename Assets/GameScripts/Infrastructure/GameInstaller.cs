@@ -14,6 +14,8 @@ namespace GameScripts.Infrastructure
             BindDailyTimer();
             Container.Bind<CalendarViewModel>().FromNew().AsSingle();
             BindShapeCatalog();
+            BindFieldViewModelContainer();
+            BindShapeViewModelsContainer();
         }
 
         private void BindDailyTimer()
@@ -28,7 +30,17 @@ namespace GameScripts.Infrastructure
 
         private void BindShapeCatalog()
         {
-            Container.Bind<IShapeCatalog>().To<ShapeCatalog>().FromInstance(shapeCatalog);
+            Container.Bind<IShapeCatalog>().To<ShapeCatalog>().FromInstance(shapeCatalog).AsSingle();
+        }
+
+        private void BindFieldViewModelContainer()
+        {
+            Container.Bind<FieldViewModelContainer>().FromNew().AsSingle();
+        }
+
+        private void BindShapeViewModelsContainer()
+        {
+            Container.Bind<ShapeViewModelsContainer>().FromNew().AsSingle();
         }
     }
 }

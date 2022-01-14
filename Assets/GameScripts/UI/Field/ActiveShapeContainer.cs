@@ -1,17 +1,19 @@
 using System;
 using DG.Tweening;
+using GameScripts.Game;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GameScripts.Game
+namespace GameScripts.UI
 {
     public class ActiveShapeContainer : MonoBehaviour
     {
-        public ReactiveProperty<Vector2Int> HoveredCell;
-        
-        public RectTransform cellContainerRect;
-        public RectTransform containerRect;
+        public IReactiveProperty<Vector2Int> HoveredCell;
+        public int SelectedShapeNumber { get; private set; }
+
+        public RectTransform fieldRect;
+        public RectTransform activeShapeRect;
         [SerializeField] private Image image;
 
         private Sequence _sequence;
@@ -21,8 +23,9 @@ namespace GameScripts.Game
 
         private void Awake()
         {
-            _initialPosition = containerRect.anchoredPosition;
+            _initialPosition = activeShapeRect.anchoredPosition;
             HoveredCell = new ReactiveProperty<Vector2Int>(new Vector2Int(-1, -1));
+            SelectedShapeNumber = -1;
         }
 
         private void Update()
@@ -37,13 +40,13 @@ namespace GameScripts.Game
                 return new Vector2Int(-1, -1);;
             }
             
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(cellContainerRect,
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(fieldRect,
                 GetRayOrigin(_rotation),
                 null, out var shapeOriginInField);
 
             var shapeOriginInFieldNormalized =
-                (shapeOriginInField + new Vector2(cellContainerRect.rect.width * 0.5f, cellContainerRect.rect.height * 0.5f))
-                / (cellContainerRect.rect.width / 9);
+                (shapeOriginInField + new Vector2(fieldRect.rect.width * 0.5f, fieldRect.rect.height * 0.5f))
+                / (fieldRect.rect.width / 9);
 
             if (shapeOriginInFieldNormalized.x < 0 || shapeOriginInFieldNormalized.x >= 9 ||
                 shapeOriginInFieldNormalized.y < 0 || shapeOriginInFieldNormalized.y >= 9)
@@ -62,7 +65,7 @@ namespace GameScripts.Game
         private Vector2 GetRayOrigin(Rotation rotation)
         {
             Vector3[] corners = new Vector3[4];
-            containerRect.GetWorldCorners(corners);
+            activeShapeRect.GetWorldCorners(corners);
             switch (rotation)
             {
                 case Rotation.Deg0:
@@ -78,12 +81,13 @@ namespace GameScripts.Game
             }
         }
 
-        public void AnimatePopUp()
+        public void AnimatePopUp(int shapeNumber)
         {
             _sequence?.Complete();
             _sequence = DOTween.Sequence();
             _sequence.Insert(0f, image.DOFade(1, 0.3f));
             _hovering = true;
+            SelectedShapeNumber = shapeNumber;
         }
 
         public void AnimateHide()
@@ -92,11 +96,12 @@ namespace GameScripts.Game
             _sequence = DOTween.Sequence();
             _sequence.Insert(0f, image.DOFade(0, 0.3f));
             _hovering = false;
+            SelectedShapeNumber = -1;
         }
 
         public void ResetAnchoredPosition()
         {
-            containerRect.anchoredPosition = _initialPosition;
+            activeShapeRect.anchoredPosition = _initialPosition;
         }
     }
 }
