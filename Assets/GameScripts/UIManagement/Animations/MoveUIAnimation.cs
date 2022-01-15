@@ -65,7 +65,7 @@ namespace GameScripts.UIManagement.Animations
                 case MoveUIAnimationDirection.Bottom:
                     return new Vector2(_uiView.StartPosition.x, _uiView.StartPosition.y - _screenSize.y);
                 case MoveUIAnimationDirection.Left:
-                    return new Vector2(-_uiViewRect.sizeDelta.x / 2, _uiView.StartPosition.y);
+                    return new Vector2(-_uiViewRect.sizeDelta.x / 2 - _screenSize.x, _uiView.StartPosition.y);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

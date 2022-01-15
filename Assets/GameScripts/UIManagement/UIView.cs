@@ -91,10 +91,10 @@ namespace GameScripts.UIManagement
             }
             if (_state == UIViewState.Hidden)
             {
-                ChangeVisibility(true);
                 _state = UIViewState.Showing;
                 ShowAnimationStarted?.Invoke();
                 _showAnimation.StartAnimation();
+                ChangeVisibility(true);
                 return;
             }
 
