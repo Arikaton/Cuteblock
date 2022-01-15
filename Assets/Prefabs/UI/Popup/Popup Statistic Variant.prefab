@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -1.436, y: -418}
-  m_SizeDelta: {x: 414.872, y: 492.214}
+  m_SizeDelta: {x: 520, y: 552}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &919332187
 CanvasRenderer:
@@ -59,14 +59,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9245283, g: 0.92369634, b: 0.31835172, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: b48beb46304f1443e8ef405bdeb91ea8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1015,6 +1015,10 @@ PrefabInstance:
       propertyPath: m_text
       value: statistic
       objectReference: {fileID: 0}
+    - target: {fileID: 6664993751053621604, guid: 9998cca0efe838543aec8c989dc2e289, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9998cca0efe838543aec8c989dc2e289, type: 3}
 --- !u!224 &7897407155294455889 stripped
@@ -1029,9 +1033,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4493739942015202349, guid: 659c38ce74cd2b34795ed4ce8ecb6dc4, type: 3}
+      propertyPath: ViewId
+      value: 105
+      objectReference: {fileID: 0}
     - target: {fileID: 6954972660922327420, guid: 659c38ce74cd2b34795ed4ce8ecb6dc4, type: 3}
       propertyPath: m_Name
-      value: Popup Statistic
+      value: Popup Statistic Variant
       objectReference: {fileID: 0}
     - target: {fileID: 6954972660922327423, guid: 659c38ce74cd2b34795ed4ce8ecb6dc4, type: 3}
       propertyPath: m_Pivot.x

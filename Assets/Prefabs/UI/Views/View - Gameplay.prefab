@@ -992,6 +992,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6701767971779508260}
   - component: {fileID: 6344368436870843547}
+  - component: {fileID: 7984625009327760410}
+  - component: {fileID: 5450995532283355093}
+  - component: {fileID: 4834013286572359604}
   m_Layer: 5
   m_Name: View - Gameplay
   m_TagString: Untagged
@@ -1043,6 +1046,74 @@ MonoBehaviour:
   horizontalRange: {x: 0, y: 1}
   vertical: 1
   verticalRange: {x: 0, y: 1}
+--- !u!223 &7984625009327760410
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6701767971779508261}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!114 &5450995532283355093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6701767971779508261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 55
+--- !u!114 &4834013286572359604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6701767971779508261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0fb4fde2aa5444eaa30ae67481961ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPopup: 0
+  ViewId: 2
+  StartPosition: {x: 0, y: 0}
+  AwakeAction: 2
+  _showAnimation: {fileID: 0}
+  _hideAnimation: {fileID: 0}
+  ShowAnimationStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  ShowAnimationFinished:
+    m_PersistentCalls:
+      m_Calls: []
+  HideAnimationStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  HideAnimationFinished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7956649058117465130
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,11 +12,17 @@ namespace GameScripts
             {
                 _instance = GetComponent<T>();
                 DontDestroyOnLoad(gameObject);
+                AwakeInternal();
             }
             else
             {
                 Destroy(gameObject);
             }
+        }
+
+        public virtual void AwakeInternal()
+        {
+            
         }
     }
 }

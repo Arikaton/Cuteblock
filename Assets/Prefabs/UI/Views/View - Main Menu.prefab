@@ -10,6 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8212728297349895016}
   - component: {fileID: 6930465446644525229}
+  - component: {fileID: 5302393487723712889}
+  - component: {fileID: 8253556482825215321}
+  - component: {fileID: 3606950914211049375}
   m_Layer: 5
   m_Name: View - Main Menu
   m_TagString: Untagged
@@ -60,6 +63,74 @@ MonoBehaviour:
   horizontalRange: {x: 0, y: 1}
   vertical: 1
   verticalRange: {x: 0, y: 1}
+--- !u!223 &5302393487723712889
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8212728297349895017}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!114 &8253556482825215321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8212728297349895017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 55
+--- !u!114 &3606950914211049375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8212728297349895017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0fb4fde2aa5444eaa30ae67481961ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPopup: 0
+  ViewId: 6
+  StartPosition: {x: 0, y: 0}
+  AwakeAction: 2
+  _showAnimation: {fileID: 0}
+  _hideAnimation: {fileID: 0}
+  ShowAnimationStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  ShowAnimationFinished:
+    m_PersistentCalls:
+      m_Calls: []
+  HideAnimationStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  HideAnimationFinished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &3679777150986983805
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67,6 +138,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8212728297349895016}
     m_Modifications:
+    - target: {fileID: 737519390508392950, guid: 03e17e07b07542a4a9de2ac8b58e24d1, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1825045766569948118, guid: 03e17e07b07542a4a9de2ac8b58e24d1, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -154,6 +229,10 @@ PrefabInstance:
     - target: {fileID: 1825045766569948119, guid: 03e17e07b07542a4a9de2ac8b58e24d1, type: 3}
       propertyPath: m_Name
       value: Button - Play
+      objectReference: {fileID: 0}
+    - target: {fileID: 1831467144676437073, guid: 03e17e07b07542a4a9de2ac8b58e24d1, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03e17e07b07542a4a9de2ac8b58e24d1, type: 3}
@@ -359,6 +438,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button - Offer Present
       objectReference: {fileID: 0}
+    - target: {fileID: 8139698240847933733, guid: d6c3f4d016cabf7419ac54ca2bd94364, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6c3f4d016cabf7419ac54ca2bd94364, type: 3}
 --- !u!224 &1148422693632162950 stripped
@@ -459,6 +542,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 453259778163073049, guid: 29999a407c882d3489ecbdb11f0b76a7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2913841361012747774, guid: 29999a407c882d3489ecbdb11f0b76a7, type: 3}
+      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
