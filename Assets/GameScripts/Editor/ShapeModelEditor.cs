@@ -14,7 +14,6 @@ namespace GameScripts.Game
             var uidProp = property.FindPropertyRelative("uid");
             var rectProp = property.FindPropertyRelative("rect");
             var pointsProp = property.FindPropertyRelative("points");
-            var rotationProp = property.FindPropertyRelative("rotation");
             
             var xProp = rectProp.FindPropertyRelative(nameof(Vector2Int.x));
             var yProp = rectProp.FindPropertyRelative(nameof(Vector2Int.y));
@@ -46,7 +45,6 @@ namespace GameScripts.Game
 
             GUI.enabled = false;
             EditorGUILayout.PropertyField(pointsProp);
-            EditorGUILayout.PropertyField(rotationProp);
             GUI.enabled = true;
         }
 

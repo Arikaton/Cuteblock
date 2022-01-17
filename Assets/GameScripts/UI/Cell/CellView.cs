@@ -1,4 +1,3 @@
-using GameScripts.UI;
 using UnityEngine;
 
 namespace GameScripts.UI

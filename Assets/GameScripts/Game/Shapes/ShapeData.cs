@@ -10,12 +10,10 @@ namespace GameScripts.Game
         [SerializeField] private int uid;
         [SerializeField] private Vector2Int rect;
         [SerializeField] private List<Vector2Int> points;
-        [SerializeField] private Rotation rotation;
 
         public int Uid => uid;
-        private Vector2Int Rect => rect;
+        public Vector2Int Rect => rect;
         private List<Vector2Int> Points => points;
-        private Rotation Rotation => rotation;
 
         public ShapeData(int uid, Vector2Int rect, params (int x, int y)[] points)
         {
@@ -27,7 +25,6 @@ namespace GameScripts.Game
 
             this.uid = uid;
             this.rect = rect;
-            rotation = Rotation.Deg0;
         }
         
         public List<Vector2Int> PointsAfterRotation(Rotation rot)

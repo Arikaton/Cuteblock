@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using GameScripts.Game;
 using UniRx;
 using UnityEngine;
@@ -13,20 +14,21 @@ namespace GameScripts.UI
         [SerializeField] private CellView cellViewPrefab;
         [SerializeField] private RectTransform cellContainerRect;
         [SerializeField] private GridLayoutGroup gridLayout;
-        [SerializeField] private ActiveShapeContainer shapeContainer;
 
         private FieldViewModelContainer _fieldViewModelContainer;
-        private ShapeViewModelsContainer _shapeViewModelsContainer;
         private FieldViewModel _fieldViewModel;
         private CellView[,] _cellViews;
         private List<Vector2Int> _shadowedCells;
         private CompositeDisposable _disposables;
+        private ShapeViewFactory _shapeViewFactory;
+        
+        public int CurrentShapeIndex { get; set; }
 
         [Inject]
-        public void Construct(FieldViewModelContainer fieldViewModelContainer, ShapeViewModelsContainer shapeViewModelsContainer)
+        public void Construct(FieldViewModelContainer fieldViewModelContainer, ShapeViewFactory shapeViewFactory)
         {
             _fieldViewModelContainer = fieldViewModelContainer;
-            _shapeViewModelsContainer = shapeViewModelsContainer;
+            _shapeViewFactory = shapeViewFactory;
         }
         
         private void Awake()
@@ -38,12 +40,22 @@ namespace GameScripts.UI
 
         private void Start()
         {
-            _fieldViewModelContainer.FieldViewModel.Subscribe(Initialize).AddTo(_disposables);
-            shapeContainer.HoveredCell
-                .DistinctUntilChanged()
-                .Subscribe(OnHoveredCellChanged).AddTo(_disposables);
             SetupCells();
-            Initialize(_fieldViewModelContainer.FieldViewModel.Value);
+            _fieldViewModelContainer.FieldViewModel.Subscribe(Initialize).AddTo(_disposables);
+        }
+
+        public bool TryPlaceShape(Vector2Int cell)
+        {
+            if (_fieldViewModel.PlaceShape(CurrentShapeIndex, cell))
+            {
+                Debug.Log("Placed shape");
+                return true;
+            }
+            else
+            {
+                Debug.Log("Cannot place shape");
+                return false;
+            }
         }
 
         private void OnDestroy()
@@ -54,12 +66,24 @@ namespace GameScripts.UI
         private void Initialize(FieldViewModel fieldViewModel)
         {
             _fieldViewModel = fieldViewModel;
+            foreach (var shapeOnField in _fieldViewModel.shapesOnField)
+            {
+                var shapeView = _shapeViewFactory.CreateShapeView(0);
+                shapeView.Bind(shapeOnField);
+            }
+
+            for (int i = 0; i < _fieldViewModel.availableShapes.Length; i++)
+            {
+                var shapeView = _shapeViewFactory.CreateShapeView(i);
+                shapeView.Bind(_fieldViewModel.availableShapes[i]);
+            }
         }
 
         private void SetupCells()
         {
             cellContainerRect.DestroyAllChildren();
-            
+
+            gridLayout.enabled = true;
             gridLayout.cellSize = new Vector2(cellContainerRect.rect.width / 9, cellContainerRect.rect.height / 9);
             gridLayout.startCorner = GridLayoutGroup.Corner.LowerLeft;
             gridLayout.startAxis = GridLayoutGroup.Axis.Vertical;
@@ -74,17 +98,21 @@ namespace GameScripts.UI
                     InstantiateCellViewAt(x, y);
                 }
             }
+
+            var sequence = DOTween.Sequence();
+            sequence.PrependInterval(1);
+            sequence.AppendCallback(() => gridLayout.enabled = false);
         }
 
-        private void OnHoveredCellChanged(Vector2Int hoveredCell)
+        public void OnHoveredCellChanged(Vector2Int hoveredCell)
         {
             if (hoveredCell == new Vector2Int(-1, -1))
             {
                 CancelAllShadowing();
                 return;
             }
-            var shapeViewModel = _shapeViewModelsContainer.shapeViewModels[shapeContainer.SelectedShapeNumber];
-
+            var shapeViewModel = _fieldViewModel.availableShapes[CurrentShapeIndex];
+            
             if (_fieldViewModel.PreviewShapePlacement(shapeViewModel.Uid,
                 shapeViewModel.Rotation.Value,
                 hoveredCell,

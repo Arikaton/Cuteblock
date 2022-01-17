@@ -1,6 +1,8 @@
 using GameScripts.Calendar;
 using GameScripts.DailyTimer;
 using GameScripts.Game;
+using GameScripts.Providers;
+using GameScripts.UI;
 using Zenject;
 
 namespace GameScripts.Infrastructure
@@ -8,14 +10,16 @@ namespace GameScripts.Infrastructure
     public class GameInstaller : MonoInstaller
     {
         public ShapeCatalog shapeCatalog;
-        
+        public ShapeSpritesCatalog shapeSpritesCatalog;
+
         public override void InstallBindings()
         {
             BindDailyTimer();
             Container.Bind<CalendarViewModel>().FromNew().AsSingle();
             BindShapeCatalog();
             BindFieldViewModelContainer();
-            BindShapeViewModelsContainer();
+            BindShapeSpritesCatalog();
+            BindShapeViewFactory();
         }
 
         private void BindDailyTimer()
@@ -38,9 +42,14 @@ namespace GameScripts.Infrastructure
             Container.Bind<FieldViewModelContainer>().FromNew().AsSingle();
         }
 
-        private void BindShapeViewModelsContainer()
+        private void BindShapeSpritesCatalog()
         {
-            Container.Bind<ShapeViewModelsContainer>().FromNew().AsSingle();
+            Container.Bind<IShapeSpritesProvider>().To<ShapeSpritesCatalog>().FromInstance(shapeSpritesCatalog);
+        }
+
+        private void BindShapeViewFactory()
+        {
+            Container.Bind<ShapeViewFactory>().FromComponentInHierarchy().AsSingle();
         }
     }
 }
