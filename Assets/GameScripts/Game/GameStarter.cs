@@ -9,7 +9,6 @@ namespace GameScripts.Game
     {
         private IShapeCatalog _shapeCatalog;
         private FieldViewModelContainer _fieldViewModelContainer;
-        private ShapeViewModelsContainer _shapeViewModelsContainer;
 
         private void Start()
         {
@@ -17,32 +16,27 @@ namespace GameScripts.Game
         }
 
         [Inject]
-        public void Construct(IShapeCatalog shapeCatalog, FieldViewModelContainer fieldViewModelContainer, ShapeViewModelsContainer shapeViewModelsContainer)
+        public void Construct(IShapeCatalog shapeCatalog, FieldViewModelContainer fieldViewModelContainer)
         {
             _shapeCatalog = shapeCatalog;
             _fieldViewModelContainer = fieldViewModelContainer;
-            _shapeViewModelsContainer = shapeViewModelsContainer;
         }
 
         [DisableInEditorMode, Button]
         public void StartGame()
         {
-            Debug.Log("Game Started");
             var fieldModel = new FieldModel();
+            var shapeData1 = _shapeCatalog.Shapes[1];
+            var shapeData2 = _shapeCatalog.Shapes[2];
+            var availableShape0 = new ShapeModel(shapeData1.Uid, Rotation.Deg0);
+            var availableShape1 = new ShapeModel(shapeData2.Uid, Rotation.Deg0);
+            var availableShape2 = new ShapeModel(shapeData1.Uid, Rotation.Deg0);
+            fieldModel.AvailableShapes = new ShapeModel[3] {availableShape0, availableShape1, availableShape2};
+            
             var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog);
             _fieldViewModelContainer.FieldViewModel.Value = fieldViewModel;
-
-            var shapeData = _shapeCatalog.Shapes[0];// TODO: Заменить на получение рандомной фигуры
-            var firstShapeModel = new ShapeModel(shapeData.Uid, Rotation.Deg0);
-            var secondShapeModel = new ShapeModel(shapeData.Uid, Rotation.Deg0);
-            var thirdShapeModel = new ShapeModel(shapeData.Uid, Rotation.Deg0);
-
-            var firstShapeViewModel = new ShapeViewModel(firstShapeModel);
-            var secondShapeViewModel = new ShapeViewModel(secondShapeModel);
-            var thirdShapeViewModel = new ShapeViewModel(thirdShapeModel);
-            _shapeViewModelsContainer.ChangeViewModel(0, firstShapeViewModel);
-            _shapeViewModelsContainer.ChangeViewModel(1, secondShapeViewModel);
-            _shapeViewModelsContainer.ChangeViewModel(2, thirdShapeViewModel);
+            
+            Debug.Log("Game Started");
         }
     }
 }

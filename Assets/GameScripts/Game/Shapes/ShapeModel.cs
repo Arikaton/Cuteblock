@@ -2,6 +2,7 @@ using UniRx;
 
 namespace GameScripts.Game
 {
+    [System.Serializable]
     public class ShapeModel
     {
         public readonly int Uid;

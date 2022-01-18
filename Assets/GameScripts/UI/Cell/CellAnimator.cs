@@ -7,11 +7,11 @@ namespace GameScripts.UI
     [RequireComponent(typeof(Image))]
     public class CellAnimator : MonoBehaviour
     {
-        [SerializeField] private float _duration = 0.4f;
+        [SerializeField] private float _duration = 0.2f;
         
         private Color _normalColor = Color.white;
         private Color _shadowedColor = Color.grey;
-        private Color _occupiedColor = Color.blue;
+        private Color _occupiedColor = new Color(0.62f, 0.73f, 1f);
 
         private Image _image;
         private Sequence _sequence;

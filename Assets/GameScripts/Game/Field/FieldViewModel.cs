@@ -1,12 +1,18 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GameScripts.Game
 {
     public class FieldViewModel
     {
-        public ShapeViewModelsContainer shapeViewModelsContainer;
+        public List<ShapeViewModel> shapesOnField;
+        public ShapeViewModel[] availableShapes;
+        public ReactiveCommand<int> OnAddNewAvailableShape;
+        public CellViewModel[,] CellViewModels;
         
         private FieldModel _fieldModel;
         private IShapeCatalog _shapeCatalog;
@@ -16,8 +22,38 @@ namespace GameScripts.Game
         {
             _fieldModel = fieldModel;
             _shapeCatalog = shapeCatalog;
+            OnAddNewAvailableShape = new ReactiveCommand<int>();
             _rect = new RectInt(0, 0, 9, 9);
-            shapeViewModelsContainer = new ShapeViewModelsContainer();
+            shapesOnField = new List<ShapeViewModel>();
+            availableShapes = new ShapeViewModel[3];
+            CellViewModels = new CellViewModel[9, 9];
+            for (var x = 0; x < 9; x++)
+            {
+                for (var y = 0; y < 9; y++)
+                {
+                    var cellState = fieldModel.FieldMatrix[x, y].uid == 0 ? CellStates.Empty : CellStates.Occupied;
+                    CellViewModels[x, y] = new CellViewModel(cellState);
+                }
+            }
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            for (int i = 0; i < _fieldModel.AvailableShapes.Length; i++)
+            {
+                var shapeModel = _fieldModel.AvailableShapes[i];
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid].Rect);
+                availableShapes[i] = shapeViewModel;
+            }
+            //TODO: Предвартельно найти все сломанные фигуры и заменить на целые
+            var shapeModelsOnField = FindAllShapeModelsOnField();
+            foreach (var foundShape in shapeModelsOnField)
+            {
+                var shapeViewModel = new ShapeViewModel(foundShape.model, _shapeCatalog.Shapes[foundShape.model.Uid].Rect);
+                shapeViewModel.PlaceShapeAt(foundShape.origin);
+                shapesOnField.Add(shapeViewModel);
+            }
         }
 
         public bool CanPlaceShape(int uid, Rotation rotation, Vector2Int cell)
@@ -34,18 +70,41 @@ namespace GameScripts.Game
             return true;
         }
 
-        public void PlaceShape(int uid, Rotation rotation, Vector2Int cell)
+        public bool PlaceShape(int shapeIndex, Vector2Int cell)
         {
-            if (!CanPlaceShape(uid, rotation, cell))
-                return;
-            var shapeData = _shapeCatalog.Shapes[uid];
-            foreach (var point in shapeData.PointsAfterRotation(rotation))
+            var shapeViewModel = availableShapes[shapeIndex];
+            if (!CanPlaceShape(shapeViewModel.Uid, shapeViewModel.Rotation.Value, cell))
+                return false;
+            var shapeData = _shapeCatalog.Shapes[shapeViewModel.Uid];
+            foreach (var point in shapeData.PointsAfterRotation(shapeViewModel.Rotation.Value))
             {
                 var pointPositionOnGrid = cell + point;
-                _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].uid = shapeData.Uid;
-                _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].shapeRotation = rotation;
+                _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].uid = shapeViewModel.Uid;
+                _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].shapeRotation = shapeViewModel.Rotation.Value;
                 _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].positionInShape = point;
+                CellViewModels[pointPositionOnGrid.x, pointPositionOnGrid.y].ChangeState(CellStates.Occupied);
             }
+
+            PlaceShapeViewModel(shapeIndex, cell);
+            CreateNewAvailableShape(shapeIndex);
+            return true;
+        }
+
+        private void PlaceShapeViewModel(int shapeIndex, Vector2Int cell)
+        {
+            var shapeViewModel = availableShapes[shapeIndex];
+            shapeViewModel.PlaceShapeAt(cell);
+            shapesOnField.Add(shapeViewModel);
+        }
+
+        private void CreateNewAvailableShape(int shapeIndex)
+        {
+            var newShapeId = Random.Range(1, 3);
+            var newShapeRotation = Rotation.Deg0;
+            var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
+            var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId].Rect);
+            availableShapes[shapeIndex] = shapeViewModel;
+            OnAddNewAvailableShape.Execute(shapeIndex);
         }
 
         public HashSet<Vector2Int> FindCellsToDelete()
@@ -109,6 +168,36 @@ namespace GameScripts.Game
                 }
             }
             return brokenShapesCells;
+        }
+
+        private List<(Vector2Int origin, ShapeModel model)> FindAllShapeModelsOnField()
+        {
+            var shapeModels = new List<(Vector2Int origin, ShapeModel model)>();
+            var visitedCells = new HashSet<Vector2Int>();
+            
+            for (int x = 0; x < 9; x++)
+            {
+                for (int y = 0; y < 9; y++)
+                {
+                    var cell = _fieldModel.FieldMatrix[x, y];
+                    if(cell.uid == 0 || visitedCells.Contains(new Vector2Int(x, y))) 
+                        continue;
+                    
+                    var shapeData = _shapeCatalog.Shapes[cell.uid];
+                    var shapeOrigin = new Vector2Int(x, y) - cell.positionInShape;
+                    var shapeModel = new ShapeModel(cell.uid, cell.shapeRotation);
+                    shapeModels.Add((shapeOrigin, shapeModel));
+                    
+                    foreach (var positionInShape in shapeData.PointsAfterRotation(cell.shapeRotation))
+                    {
+                        var pointPositionOnGrid = shapeOrigin + positionInShape;
+                        visitedCells.Add(pointPositionOnGrid);
+                        if (_fieldModel.FieldMatrix[pointPositionOnGrid].uid != shapeData.Uid)
+                            throw new InvalidOperationException("Cannot find shapes models on field with broken cells");
+                    }
+                }
+            }
+            return shapeModels;
         }
 
         public void DestroyCells(HashSet<Vector2Int> cells)
