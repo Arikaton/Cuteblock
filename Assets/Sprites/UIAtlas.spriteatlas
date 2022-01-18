@@ -56,6 +56,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 6e57a9d000641024f83b72ed61b876ac, type: 3}
   - {fileID: 21300000, guid: 058746e0bcbddd34fb3688afe1575c00, type: 3}
   - {fileID: 21300000, guid: a61ad81115bbc78438e554a7299d18ee, type: 3}
+  - {fileID: 21300000, guid: c8ad31913fe844b1ba83e46ba9eb7981, type: 3}
   - {fileID: 21300000, guid: 1aa8bdb16e7cf9842a616b23cea7ac1f, type: 3}
   - {fileID: 21300000, guid: 89926e123153e9b448e4a1767fa9c983, type: 3}
   - {fileID: 21300000, guid: 3e29b1d2bd7322740a91ce8ea18ee0b3, type: 3}
@@ -63,20 +64,25 @@ SpriteAtlas:
   - {fileID: 21300000, guid: d34d2523a9c565e45a82b77b093a2c0b, type: 3}
   - {fileID: 21300000, guid: 74135563fe6821e458cdad9f1008ec1f, type: 3}
   - {fileID: 21300000, guid: 5fd69b6340cdb2a41b54bbe2b4c825bf, type: 3}
+  - {fileID: 21300000, guid: a9211e14c18674c308585ab1705e9268, type: 3}
   - {fileID: 21300000, guid: cc29883428b011843b5d26093c621081, type: 3}
   - {fileID: 21300000, guid: 04e35a84d1b77b24c898054942d607fa, type: 3}
   - {fileID: 21300000, guid: be8ccf94f1fa61a43b7b870a57a8ebf1, type: 3}
   - {fileID: 21300000, guid: bba296c479a5646498d3c70de8ea9397, type: 3}
+  - {fileID: 21300000, guid: dc35f4d4f01e34635b510f6c711ae60f, type: 3}
   - {fileID: 21300000, guid: 8fbc07e43f4ed6a4bb33a9f3fb5e531d, type: 3}
   - {fileID: 21300000, guid: 2b13b2156dc1e154d9c7009fb22cfd4c, type: 3}
   - {fileID: 21300000, guid: 43db8f3537b440c43a1ed8d46274241e, type: 3}
   - {fileID: 21300000, guid: 7479ab75dcb26aa41811ea254fe0726f, type: 3}
+  - {fileID: 21300000, guid: b06a68e5097cf4467a3203814863e4d3, type: 3}
   - {fileID: 21300000, guid: eeb8f5f56d3845d41893df3f7dd94504, type: 3}
   - {fileID: 21300000, guid: 853b4e06ae807f243a0afb367b7e2058, type: 3}
+  - {fileID: 21300000, guid: b48beb46304f1443e8ef405bdeb91ea8, type: 3}
   - {fileID: 21300000, guid: b19c4e9613fa8e94e8667f305238f43a, type: 3}
   - {fileID: 21300000, guid: 3d607f679ba7dae4db80e4fd02f9cf23, type: 3}
   - {fileID: 21300000, guid: 61296697f5a41cb4dba66efba50760fc, type: 3}
   - {fileID: 21300000, guid: f0871ab7fce5e29418bf75892f46445d, type: 3}
+  - {fileID: 21300000, guid: 0729b6c7b6ba24c9287b0a2b61afbe4c, type: 3}
   - {fileID: 21300000, guid: cf4abec7e7bb0054b93e0c43a8574f0f, type: 3}
   - {fileID: 21300000, guid: 617dabe7ecf457843994509ef72dd8f9, type: 3}
   - {fileID: 21300000, guid: 84884ad8efd6e9a47be00459098e88b0, type: 3}
@@ -92,8 +98,10 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 3786e80c7a5941847ad68d3ef74aa400, type: 3}
   - {fileID: 21300000, guid: 6d7ceb3c6ea74484ba3c7aa05775fe23, type: 3}
   - {fileID: 21300000, guid: 777d456c40a39bb48b26b19a3a020ce7, type: 3}
+  - {fileID: 21300000, guid: 082a61bc7ca124313a2d40cb1fc34f2f, type: 3}
   - {fileID: 21300000, guid: 267bbccc7256b6348992e32891701a7d, type: 3}
   - {fileID: 21300000, guid: 1201fcfc59fa8bc4eb6b9445cb13bd51, type: 3}
+  - {fileID: 21300000, guid: ff290b1d0e3be4d7ba7d71220446a92b, type: 3}
   - {fileID: 21300000, guid: d86f382dd2e2f8b47940899d6ab28aef, type: 3}
   - {fileID: 21300000, guid: f408c69db8046594ea10b2f98111a037, type: 3}
   - {fileID: 21300000, guid: eb6ecacd36885584f96f6620a854853a, type: 3}
@@ -112,6 +120,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: e826536ff0ddde24687e718c015950dc, type: 3}
   - {fileID: 21300000, guid: e72b078f2b3bb814bb3849b49da136b7, type: 3}
   - {fileID: 21300000, guid: 758314df0dce4324ba5dd473ce3d2167, type: 3}
+  - {fileID: 21300000, guid: 7ebecbdfd11f84b1e88a49809d383afc, type: 3}
   - {fileID: 21300000, guid: 0fd287ff2b4a2624491cd19540241545, type: 3}
   m_PackedSpriteNamesToIndex:
   - close
@@ -120,6 +129,7 @@ SpriteAtlas:
   - plate_score
   - Round5
   - Round30
+  - IMG_4097 1
   - gem
   - Popup - Rectangle
   - figure_replacement
@@ -127,20 +137,25 @@ SpriteAtlas:
   - special_offers
   - bottom_panel
   - coin
+  - hints
   - awards
   - daily_challenge
   - selected_icon
   - share
+  - second_chance
   - square_mini
   - daily_reminder
   - chest
   - shop
+  - royal_offer
   - watch_ads
   - cell_occupied
+  - statistics_popup
   - figure_rotation
   - arrow
   - star
   - next_goal_panel
+  - bubble
   - ellipse_shop
   - coin_gem_counter
   - popup_name
@@ -156,8 +171,10 @@ SpriteAtlas:
   - button
   - Round50_Thickness5
   - Round10_Thickness5
+  - coins
   - crown
   - settings
+  - gems
   - gift
   - multi_radial
   - figure_delete
@@ -176,6 +193,7 @@ SpriteAtlas:
   - field
   - price_shop
   - cell_empty
+  - royal_offer_light
   - Round10_Blur10
   m_RenderDataMap: {}
   m_Tag: UIAtlas

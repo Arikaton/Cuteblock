@@ -75,3 +75,7 @@ Assets/Plugins/Sirenix/Demos*
 Assets/Le Tai's Asset/TrueShadow/Demo*
 Assets/FacebookSDK/Examples*
 *.keystore
+
+Cuteblock_BurstDebugInformation_DoNotShip/tempburstlibs/armeabi-v7a/lib_burst_generated.txt
+
+.idea/.idea.Cuteblock/.idea/indexLayout.xml

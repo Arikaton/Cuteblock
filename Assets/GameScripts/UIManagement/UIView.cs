@@ -10,12 +10,16 @@ namespace GameScripts.UIManagement
     [RequireComponent(typeof(Canvas), typeof(GraphicRaycaster), typeof(RectTransform))]
     public class UIView : MonoBehaviour
     {
+        [SerializeField] private bool _isPopup;
         public UIViewId ViewId;
         [HorizontalGroup(GroupID = "Start Position")]
         public Vector2 StartPosition;
-        [SerializeField] private UIViewAwakeAction AwakeAction = UIViewAwakeAction.InstantHide;
-        [SerializeField] private UIAnimation _showAnimation;
-        [SerializeField] private UIAnimation _hideAnimation;
+        [SerializeField] 
+        private UIViewAwakeAction AwakeAction = UIViewAwakeAction.InstantHide;
+        [SerializeField] 
+        private UIAnimation _showAnimation;
+        [SerializeField] 
+        private UIAnimation _hideAnimation;
 
         [FoldoutGroup("Events")]
         public UnityEvent ShowAnimationStarted = new();
@@ -31,7 +35,9 @@ namespace GameScripts.UIManagement
         private GraphicRaycaster _graphicRaycaster;
         private RectTransform _rectTransform;
 
-        private void Awake()
+        public bool IsPopup => _isPopup;
+
+        private void Start()
         {
             _canvas = GetComponent<Canvas>();
             _graphicRaycaster = GetComponent<GraphicRaycaster>();
@@ -43,6 +49,8 @@ namespace GameScripts.UIManagement
                 _showAnimation.AnimationFinished += OnShowAnimationFinished;
             if (_hideAnimation)
                 _hideAnimation.AnimationFinished += OnHideAnimationFinished;
+            
+            UIManager.Instance.Register(this);
         }
 
         private void CallAwakeAction()
@@ -83,10 +91,10 @@ namespace GameScripts.UIManagement
             }
             if (_state == UIViewState.Hidden)
             {
-                ChangeVisibility(true);
                 _state = UIViewState.Showing;
                 ShowAnimationStarted?.Invoke();
                 _showAnimation.StartAnimation();
+                ChangeVisibility(true);
                 return;
             }
 

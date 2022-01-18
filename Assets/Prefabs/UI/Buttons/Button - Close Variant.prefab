@@ -17,7 +17,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 4bab1850f9e102747bc33902b5aca086, type: 3}
     - target: {fileID: 2065062422105738164, guid: a6f243e03b2588440a0ebde95dbb6fcd, type: 3}
       propertyPath: m_Name
-      value: Button - Close
+      value: Button - Close Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2065062422105738165, guid: a6f243e03b2588440a0ebde95dbb6fcd, type: 3}
       propertyPath: m_Pivot.x
@@ -105,3 +105,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a6f243e03b2588440a0ebde95dbb6fcd, type: 3}
+--- !u!1 &7088313042486025602 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2065062422105738164, guid: a6f243e03b2588440a0ebde95dbb6fcd, type: 3}
+  m_PrefabInstance: {fileID: 9148548608276764214}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2779187183834241946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7088313042486025602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ec0361e45df4775b2eaa7ada8c9e668, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -14,6 +14,7 @@ namespace GameScripts.UIManagement
         MainMenu,
         Game,
         Shop,
-        Daily
+        Daily,
+        Calendar
     }
 }
