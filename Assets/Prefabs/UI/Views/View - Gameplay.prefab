@@ -992,6 +992,9 @@ GameObject:
   - component: {fileID: 6701767971779508260}
   - component: {fileID: 6344368436870843547}
   - component: {fileID: 2755677206483842889}
+  - component: {fileID: 8109319535413161430}
+  - component: {fileID: 1423305230187278428}
+  - component: {fileID: 8959832141432091869}
   m_Layer: 5
   m_Name: View - Gameplay
   m_TagString: Untagged
@@ -1061,6 +1064,74 @@ MonoBehaviour:
   - {fileID: 5647373340124588881}
   - {fileID: 9028593117164101208}
   fieldView: {fileID: 318524331238377966}
+--- !u!223 &8109319535413161430
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6701767971779508261}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!114 &1423305230187278428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6701767971779508261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 55
+--- !u!114 &8959832141432091869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6701767971779508261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0fb4fde2aa5444eaa30ae67481961ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPopup: 0
+  ViewId: 2
+  StartPosition: {x: 0, y: 0}
+  AwakeAction: 2
+  _showAnimation: {fileID: 0}
+  _hideAnimation: {fileID: 0}
+  ShowAnimationStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  ShowAnimationFinished:
+    m_PersistentCalls:
+      m_Calls: []
+  HideAnimationStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  HideAnimationFinished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7956649058117465130
 GameObject:
   m_ObjectHideFlags: 0
