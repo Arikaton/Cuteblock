@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UniRx;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GameScripts.Game
 {
@@ -11,6 +12,7 @@ namespace GameScripts.Game
         public List<ShapeViewModel> shapesOnField;
         public ShapeViewModel[] availableShapes;
         public ReactiveCommand<int> OnAddNewAvailableShape;
+        public CellViewModel[,] CellViewModels;
         
         private FieldModel _fieldModel;
         private IShapeCatalog _shapeCatalog;
@@ -24,6 +26,15 @@ namespace GameScripts.Game
             _rect = new RectInt(0, 0, 9, 9);
             shapesOnField = new List<ShapeViewModel>();
             availableShapes = new ShapeViewModel[3];
+            CellViewModels = new CellViewModel[9, 9];
+            for (var x = 0; x < 9; x++)
+            {
+                for (var y = 0; y < 9; y++)
+                {
+                    var cellState = fieldModel.FieldMatrix[x, y].uid == 0 ? CellStates.Empty : CellStates.Occupied;
+                    CellViewModels[x, y] = new CellViewModel(cellState);
+                }
+            }
             Initialize();
         }
 
@@ -71,6 +82,7 @@ namespace GameScripts.Game
                 _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].uid = shapeViewModel.Uid;
                 _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].shapeRotation = shapeViewModel.Rotation.Value;
                 _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].positionInShape = point;
+                CellViewModels[pointPositionOnGrid.x, pointPositionOnGrid.y].ChangeState(CellStates.Occupied);
             }
 
             PlaceShapeViewModel(shapeIndex, cell);
@@ -87,7 +99,7 @@ namespace GameScripts.Game
 
         private void CreateNewAvailableShape(int shapeIndex)
         {
-            var newShapeId = 1; //TODO: Получать рандомную фигуру
+            var newShapeId = Random.Range(1, 3);
             var newShapeRotation = Rotation.Deg0;
             var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
             var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId].Rect);

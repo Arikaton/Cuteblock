@@ -42,6 +42,7 @@ namespace GameScripts.UI
         {
             SetupCells();
             _fieldViewModelContainer.FieldViewModel.Subscribe(Initialize).AddTo(_disposables);
+            _fieldViewModel.OnAddNewAvailableShape.Subscribe(AddNewAvailableShape).AddTo(_disposables);
         }
 
         public bool TryPlaceShape(Vector2Int cell)
@@ -77,6 +78,13 @@ namespace GameScripts.UI
                 var shapeView = _shapeViewFactory.CreateShapeView(i);
                 shapeView.Bind(_fieldViewModel.availableShapes[i]);
             }
+            for (var x = 0; x < 9; x++)
+            {
+                for (var y = 0; y < 9; y++)
+                {
+                    _cellViews[x, y].Bind(_fieldViewModel.CellViewModels[x, y]);
+                }
+            }
         }
 
         private void SetupCells()
@@ -102,6 +110,12 @@ namespace GameScripts.UI
             var sequence = DOTween.Sequence();
             sequence.PrependInterval(1);
             sequence.AppendCallback(() => gridLayout.enabled = false);
+        }
+
+        private void InstantiateCellViewAt(int x, int y)
+        {
+            var cellView = Instantiate(cellViewPrefab, cellContainerRect);
+            _cellViews[x, y] = cellView;
         }
 
         public void OnHoveredCellChanged(Vector2Int hoveredCell)
@@ -132,7 +146,7 @@ namespace GameScripts.UI
             foreach (var cell in shadowedCells)
             {
                 _shadowedCells.Add(cell);
-                _cellViews[cell.x, cell.y].AnimateShadow();
+                _fieldViewModel.CellViewModels[cell.x, cell.y].TurnOnShadow();
             }
         }
 
@@ -140,15 +154,15 @@ namespace GameScripts.UI
         {
             foreach (var cell in _shadowedCells)
             {
-                _cellViews[cell.x, cell.y].AnimateNormal();
+                _fieldViewModel.CellViewModels[cell.x, cell.y].TurnOffShadow();
             }
             _shadowedCells.Clear();
         }
 
-        private void InstantiateCellViewAt(int x, int y)
+        private void AddNewAvailableShape(int shapeIndex)
         {
-            var cellView = Instantiate(cellViewPrefab, cellContainerRect);
-            _cellViews[x, y] = cellView;
+            var shapeView = _shapeViewFactory.CreateShapeView(shapeIndex);
+            shapeView.Bind(_fieldViewModel.availableShapes[shapeIndex]);
         }
     }
 }

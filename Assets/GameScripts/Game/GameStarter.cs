@@ -26,10 +26,11 @@ namespace GameScripts.Game
         public void StartGame()
         {
             var fieldModel = new FieldModel();
-            var shapeData = _shapeCatalog.Shapes[1]; // TODO: Заменить на получение рандомной фигуры
-            var availableShape0 = new ShapeModel(shapeData.Uid, Rotation.Deg0);
-            var availableShape1 = new ShapeModel(shapeData.Uid, Rotation.Deg0);
-            var availableShape2 = new ShapeModel(shapeData.Uid, Rotation.Deg0);
+            var shapeData1 = _shapeCatalog.Shapes[1];
+            var shapeData2 = _shapeCatalog.Shapes[2];
+            var availableShape0 = new ShapeModel(shapeData1.Uid, Rotation.Deg0);
+            var availableShape1 = new ShapeModel(shapeData2.Uid, Rotation.Deg0);
+            var availableShape2 = new ShapeModel(shapeData1.Uid, Rotation.Deg0);
             fieldModel.AvailableShapes = new ShapeModel[3] {availableShape0, availableShape1, availableShape2};
             
             var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog);
