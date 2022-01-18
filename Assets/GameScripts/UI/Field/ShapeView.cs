@@ -78,8 +78,8 @@ namespace GameScripts.UI
                 (shapeOriginInField + new Vector2(_fieldRect.rect.width * 0.5f, _fieldRect.rect.height * 0.5f))
                 / (_fieldRect.rect.width / 9);
 
-            if (shapeOriginInFieldNormalized.x < 0 || shapeOriginInFieldNormalized.x >= 9 ||
-                shapeOriginInFieldNormalized.y < 0 || shapeOriginInFieldNormalized.y >= 9)
+            if (shapeOriginInFieldNormalized.x < -0.49f || shapeOriginInFieldNormalized.x >= 9 ||
+                shapeOriginInFieldNormalized.y < -0.49f || shapeOriginInFieldNormalized.y >= 9)
             {
                 return new Vector2Int(-1, -1);
             }
