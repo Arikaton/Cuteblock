@@ -18,6 +18,8 @@ namespace GameScripts.Game
             var xProp = rectProp.FindPropertyRelative(nameof(Vector2Int.x));
             var yProp = rectProp.FindPropertyRelative(nameof(Vector2Int.y));
             
+            EditorGUI.BeginChangeCheck();
+            
             EditorGUILayout.PropertyField(uidProp);
             var rectValue = EditorGUILayout.Vector2IntField("Rect", new Vector2Int(xProp.intValue, yProp.intValue));
             xProp.intValue = Math.Clamp(rectValue.x, 1, 9);
@@ -34,6 +36,11 @@ namespace GameScripts.Game
                 {
                     bool pointExists = list.Contains(new Vector2Int(x, y));
                     var newToggle = GUILayout.Toggle(pointExists, $"{x},{y}", new GUIStyle("Button"), GUILayout.Height(30), GUILayout.Width(30));
+                    
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        Undo.RecordObject(property.serializedObject.targetObject, "Shape model change");
+                    }
                     if (pointExists && newToggle == false)
                         list.Remove(new Vector2Int(x, y));
                     if (!pointExists && newToggle)
