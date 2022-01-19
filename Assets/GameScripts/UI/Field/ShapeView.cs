@@ -29,7 +29,10 @@ namespace GameScripts.UI
         private float _cellSize;
         private Sequence _sequence;
         private bool _hovering;
+        private bool _available;
         private CompositeDisposable _disposables = new CompositeDisposable();
+
+        private bool DragAvailable => !_placedOnField && _available;
 
         public void Initialize(RectTransform fieldRect, IShapeSpritesProvider shapeSpritesProvider, int shapeIndex,
             FieldView fieldView)
@@ -50,6 +53,7 @@ namespace GameScripts.UI
         {
             _viewModel = viewModel;
             _viewModel.PositionOnGrid.Subscribe(SnapToPositionOnGrid).AddTo(_disposables);
+            _viewModel.CanBePlaced.Subscribe(SwitchAvailability).AddTo(_disposables);
             LoadSprite();
         }
 
@@ -121,7 +125,7 @@ namespace GameScripts.UI
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            if(_placedOnField)
+            if(!DragAvailable)
                 return;
             if (eventData.pointerId != 0 && eventData.pointerId != -1)
                 return;
@@ -145,7 +149,7 @@ namespace GameScripts.UI
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (_placedOnField || (eventData.pointerId != 0 && eventData.pointerId != -1)) 
+            if (!DragAvailable || (eventData.pointerId != 0 && eventData.pointerId != -1)) 
                 eventData.pointerDrag = null;
         }
 
@@ -156,7 +160,7 @@ namespace GameScripts.UI
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            if (_placedOnField)
+            if (!DragAvailable)
                 return;
             _hovering = false;
             
@@ -197,6 +201,12 @@ namespace GameScripts.UI
         private void HoveredCellChanged(Vector2Int cell)
         {
             _fieldView.OnHoveredCellChanged(cell);
+        }
+
+        private void SwitchAvailability(bool available)
+        {
+            _available = available;
+            shapeImage.DOFade(available ? 1f : 0.5f, 0.2f);
         }
     }
 }

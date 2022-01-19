@@ -7,9 +7,10 @@ namespace GameScripts.Game
     {
         private ShapeModel _model;
         private IReactiveProperty<Vector2Int> _positionOnGrid;
-
+        
         public IReadOnlyReactiveProperty<Vector2Int> PositionOnGrid;
         public IReadOnlyReactiveProperty<Rotation> Rotation;
+        public ReactiveProperty<bool> CanBePlaced;
         public int Uid => _model.Uid;
         public Vector2Int Rect { get; private set; }
 
@@ -20,6 +21,7 @@ namespace GameScripts.Game
             Rotation = _model.Rotation;
             _positionOnGrid = new ReactiveProperty<Vector2Int>(new Vector2Int(-1, -1));
             PositionOnGrid = _positionOnGrid;
+            CanBePlaced = new ReactiveProperty<bool>(false);
         }
 
         public void PlaceShapeAt(Vector2Int cell)

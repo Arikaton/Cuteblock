@@ -1,5 +1,5 @@
-using System;
 using Sirenix.OdinInspector;
+using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -9,10 +9,21 @@ namespace GameScripts.Game
     {
         private IShapeCatalog _shapeCatalog;
         private FieldViewModelContainer _fieldViewModelContainer;
+        private CompositeDisposable _disposables;
+
+        private void Awake()
+        {
+            _disposables = new CompositeDisposable();
+        }
 
         private void Start()
         {
             StartGame();
+        }
+
+        private void OnDestroy()
+        {
+            _disposables.Dispose();
         }
 
         [Inject]
@@ -22,7 +33,6 @@ namespace GameScripts.Game
             _fieldViewModelContainer = fieldViewModelContainer;
         }
 
-        [DisableInEditorMode, Button]
         public void StartGame()
         {
             var fieldModel = new FieldModel();
@@ -34,9 +44,15 @@ namespace GameScripts.Game
             fieldModel.AvailableShapes = new ShapeModel[3] {availableShape0, availableShape1, availableShape2};
             
             var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog);
+            fieldViewModel.OnGameFinished.Subscribe(_ => FinishGame()).AddTo(_disposables);
             _fieldViewModelContainer.FieldViewModel.Value = fieldViewModel;
             
             Debug.Log("Game Started");
+        }
+
+        public void FinishGame()
+        {
+            Debug.Log("Game Finished");
         }
     }
 }
