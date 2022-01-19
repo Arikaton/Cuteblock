@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b656772b784ef5982a77a662ec63ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellAnimator: {fileID: 5010158346757571899}
+  image: {fileID: 2090421825302035207}
 --- !u!114 &5010158346757571899
 MonoBehaviour:
   m_ObjectHideFlags: 0

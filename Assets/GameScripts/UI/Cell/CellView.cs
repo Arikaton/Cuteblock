@@ -1,59 +1,62 @@
-using System;
 using GameScripts.Game;
+using TweensStateMachine;
 using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GameScripts.UI
 {
     [RequireComponent(typeof(CellAnimator))]
     public class CellView : MonoBehaviour
     {
-        [SerializeField] private CellAnimator cellAnimator;
+        private const float Duration = 0.15f;
         
-        private CellViewModel _cellViewModel;
-        private CompositeDisposable _disposables = new CompositeDisposable();
+        [SerializeField] private Image image;
 
+        private CellViewModel _cellViewModel;
+        private CompositeDisposable _disposables = new();
+        private TweenStateMachine _stateMachine;
+        private bool _shadowed;
+        private bool _occupied;
+
+        private void Awake()
+        {
+            _stateMachine = new TweenStateMachine();
+            InitializeStateMachine();
+        }
+
+        private void Update()
+        {
+            _stateMachine.Tick();
+        }
 
         public void Bind(CellViewModel cellViewModel)
         {
             _cellViewModel = cellViewModel;
-            _cellViewModel.CellState.Subscribe(ChangeCellState).AddTo(_disposables);
-            _cellViewModel.Shadowed.Subscribe(AnimateShadow).AddTo(_disposables);
+            _cellViewModel.CellState.Subscribe(value => _occupied = value == CellStates.Occupied).AddTo(_disposables);
+            _cellViewModel.Shadowed.Subscribe(value =>_shadowed = value).AddTo(_disposables);
         }
+
+        private void InitializeStateMachine()
+        {
+            _stateMachine.AddState("normal", image.TTColor(Color.white, Duration));
+            _stateMachine.AddState("shadowed", image.TTColor(new Color(0.73f, 0.74f, 0.84f), Duration));
+            _stateMachine.AddState("occupied", image.TTColor(new Color(0.74f, 0.81f, 1f), Duration));
+
+            _stateMachine.AddTransition("normal", "occupied", Occupied);
+            _stateMachine.AddTransition("normal", "shadowed", Shadowed);
+            _stateMachine.AddTransition("shadowed", "occupied", Occupied);
+            _stateMachine.AddTransition("shadowed", "normal", () => !Shadowed());
+            _stateMachine.AddTransition("occupied", "normal", () => !Occupied());
+            _stateMachine.SetState("normal");
+        }
+
+        private bool Shadowed() => _shadowed;
+        private bool Occupied() => _occupied;
 
         private void OnDestroy()
         {
             _disposables.Dispose();
-        }
-
-        private void ChangeCellState(CellStates cellState)
-        {
-            if (cellState == CellStates.Empty)
-                AnimateNormal();
-            else if (cellState == CellStates.Occupied)
-                AnimateOccupied();
-            else
-                throw new ArgumentOutOfRangeException(nameof(cellState), cellState, null);
-        }
-
-        private void AnimateNormal()
-        {
-            cellAnimator.AnimateNormal();
-        }
-
-        private void AnimateOccupied()
-        {
-            cellAnimator.AnimateOccupied();
-        }
-
-        private void AnimateShadow(bool shadow)
-        {
-            if (_cellViewModel.CellState.Value == CellStates.Occupied)
-                return;
-            if(shadow)
-                cellAnimator.AnimateShadow();
-            else
-                cellAnimator.AnimateNormal();
         }
     }
 }
