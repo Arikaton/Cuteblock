@@ -389,7 +389,7 @@ namespace GameScripts.Game
                     {
                         completedColumns.Remove(column);
                         completedRows.Remove(row);
-                        completedSubgrids.Remove(GetSubgridId(row, column));
+                        completedSubgrids.Remove(GetSubgridId(column, row));
                     }
                 }
             }
