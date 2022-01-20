@@ -18,7 +18,6 @@ namespace GameScripts.UI
         private FieldViewModelContainer _fieldViewModelContainer;
         private FieldViewModel _fieldViewModel;
         private CellView[,] _cellViews;
-        private List<Vector2Int> _shadowedCells;
         private CompositeDisposable _disposables;
         private ShapeViewFactory _shapeViewFactory;
         
@@ -35,7 +34,6 @@ namespace GameScripts.UI
         {
             _cellViews = new CellView[9, 9];
             _disposables = new CompositeDisposable();
-            _shadowedCells = new List<Vector2Int>();
         }
 
         private void Start()
@@ -121,42 +119,10 @@ namespace GameScripts.UI
         public void OnHoveredCellChanged(Vector2Int hoveredCell)
         {
             if (hoveredCell == new Vector2Int(-1, -1))
-            {
-                CancelAllShadowing();
                 return;
-            }
             var shapeViewModel = _fieldViewModel.availableShapes[CurrentShapeIndex];
-            
-            if (_fieldViewModel.PreviewShapePlacement(shapeViewModel.Uid,
-                shapeViewModel.Rotation.Value,
-                hoveredCell,
-                out List<Vector2Int> occupiedCells))
-            {
-                AnimateCellPreviewForPlacement(occupiedCells);
-            }
-            else
-            {
-                CancelAllShadowing();
-            }
-        }
 
-        private void AnimateCellPreviewForPlacement(List<Vector2Int> shadowedCells)
-        {
-            CancelAllShadowing();
-            foreach (var cell in shadowedCells)
-            {
-                _shadowedCells.Add(cell);
-                _fieldViewModel.CellViewModels[cell.x, cell.y].TurnOnShadow();
-            }
-        }
-
-        private void CancelAllShadowing()
-        {
-            foreach (var cell in _shadowedCells)
-            {
-                _fieldViewModel.CellViewModels[cell.x, cell.y].TurnOffShadow();
-            }
-            _shadowedCells.Clear();
+            _fieldViewModel.PreviewShapePlacement(shapeViewModel.Uid, shapeViewModel.Rotation.Value, hoveredCell);
         }
 
         private void AddNewAvailableShape(int shapeIndex)

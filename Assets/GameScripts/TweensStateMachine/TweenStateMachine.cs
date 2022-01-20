@@ -28,7 +28,7 @@ namespace TweensStateMachine
             if (_currentState == null)
             {
                 throw new InvalidOperationException(
-                    "You need to set current state before using animator. (Use SetState() before first Tick())");
+                    "You need to set current state before using state machine. (Use SetState() before first Tick())");
             }
             var condition = GetTransition();
             if (condition != null)
@@ -44,7 +44,7 @@ namespace TweensStateMachine
         {
             if (_states.All(x => x.StateName != stateName))
                 throw new InvalidOperationException(
-                    $"State {stateName} doesn't exist. You must add state before adding transition for it");
+                    $"State {stateName} doesn't exist. You must add state before seting it active");
         
             var state = _states.Find(x => x.StateName == stateName);
             if(state == _currentState)

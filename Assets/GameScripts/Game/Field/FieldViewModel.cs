@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
@@ -18,6 +19,8 @@ namespace GameScripts.Game
         private FieldModel _fieldModel;
         private IShapeCatalog _shapeCatalog;
         private RectInt _rect;
+        private List<Vector2Int> _shadowedCells;
+        private List<Vector2Int> _highlightedCells;
 
         public FieldViewModel(FieldModel fieldModel, IShapeCatalog shapeCatalog)
         {
@@ -29,6 +32,8 @@ namespace GameScripts.Game
             shapesOnField = new List<ShapeViewModel>();
             availableShapes = new ShapeViewModel[3];
             CellViewModels = new CellViewModel[9, 9];
+            _shadowedCells = new List<Vector2Int>();
+            _highlightedCells = new List<Vector2Int>();
             for (var x = 0; x < 9; x++)
             {
                 for (var y = 0; y < 9; y++)
@@ -275,7 +280,7 @@ namespace GameScripts.Game
             }
             return cells;
         }
-        
+
         private HashSet<Vector2Int> AllCellsInSubgrid(int subgridId)
         {
             var x0 = subgridId % 3 * 3;
@@ -291,11 +296,22 @@ namespace GameScripts.Game
             return cells;
         }
 
-        public bool PreviewShapePlacement(int uid, Rotation rotation, Vector2Int cell, out List<Vector2Int> occupiedCells)
+        public void PreviewShapePlacement(int uid, Rotation rotation, Vector2Int cell)
         {
-            occupiedCells = new List<Vector2Int>();
-            if (!CanPlaceShape(uid, rotation, cell)) 
-                return false;
+            if (cell == new Vector2Int(-1, -1))
+            {
+                CancelAllShadowing();
+                CancelAllHighlighting();
+                return;
+            }
+            
+            var occupiedCells = new HashSet<Vector2Int>();
+            if (!CanPlaceShape(uid, rotation, cell))
+            {
+                CancelAllShadowing();
+                CancelAllHighlighting();
+                return;
+            }
 
             var shapeData = _shapeCatalog.Shapes[uid];
             foreach (var point in shapeData.PointsAfterRotation(rotation))
@@ -303,7 +319,9 @@ namespace GameScripts.Game
                 var pointPositionOnGrid = cell + point;
                 occupiedCells.Add(pointPositionOnGrid);
             }
-            return true;
+            ShadowCells(occupiedCells);
+            var highlightedCells = FindCellsToDeleteAfterShapePlacement(occupiedCells);
+            HighlightCells(highlightedCells);
         }
 
         private bool ShapeCanBePlaced(int uid, Rotation rotation)
@@ -317,6 +335,73 @@ namespace GameScripts.Game
                 }
             }
             return false;
+        }
+
+        private void ShadowCells(HashSet<Vector2Int> shadowedCells)
+        {
+            CancelAllShadowing();
+            foreach (var cell in shadowedCells)
+            {
+                _shadowedCells.Add(cell);
+                CellViewModels[cell.x, cell.y].TurnOnShadow();
+            }
+        }
+
+        private void HighlightCells(HashSet<Vector2Int> highlightedCells)
+        {
+            CancelAllHighlighting();
+            foreach (var cell in highlightedCells)
+            {
+                _highlightedCells.Add(cell);
+                CellViewModels[cell.x, cell.y].TurnOnHighlight();
+            }
+        }
+
+        private void CancelAllShadowing()
+        {
+            foreach (var cell in _shadowedCells)
+            {
+                CellViewModels[cell.x, cell.y].TurnOffShadow();
+            }
+            _shadowedCells.Clear();
+        }
+
+        private void CancelAllHighlighting()
+        {
+            foreach (var cell in _highlightedCells)
+            {
+                CellViewModels[cell.x, cell.y].TurnOffHighlight();
+            }
+        }
+
+        private HashSet<Vector2Int> FindCellsToDeleteAfterShapePlacement(HashSet<Vector2Int> occupiedPoints)
+        {
+            HashSet<Vector2Int> cellsToDelete = new HashSet<Vector2Int>();
+            var completedRows = Enumerable.Range(0, 9).ToList();
+            var completedColumns = Enumerable.Range(0, 9).ToList();
+            var completedSubgrids = Enumerable.Range(0, 9).ToList();
+
+            for (int column = 0; column < 9; column++)
+            {
+                for (int row = 0; row < 9; row++)
+                {
+                    if (_fieldModel.FieldMatrix[column, row].uid == 0 && ! occupiedPoints.Contains(new Vector2Int(column, row)))
+                    {
+                        completedColumns.Remove(column);
+                        completedRows.Remove(row);
+                        completedSubgrids.Remove(GetSubgridId(row, column));
+                    }
+                }
+            }
+
+            foreach (var row in completedRows)
+                cellsToDelete.UnionWith(AllCellsInRow(row));
+            foreach (var column in completedColumns) 
+                cellsToDelete.UnionWith(AllCellsInColumn(column));
+            foreach (var subgrid in completedSubgrids)
+                cellsToDelete.UnionWith(AllCellsInSubgrid(subgrid));
+
+            return cellsToDelete;
         }
     }
 }
