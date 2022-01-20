@@ -31,5 +31,10 @@ namespace GameScripts.Game
         {
             return points.Select(point => point.RotateBy(rot)).ToList();
         }
+
+        public Vector2 OriginCenterToShapeCenterDistanceNormalized(Rotation rotation)
+        {
+            return (new Vector2(rect.x * 0.5f, rect.y * 0.5f) - new Vector2(0.5f, 0.5f)).RotateBy(rotation);
+        }
     }
 }

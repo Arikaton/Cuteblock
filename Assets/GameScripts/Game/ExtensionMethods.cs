@@ -32,6 +32,12 @@ namespace GameScripts.Game
             var rm = GetRotationMatrix(rotation);
             return new Vector2Int(vector.x * rm[0, 0] + vector.y * rm[0, 1], vector.x * rm[1, 0] + vector.y * rm[1, 1]);
         }
+        
+        public static Vector2 RotateBy(this Vector2 vector, Rotation rotation)
+        {
+            var rm = GetRotationMatrix(rotation);
+            return new Vector2(vector.x * rm[0, 0] + vector.y * rm[0, 1], vector.x * rm[1, 0] + vector.y * rm[1, 1]);
+        }
 
         private static int[,] GetRotationMatrix(Rotation rotation)
         {

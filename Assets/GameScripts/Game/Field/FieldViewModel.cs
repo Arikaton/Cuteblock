@@ -50,14 +50,15 @@ namespace GameScripts.Game
             for (int i = 0; i < _fieldModel.AvailableShapes.Length; i++)
             {
                 var shapeModel = _fieldModel.AvailableShapes[i];
-                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid].Rect);
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid].Rect, _shapeCatalog.Shapes[shapeModel.Uid]);
                 availableShapes[i] = shapeViewModel;
             }
             //TODO: Предвартельно найти все сломанные фигуры и заменить на целые
             var shapeModelsOnField = FindAllShapeModelsOnField();
             foreach (var foundShape in shapeModelsOnField)
             {
-                var shapeViewModel = new ShapeViewModel(foundShape.model, _shapeCatalog.Shapes[foundShape.model.Uid].Rect);
+                var shapeModel = foundShape.model;
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid].Rect, _shapeCatalog.Shapes[shapeModel.Uid]);
                 shapeViewModel.PlaceShapeAt(foundShape.origin);
                 shapesOnField.Add(shapeViewModel);
             }
@@ -133,7 +134,7 @@ namespace GameScripts.Game
                 var newShapeId = Random.Range(1, 3);
                 var newShapeRotation = Rotation.Deg0;
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
-                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId].Rect);
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId].Rect, _shapeCatalog.Shapes[newShapeId]);
                 availableShapes[i] = shapeViewModel;
                 OnAddNewAvailableShape.Execute(i);
             }

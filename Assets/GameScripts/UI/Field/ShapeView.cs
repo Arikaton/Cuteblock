@@ -71,11 +71,11 @@ namespace GameScripts.UI
         {
             if (!_hovering)
             {
-                return new Vector2Int(-1, -1);;
+                return new Vector2Int(-1, -1);
             }
             
             RectTransformUtility.ScreenPointToLocalPointInRectangle(_fieldRect,
-                GetRayOrigin(_viewModel.Rotation.Value),
+                GetRayOrigin(),
                 null, out var shapeOriginInField);
 
             var shapeOriginInFieldNormalized =
@@ -88,12 +88,40 @@ namespace GameScripts.UI
                 return new Vector2Int(-1, -1);
             }
 
-            var currentPlacementPosition = new Vector2Int(
-                Math.Clamp((int) (shapeOriginInFieldNormalized.x + 0.5f), 0, 8),
-                Math.Clamp((int) (shapeOriginInFieldNormalized.y + 0.5f), 0, 8)
-            );
+            var currentPlacementPosition = FindCurrentPlacementPosition(shapeOriginInFieldNormalized, _viewModel.Rotation.Value);
 
             return currentPlacementPosition;
+        }
+
+        private static Vector2Int FindCurrentPlacementPosition(Vector2 shapeOriginInFieldNormalized, Rotation rotation)
+        {
+            var x = shapeOriginInFieldNormalized.x;
+            var y = shapeOriginInFieldNormalized.y;
+            switch (rotation)
+            {
+                case Rotation.Deg0:
+                    return new Vector2Int(
+                Math.Clamp((int) (x + 0.5f), 0, 8),
+                Math.Clamp((int) (y + 0.5f), 0, 8)
+            );
+                case Rotation.Deg90:
+                    return new Vector2Int(
+                Math.Clamp((int) (x + 0.5f) - 1, 0, 8),
+                Math.Clamp((int) (y + 0.5f), 0, 8)
+            );
+                case Rotation.Deg180:
+                    return new Vector2Int(
+                Math.Clamp((int) (x + 0.5f) - 1, 0, 8),
+                Math.Clamp((int) (y + 0.5f) - 1, 0, 8)
+            );
+                case Rotation.Deg270:
+                    return new Vector2Int(
+                Math.Clamp((int) (x + 0.5f), 0, 8),
+                Math.Clamp((int) (y + 0.5f) - 1, 0, 8)
+            );
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(rotation), rotation, null);
+            }
         }
 
         private void LoadSprite()
@@ -118,9 +146,10 @@ namespace GameScripts.UI
 
         private Vector2 FindAnchoredPositionOnField(Vector2Int cell)
         {
-            return ((Vector2) cell * _cellSize) +
-                   new Vector2(_viewModel.Rect.x * _cellSize * 0.5f, _viewModel.Rect.y * _cellSize * 0.5f) -
-                   new Vector2(_fieldRect.rect.width * 0.5f, _fieldRect.rect.height * 0.5f);
+            var originCellCenter = (Vector2) cell * _cellSize -
+                                   new Vector2(_fieldRect.rect.width * 0.5f, _fieldRect.rect.height * 0.5f) +
+                                   new Vector2(_cellSize * 0.5f, _cellSize * 0.5f);
+            return originCellCenter + _viewModel.OriginCenterToShapeCenterDistanceNormalized() * _cellSize;
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -179,23 +208,11 @@ namespace GameScripts.UI
             _sequence.Insert(0.0f, shapeRect.DOScale(new Vector3(0.6f, 0.6f, 1f), AnimationSpeed).SetEase(Ease.InOutQuad));
         }
 
-        private Vector2 GetRayOrigin(Rotation rotation)
+        private Vector2 GetRayOrigin()
         {
             var corners = new Vector3[4];
             shapeRect.GetWorldCorners(corners);
-            switch (rotation)
-            {
-                case Rotation.Deg0:
-                    return corners[0];
-                case Rotation.Deg90:
-                    return corners[3];
-                case Rotation.Deg180:
-                    return corners[2];
-                case Rotation.Deg270:
-                    return corners[1];
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(rotation), rotation, null);
-            }
+            return corners[0];
         }
 
         private void HoveredCellChanged(Vector2Int cell)
