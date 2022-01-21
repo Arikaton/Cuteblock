@@ -47,13 +47,18 @@ namespace GameScripts.UI
             _stateMachine.AddState("highlighted", image.TTColor(new Color(0.46f, 1f, 0.65f), Duration));
 
             _stateMachine.AddTransition("normal", "occupied", Occupied);
-            _stateMachine.AddTransition("normal", "shadowed", Shadowed);
             _stateMachine.AddTransition("normal", "highlighted", Highlighted);
-            _stateMachine.AddTransition("shadowed", "occupied", Occupied);
+            _stateMachine.AddTransition("normal", "shadowed", Shadowed);
+            
             _stateMachine.AddTransition("shadowed", "normal", () => !Shadowed());
+            _stateMachine.AddTransition("shadowed", "highlighted", Highlighted);
+            
             _stateMachine.AddTransition("occupied", "normal", () => !Occupied());
             _stateMachine.AddTransition("occupied", "highlighted", Highlighted);
+
+            _stateMachine.AddTransition("highlighted", "normal", () => !Highlighted());
             _stateMachine.AddTransition("highlighted", "occupied", () => !Highlighted());
+
             _stateMachine.SetState("normal");
         }
 

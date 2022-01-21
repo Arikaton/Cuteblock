@@ -127,6 +127,7 @@ namespace GameScripts.Game
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId].Rect, _shapeCatalog.Shapes[newShapeId]);
                 shapeViewModel.PlaceShapeAt(cell);
+                shapeViewModel.CanBePlaced.Value = true;
                 shapesOnField.Add(shapeViewModel);
                 OnAddNewShapeOnField.Execute((shapeViewModel, 0));
             }
@@ -448,7 +449,7 @@ namespace GameScripts.Game
             {
                 for (int row = 0; row < 9; row++)
                 {
-                    if (_fieldModel.FieldMatrix[column, row].uid == 0 && ! occupiedPoints.Contains(new Vector2Int(column, row)))
+                    if (_fieldModel.FieldMatrix[column, row].uid == 0 && !occupiedPoints.Contains(new Vector2Int(column, row)))
                     {
                         completedColumns.Remove(column);
                         completedRows.Remove(row);
