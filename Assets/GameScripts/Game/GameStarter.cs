@@ -1,4 +1,3 @@
-using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -36,8 +35,8 @@ namespace GameScripts.Game
         public void StartGame()
         {
             var fieldModel = new FieldModel();
-            var shapeData1 = _shapeCatalog.Shapes[1];
-            var shapeData2 = _shapeCatalog.Shapes[2];
+            var shapeData1 = _shapeCatalog.Shapes[4];
+            var shapeData2 = _shapeCatalog.Shapes[5];
             var availableShape0 = new ShapeModel(shapeData1.Uid, Rotation.Deg90);
             var availableShape1 = new ShapeModel(shapeData2.Uid, Rotation.Deg90);
             var availableShape2 = new ShapeModel(shapeData1.Uid, Rotation.Deg90);

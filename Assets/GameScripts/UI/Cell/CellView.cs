@@ -34,7 +34,7 @@ namespace GameScripts.UI
         public void Bind(CellViewModel cellViewModel)
         {
             _cellViewModel = cellViewModel;
-            _cellViewModel.CellState.Subscribe(value => _occupied = value == CellStates.Occupied).AddTo(_disposables);
+            _cellViewModel.Occupied.Subscribe(value => _occupied = value ).AddTo(_disposables);
             _cellViewModel.Shadowed.Subscribe(value =>_shadowed = value).AddTo(_disposables);
             _cellViewModel.Highlighted.Subscribe(value => _highlighted = value).AddTo(_disposables);
         }

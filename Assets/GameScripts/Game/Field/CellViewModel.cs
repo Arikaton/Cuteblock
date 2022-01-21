@@ -4,27 +4,27 @@ namespace GameScripts.Game
 {
     public class CellViewModel
     {
-        private IReactiveProperty<CellStates> _cellState;
+        private IReactiveProperty<bool> _occupied;
         private IReactiveProperty<bool> _shadowed;
         private IReactiveProperty<bool> _highlighted;
         
-        public IReadOnlyReactiveProperty<CellStates> CellState;
+        public IReadOnlyReactiveProperty<bool> Occupied;
         public IReadOnlyReactiveProperty<bool> Shadowed;
         public IReadOnlyReactiveProperty<bool> Highlighted;
 
-        public CellViewModel(CellStates cellState)
+        public CellViewModel()
         {
-            _cellState = new ReactiveProperty<CellStates>(cellState);
+            _occupied = new ReactiveProperty<bool>(false);
             _shadowed = new ReactiveProperty<bool>(false);
             _highlighted = new ReactiveProperty<bool>(false);
-            CellState = _cellState;
+            Occupied = _occupied;
             Shadowed = _shadowed;
             Highlighted = _highlighted;
         }
 
-        public void ChangeState(CellStates cellState)
+        public void ChangeState(bool occupied)
         {
-            _cellState.Value = cellState;
+            _occupied.Value = occupied;
         }
 
         public void TurnOnShadow()

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using DG.Tweening;
 using GameScripts.Game;
 using UniRx;
@@ -40,7 +39,7 @@ namespace GameScripts.UI
         {
             SetupCells();
             _fieldViewModelContainer.FieldViewModel.Subscribe(Initialize).AddTo(_disposables);
-            _fieldViewModel.OnAddNewAvailableShape.Subscribe(AddNewAvailableShape).AddTo(_disposables);
+            _fieldViewModel.OnAddNewShapeOnField.Subscribe(AddNewShapeOnField).AddTo(_disposables);
         }
 
         public bool TryPlaceShape(Vector2Int cell)
@@ -118,17 +117,13 @@ namespace GameScripts.UI
 
         public void OnHoveredCellChanged(Vector2Int hoveredCell)
         {
-            if (hoveredCell == new Vector2Int(-1, -1))
-                return;
-            var shapeViewModel = _fieldViewModel.availableShapes[CurrentShapeIndex];
-
-            _fieldViewModel.PreviewShapePlacement(shapeViewModel.Uid, shapeViewModel.Rotation.Value, hoveredCell);
+            _fieldViewModel.PreviewShapePlacement(CurrentShapeIndex, hoveredCell);
         }
 
-        private void AddNewAvailableShape(int shapeIndex)
+        private void AddNewShapeOnField((ShapeViewModel viewModel, int index) shape)
         {
-            var shapeView = _shapeViewFactory.CreateShapeView(shapeIndex);
-            shapeView.Bind(_fieldViewModel.availableShapes[shapeIndex]);
+            var shapeView = _shapeViewFactory.CreateShapeView(shape.index);
+            shapeView.Bind(shape.viewModel);
         }
     }
 }

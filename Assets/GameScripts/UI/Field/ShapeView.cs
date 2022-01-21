@@ -54,7 +54,14 @@ namespace GameScripts.UI
             _viewModel = viewModel;
             _viewModel.PositionOnGrid.Subscribe(SnapToPositionOnGrid).AddTo(_disposables);
             _viewModel.CanBePlaced.Subscribe(SwitchAvailability).AddTo(_disposables);
+            _viewModel.Destroy.Subscribe(_ => DestroyShape()).AddTo(_disposables);
             LoadSprite();
+        }
+
+        private void DestroyShape()
+        {
+            _sequence?.Kill();
+            Destroy(gameObject);
         }
 
         private void Update()
