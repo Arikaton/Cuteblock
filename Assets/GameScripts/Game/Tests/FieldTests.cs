@@ -17,19 +17,19 @@ namespace GameScripts.Game.Tests
         [SetUp]
         public void Setup()
         {
-            _shapeT = new ShapeData(TestId, new Vector2Int(3, 2), (0, 0), (1, 0), (1, 1), (2, 0));
-            _fieldModel = new FieldModel();
-            var shapeCatalogMock = new Mock<IShapeCatalog>();
-            shapeCatalogMock.Setup(x => x.Shapes).Returns(new Dictionary<int, ShapeData> {{_shapeT.Uid, _shapeT}});
-            _shapeCatalog = shapeCatalogMock.Object;
-            _fieldViewModel = new FieldViewModel(_fieldModel, _shapeCatalog);
+            
         }
-    
+
         [Test]
-        public void EmptyField_CanPlaceShape()
+        public void FillRegionWithShapes_OutputIsCorrect()
         {
-            var canPlace = _fieldViewModel.CanPlaceShape(TestId, Rotation.Deg0, new Vector2Int(0,0));
-            Assert.IsTrue(canPlace);
+            var shapes = new List<ShapeData>()
+                {new(1, new Vector2Int(1, 1), (0, 0)), new(2, new Vector2Int(2, 1), (0, 0), (1, 0))};
+            
+            var cells = new HashSet<Vector2Int>
+                {new Vector2Int(0, 0), new Vector2Int(1, 1), new Vector2Int(2, 1), new Vector2Int(3, 1), new Vector2Int(4, 1)};
+
+            var output = FieldTools.FillPointsWithShapes(cells, shapes);
         }
 
         [TearDown]

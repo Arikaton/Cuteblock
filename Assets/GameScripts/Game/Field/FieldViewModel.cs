@@ -90,7 +90,7 @@ namespace GameScripts.Game
                 _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].uid = shapeViewModel.Uid;
                 _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].shapeRotation = shapeViewModel.Rotation.Value;
                 _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].positionInShape = point;
-                CellViewModels[pointPositionOnGrid.x, pointPositionOnGrid.y].ChangeState(true);
+                CellViewModels[pointPositionOnGrid.x, pointPositionOnGrid.y].SwitchOccupied(true);
             }
             
             PlaceShapeViewModel(shapeIndex, cell);
@@ -101,7 +101,7 @@ namespace GameScripts.Game
             ClearCells(cellsToDelete);
             DestroyShapes(shapesToDestroy);
             var brokenCells = FindBrokenShapesCells();
-            FillBrokenCells(brokenCells);
+            FillBrokenCellsAdvanced(brokenCells);
             CreateNewAvailableShapes(shapeIndex);
             CheckRemainingShapesAvailability();
             return true;
@@ -121,12 +121,35 @@ namespace GameScripts.Game
                     _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].uid = newShapeId;
                     _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].shapeRotation = newShapeRotation;
                     _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].positionInShape = point;
-                    CellViewModels[pointPositionOnGrid.x, pointPositionOnGrid.y].ChangeState(true);
+                    CellViewModels[pointPositionOnGrid.x, pointPositionOnGrid.y].SwitchOccupied(true);
                 }
                 
-                var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
+                var shapeModel = new ShapeModel(newShapeId, newShapeRotation);
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId].Rect, _shapeCatalog.Shapes[newShapeId]);
                 shapeViewModel.PlaceShapeAt(cell);
+                shapeViewModel.CanBePlaced.Value = true;
+                shapesOnField.Add(shapeViewModel);
+                OnAddNewShapeOnField.Execute((shapeViewModel, 0));
+            }
+        }
+
+        private void FillBrokenCellsAdvanced(HashSet<Vector2Int> brokenCells)
+        {
+            var regions = FieldTools.FillPointsWithShapes(brokenCells, _shapeCatalog.Shapes.Values.ToList());
+            foreach (var region in regions)
+            {
+                var shapeData = _shapeCatalog.Shapes[region.shapeId];
+                foreach (var point in shapeData.PointsAfterRotation(region.shapeRotation))
+                {
+                    var pointPositionOnGrid = region.origin + point;
+                    _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].uid = region.shapeId;
+                    _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].shapeRotation = region.shapeRotation;
+                    _fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].positionInShape = point;
+                    CellViewModels[pointPositionOnGrid.x, pointPositionOnGrid.y].SwitchOccupied(true);
+                }
+                var shapeModel = new ShapeModel(region.shapeId, region.shapeRotation);
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[region.shapeId].Rect, _shapeCatalog.Shapes[region.shapeId]);
+                shapeViewModel.PlaceShapeAt(region.origin);
                 shapeViewModel.CanBePlaced.Value = true;
                 shapesOnField.Add(shapeViewModel);
                 OnAddNewShapeOnField.Execute((shapeViewModel, 0));
@@ -312,7 +335,7 @@ namespace GameScripts.Game
             }
             _fieldModel.FieldMatrix[cell.x, cell.y].uid = 0;
             _fieldModel.FieldMatrix[cell.x, cell.y].hp = 0;
-            CellViewModels[cell.x, cell.y].ChangeState(false);
+            CellViewModels[cell.x, cell.y].SwitchOccupied(false);
         }
 
         private int GetSubgridId(int x, int y)

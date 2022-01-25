@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace GameScripts.Game
@@ -9,6 +11,38 @@ namespace GameScripts.Game
         public static readonly int[,] rotationMatrix90 = new int[2, 2] {{0, -1}, {1, 0}};
         public static readonly int[,] rotationMatrix180 = new int[2, 2] {{-1, 0}, {0, -1}};
         public static readonly int[,] rotationMatrix270 = new int[2, 2] {{0, 1}, {-1, 0}};
+
+        public static readonly Vector2Int[] neighbours = new []
+        {
+            new Vector2Int(1, 0),
+            new Vector2Int(1, -1),
+            new Vector2Int(0, -1),
+            new Vector2Int(-1, -1),
+            new Vector2Int(-1, 0),
+            new Vector2Int(-1, 1),
+            new Vector2Int(0, 1),
+            new Vector2Int(1, 1)
+        }; // TODO: Поменять порядок соседей
+
+        public static IEnumerable<Vector2Int> Neighbours(this Vector2Int vector)
+        {
+            return neighbours.Select(neighbour => vector + neighbour);
+        }
+        
+        public static int Perimeter(this Vector2Int vector)
+        {
+            return vector.x + vector.y;
+        }
+
+        public static bool IsDiagonal(this Vector2Int first, Vector2Int second)
+        {
+            return first.x != second.x && first.y != second.y;
+        }
+        
+        public static bool SameRect(this Vector2Int first, Vector2Int second)
+        {
+            return (first.x == second.x && first.y == second.y) || (first.x == second.y && first.y == second.x);
+        }
 
         public static int AngleValue(this Rotation rotation)
         {

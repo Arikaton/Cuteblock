@@ -22,7 +22,7 @@ namespace GameScripts.Game
             Highlighted = _highlighted;
         }
 
-        public void ChangeState(bool occupied)
+        public void SwitchOccupied(bool occupied)
         {
             _occupied.Value = occupied;
         }
