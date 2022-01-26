@@ -92,26 +92,34 @@ namespace GameScripts.Game
                 return CreateRegionsListFromGraph(region);
             }
 
-            while (regionsSet.Count > 1)
+            Region head = null;
+            while (regionsSet.Count > 0)
             {
                 var minRegion = regionsSet.Min();
                 regionsSet.Remove(minRegion);
-                var minNeighbour = minRegion.neighbours.Min(); // TODO: Проверять всех соседей, а не только минимального
-                if (Join(minRegion, minNeighbour, out var createdRegion))
+                bool joined = false;
+                foreach (var neighbour in minRegion.neighbours.OrderByDescending(region => region.cells.Count))
                 {
-                    regionsSet.Add(createdRegion);
-                    regionsSet.Remove(minNeighbour);
+                    if (Join(minRegion, neighbour, out var createdRegion))
+                    {
+                        regionsSet.Add(createdRegion);
+                        regionsSet.Remove(neighbour);
+                        joined = true;
+                        head = createdRegion;
+                        break;
+                    }
                 }
-                else
-                {
-                    FindSuitableShape(minRegion.cells, sortedShapes, minRegion.rect, out var placementData);
-                    minRegion.shapeId = placementData.shapeId;
-                    minRegion.origin = placementData.origin;
-                    minRegion.shapeRotation = placementData.rotation;
-                }
+                if (joined)
+                    continue;
+                
+                FindSuitableShape(minRegion.cells, sortedShapes, minRegion.rect, out var placementData);
+                minRegion.shapeId = placementData.shapeId;
+                minRegion.origin = placementData.origin;
+                minRegion.shapeRotation = placementData.rotation;
+                head = minRegion;
             }
 
-            return CreateRegionsListFromGraph(regionsSet.First());
+            return CreateRegionsListFromGraph(head);
 
             bool Join(Region region, Region neighbour, out Region createdRegion)
             {

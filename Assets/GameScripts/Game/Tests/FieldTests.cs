@@ -27,7 +27,7 @@ namespace GameScripts.Game.Tests
                 {new(1, new Vector2Int(1, 1), (0, 0)), new(2, new Vector2Int(2, 1), (0, 0), (1, 0))};
             
             var cells = new HashSet<Vector2Int>
-                {new Vector2Int(0, 0), new Vector2Int(1, 1), new Vector2Int(2, 1), new Vector2Int(3, 1), new Vector2Int(4, 1)};
+                {new Vector2Int(0, 0), new Vector2Int(1, 1)};
 
             var output = FieldTools.FillPointsWithShapes(cells, shapes);
         }

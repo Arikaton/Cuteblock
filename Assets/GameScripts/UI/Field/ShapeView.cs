@@ -22,7 +22,7 @@ namespace GameScripts.UI
         private ShapeViewModel _viewModel;
         private IShapeSpritesProvider _shapeSpritesProvider;
         private FieldView _fieldView;
-        private RectTransform _fieldRect;
+        private RectTransform _shapesContainer;
         private Canvas _mainCanvas;
         private int _shapeIndex;
         private bool _placedOnField;
@@ -34,19 +34,19 @@ namespace GameScripts.UI
 
         private bool DragAvailable => !_placedOnField && _available;
 
-        public void Initialize(RectTransform fieldRect, IShapeSpritesProvider shapeSpritesProvider, int shapeIndex,
+        public void Initialize(RectTransform shapesContainer, IShapeSpritesProvider shapeSpritesProvider, int shapeIndex,
             FieldView fieldView)
         {
-            _fieldRect = fieldRect;
+            _shapesContainer = shapesContainer;
             _shapeSpritesProvider = shapeSpritesProvider;
             _shapeIndex = shapeIndex;
             _fieldView = fieldView;
             _hoveredCell = new ReactiveProperty<Vector2Int>(new Vector2Int(-1, -1));
-            _cellSize = _fieldRect.sizeDelta.x / 9;
+            _cellSize = _shapesContainer.sizeDelta.x / 9;
             containerRect.anchoredPosition = Vector2.zero;
             _mainCanvas = GetComponentInParent<Canvas>().rootCanvas;
             shapeRect.localScale = new Vector3(0.6f, 0.6f, 1f);
-            _hoveredCell.DistinctUntilChanged().Subscribe(HoveredCellChanged).AddTo(_disposables);
+            _hoveredCell.DistinctUntilChanged().Subscribe(ChangeHoveredCell).AddTo(_disposables);
         }
 
         public void Bind(ShapeViewModel viewModel)
@@ -81,13 +81,13 @@ namespace GameScripts.UI
                 return new Vector2Int(-1, -1);
             }
             
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(_fieldRect,
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(_shapesContainer,
                 GetRayOrigin(),
                 null, out var shapeOriginInField);
 
             var shapeOriginInFieldNormalized =
-                (shapeOriginInField + new Vector2(_fieldRect.rect.width * 0.5f, _fieldRect.rect.height * 0.5f))
-                / (_fieldRect.rect.width / 9);
+                (shapeOriginInField + new Vector2(_shapesContainer.rect.width * 0.5f, _shapesContainer.rect.height * 0.5f))
+                / (_shapesContainer.rect.width / 9);
 
             if (shapeOriginInFieldNormalized.x < -0.49f || shapeOriginInFieldNormalized.x >= 9.5f ||
                 shapeOriginInFieldNormalized.y < -0.49f || shapeOriginInFieldNormalized.y >= 9.5f)
@@ -144,7 +144,7 @@ namespace GameScripts.UI
                 return;
             _sequence?.Kill();
             _sequence = DOTween.Sequence();
-            containerRect.SetParent(_fieldRect);
+            containerRect.SetParent(_shapesContainer);
             containerRect.anchoredPosition = FindAnchoredPositionOnField(cell);
             _placedOnField = true;
             _sequence.Insert(0.0f, shapeRect.DOAnchorPos(Vector2.zero, AnimationSpeed).SetEase(Ease.InOutQuad));
@@ -154,7 +154,7 @@ namespace GameScripts.UI
         private Vector2 FindAnchoredPositionOnField(Vector2Int cell)
         {
             var originCellCenter = (Vector2) cell * _cellSize -
-                                   new Vector2(_fieldRect.rect.width * 0.5f, _fieldRect.rect.height * 0.5f) +
+                                   new Vector2(_shapesContainer.rect.width * 0.5f, _shapesContainer.rect.height * 0.5f) +
                                    new Vector2(_cellSize * 0.5f, _cellSize * 0.5f);
             return originCellCenter + _viewModel.OriginCenterToShapeCenterDistanceNormalized() * _cellSize;
         }
@@ -222,9 +222,9 @@ namespace GameScripts.UI
             return corners[0];
         }
 
-        private void HoveredCellChanged(Vector2Int cell)
+        private void ChangeHoveredCell(Vector2Int cell)
         {
-            _fieldView.OnHoveredCellChanged(cell);
+            _fieldView.ChangeHoveredCell(cell);
         }
 
         private void SwitchAvailability(bool available)

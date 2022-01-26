@@ -47,10 +47,4 @@ namespace GameScripts.Game
             _highlighted.Value = false;
         }
     }
-
-    public enum CellStates
-    {
-        Empty = 0,
-        Occupied = 1
-    }
 }

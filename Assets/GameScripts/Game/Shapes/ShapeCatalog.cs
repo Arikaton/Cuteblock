@@ -9,6 +9,8 @@ namespace GameScripts.Game
         public List<ShapeData> shapes;
         private Dictionary<int, ShapeData> _shapes;
 
+        public List<ShapeData> AllShapes => shapes;
+
         public Dictionary<int, ShapeData> Shapes
         {
             get

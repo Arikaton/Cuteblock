@@ -9,27 +9,28 @@ namespace GameScripts.Game
 {
     public class FieldViewModel
     {
-        public List<ShapeViewModel> shapesOnField;
-        public ShapeViewModel[] availableShapes;
+        public IReadOnlyReactiveCollection<ShapeViewModel> ShapesOnField;
+        public IReadOnlyReactiveCollection<ShapeViewModel> AvailableShapes;
         public CellViewModel[,] CellViewModels;
         public ReactiveCommand OnGameFinished;
-        public ReactiveCommand<(ShapeViewModel shape, int shapeIndex)> OnAddNewShapeOnField;
 
+        private IReactiveCollection<ShapeViewModel> _shapesOnField;
+        private IReactiveCollection<ShapeViewModel> _availableShapes;
         private FieldModel _fieldModel;
         private IShapeCatalog _shapeCatalog;
-        private RectInt _rect;
         private List<Vector2Int> _shadowedCells;
         private List<Vector2Int> _highlightedCells;
+        private RectInt _rect = new RectInt(0, 0, 9, 9);
 
         public FieldViewModel(FieldModel fieldModel, IShapeCatalog shapeCatalog)
         {
             _fieldModel = fieldModel;
             _shapeCatalog = shapeCatalog;
-            OnAddNewShapeOnField = new ReactiveCommand<(ShapeViewModel shape, int shapeIndex)>();
             OnGameFinished = new ReactiveCommand();
-            _rect = new RectInt(0, 0, 9, 9);
-            shapesOnField = new List<ShapeViewModel>();
-            availableShapes = new ShapeViewModel[3];
+            _shapesOnField = new ReactiveCollection<ShapeViewModel>();
+            _availableShapes = new ReactiveCollection<ShapeViewModel>();
+            ShapesOnField = _shapesOnField;
+            AvailableShapes = _availableShapes;
             CellViewModels = new CellViewModel[9, 9];
             _shadowedCells = new List<Vector2Int>();
             _highlightedCells = new List<Vector2Int>();
@@ -37,8 +38,9 @@ namespace GameScripts.Game
             {
                 for (var y = 0; y < 9; y++)
                 {
-                    var cellState = fieldModel.FieldMatrix[x, y].uid == 0 ? CellStates.Empty : CellStates.Occupied;
+                    var cellOccupied = fieldModel.FieldMatrix[x, y].uid != 0;
                     CellViewModels[x, y] = new CellViewModel();
+                    CellViewModels[x, y].SwitchOccupied(cellOccupied);
                 }
             }
             Initialize();
@@ -50,7 +52,7 @@ namespace GameScripts.Game
             {
                 var shapeModel = _fieldModel.AvailableShapes[i];
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid].Rect, _shapeCatalog.Shapes[shapeModel.Uid]);
-                availableShapes[i] = shapeViewModel;
+                _availableShapes.Insert(i, shapeViewModel);
             }
             //TODO: Предвартельно найти все сломанные фигуры и заменить на целые
             var shapeModelsOnField = FindAllShapeModelsOnField();
@@ -59,7 +61,7 @@ namespace GameScripts.Game
                 var shapeModel = foundShape.model;
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid].Rect, _shapeCatalog.Shapes[shapeModel.Uid]);
                 shapeViewModel.PlaceShapeAt(foundShape.origin);
-                shapesOnField.Add(shapeViewModel);
+                _shapesOnField.Add(shapeViewModel);
             }
             CheckRemainingShapesAvailability();
         }
@@ -80,7 +82,7 @@ namespace GameScripts.Game
 
         public bool PlaceShape(int shapeIndex, Vector2Int cell)
         {
-            var shapeViewModel = availableShapes[shapeIndex];
+            var shapeViewModel = _availableShapes[shapeIndex];
             if (!CanPlaceShape(shapeViewModel.Uid, shapeViewModel.Rotation.Value, cell))
                 return false;
             var shapeData = _shapeCatalog.Shapes[shapeViewModel.Uid];
@@ -128,14 +130,13 @@ namespace GameScripts.Game
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId].Rect, _shapeCatalog.Shapes[newShapeId]);
                 shapeViewModel.PlaceShapeAt(cell);
                 shapeViewModel.CanBePlaced.Value = true;
-                shapesOnField.Add(shapeViewModel);
-                OnAddNewShapeOnField.Execute((shapeViewModel, 0));
+                _shapesOnField.Add(shapeViewModel);
             }
         }
 
         private void FillBrokenCellsAdvanced(HashSet<Vector2Int> brokenCells)
         {
-            var regions = FieldTools.FillPointsWithShapes(brokenCells, _shapeCatalog.Shapes.Values.ToList());
+            var regions = FieldTools.FillPointsWithShapes(brokenCells, _shapeCatalog.AllShapes);
             foreach (var region in regions)
             {
                 var shapeData = _shapeCatalog.Shapes[region.shapeId];
@@ -151,8 +152,7 @@ namespace GameScripts.Game
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[region.shapeId].Rect, _shapeCatalog.Shapes[region.shapeId]);
                 shapeViewModel.PlaceShapeAt(region.origin);
                 shapeViewModel.CanBePlaced.Value = true;
-                shapesOnField.Add(shapeViewModel);
-                OnAddNewShapeOnField.Execute((shapeViewModel, 0));
+                _shapesOnField.Add(shapeViewModel);
             }
         }
 
@@ -161,7 +161,7 @@ namespace GameScripts.Game
             foreach (var shape in shapesToDestroy)
             {
                 shape.Destroy.Execute();
-                shapesOnField.Remove(shape);
+                _shapesOnField.Remove(shape);
             }
         }
 
@@ -179,7 +179,7 @@ namespace GameScripts.Game
                 var shapeOrigin = cellPosition - cell.positionInShape;
                 foreach (var shapePoint in shapeData.PointsAfterRotation(cell.shapeRotation))
                     visitedCells.Add(shapeOrigin + shapePoint);
-                var shapeOnField = shapesOnField.Find(x => x.PositionOnGrid.Value == shapeOrigin);
+                var shapeOnField = _shapesOnField.First(x => x.PositionOnGrid.Value == shapeOrigin);
                 if (shapeOnField == null)
                     throw new InvalidOperationException("Field contains occupied cells which do not belong to any shapes");
                 foundShapes.Add(shapeOnField);
@@ -190,7 +190,7 @@ namespace GameScripts.Game
         private void CheckRemainingShapesAvailability()
         {
             bool gameFinished = true;
-            foreach (var shape in availableShapes)
+            foreach (var shape in _availableShapes)
             {
                 if (shape == null) continue;
                 shape.CanBePlaced.Value = ShapeCanBePlaced(shape.Uid, shape.Rotation.Value);
@@ -203,15 +203,16 @@ namespace GameScripts.Game
 
         private void PlaceShapeViewModel(int shapeIndex, Vector2Int cell)
         {
-            var shapeViewModel = availableShapes[shapeIndex];
+            var shapeViewModel = _availableShapes[shapeIndex];
             shapeViewModel.PlaceShapeAt(cell);
-            shapesOnField.Add(shapeViewModel);
+            _shapesOnField.Insert(_shapesOnField.Count, null);
+            _shapesOnField[_shapesOnField.Count - 1] = shapeViewModel;
         }
 
         private void CreateNewAvailableShapes(int shapeIndex)
         {
-            availableShapes[shapeIndex] = null;
-            if (availableShapes[0] != null || availableShapes[1] != null || availableShapes[2] != null)
+            _availableShapes[shapeIndex] = null;
+            if (_availableShapes[0] != null || _availableShapes[1] != null || _availableShapes[2] != null)
                 return;
 
             for (int i = 0; i < 3; i++)
@@ -220,8 +221,7 @@ namespace GameScripts.Game
                 var newShapeRotation = Rotation.Deg0;
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId].Rect, _shapeCatalog.Shapes[newShapeId]);
-                availableShapes[i] = shapeViewModel;
-                OnAddNewShapeOnField.Execute((shapeViewModel, i));
+                _availableShapes.Insert(i, shapeViewModel);
             }
         }
 
@@ -343,11 +343,6 @@ namespace GameScripts.Game
             return x / 3 + y / 3 * 3;
         }
 
-        private int GetSubgridId(Vector2Int cell)
-        {
-            return GetSubgridId(cell.x, cell.y);
-        }
-
         private HashSet<Vector2Int> AllCellsInColumn(int column)
         {
             var cells = new HashSet<Vector2Int>();
@@ -391,7 +386,7 @@ namespace GameScripts.Game
                 CancelAllHighlighting();
                 return;
             }
-            var shapeViewModel = availableShapes[shapeIndex];
+            var shapeViewModel = _availableShapes[shapeIndex];
             var occupiedCells = new HashSet<Vector2Int>();
             if (!CanPlaceShape(shapeViewModel.Uid, shapeViewModel.Rotation.Value, cell))
             {

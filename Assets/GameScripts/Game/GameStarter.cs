@@ -15,11 +15,6 @@ namespace GameScripts.Game
             _disposables = new CompositeDisposable();
         }
 
-        private void Start()
-        {
-            StartGame();
-        }
-
         private void OnDestroy()
         {
             _disposables.Dispose();
