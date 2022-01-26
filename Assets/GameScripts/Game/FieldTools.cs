@@ -194,13 +194,13 @@ namespace GameScripts.Game
             
             bool ShapeWithRotationCanBePlaced(ShapeData shape, Rotation rotation, Vector2Int cell)
             {
+                var shapePointsOnField = new HashSet<Vector2Int>();
                 foreach (var point in shape.PointsAfterRotation(rotation))
                 {
-                    var pointPositionOnGrid = cell + point;
-                    if (!cells.Contains(pointPositionOnGrid))
-                        return false;
+                    var pointFieldPosition = cell + point;
+                    shapePointsOnField.Add(pointFieldPosition);
                 }
-                return true;
+                return shapePointsOnField.SetEquals(cells);
             }
         }
 
