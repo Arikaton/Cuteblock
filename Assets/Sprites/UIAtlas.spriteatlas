@@ -69,6 +69,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 04e35a84d1b77b24c898054942d607fa, type: 3}
   - {fileID: 21300000, guid: be8ccf94f1fa61a43b7b870a57a8ebf1, type: 3}
   - {fileID: 21300000, guid: bba296c479a5646498d3c70de8ea9397, type: 3}
+  - {fileID: 21300000, guid: 3792adc473f019145b7fb923ef281dbb, type: 3}
   - {fileID: 21300000, guid: dc35f4d4f01e34635b510f6c711ae60f, type: 3}
   - {fileID: 21300000, guid: 8fbc07e43f4ed6a4bb33a9f3fb5e531d, type: 3}
   - {fileID: 21300000, guid: 2b13b2156dc1e154d9c7009fb22cfd4c, type: 3}
@@ -142,6 +143,7 @@ SpriteAtlas:
   - daily_challenge
   - selected_icon
   - share
+  - bg_square_8_8
   - second_chance
   - square_mini
   - daily_reminder

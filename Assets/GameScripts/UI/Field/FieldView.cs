@@ -105,7 +105,7 @@ namespace GameScripts.UI
             }
 
             var sequence = DOTween.Sequence();
-            sequence.PrependInterval(1);
+            sequence.PrependInterval(0.3f);
             sequence.AppendCallback(() => gridLayout.enabled = false);
         }
 

@@ -11,7 +11,7 @@ namespace GameScripts.UI
 {
     public class ShapeView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler
     {
-        private const float ShapeStartingOffset = 0.2f;
+        private const float ShapeStartingOffset = 0.13f;
         private const float AnimationSpeed = 0.15f;
         
         public RectTransform containerRect;

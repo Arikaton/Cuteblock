@@ -10,7 +10,11 @@ namespace GameScripts.UI
     public class CellView : MonoBehaviour
     {
         private const float Duration = 0.15f;
-        
+        private const string StateNormal = "normal";
+        private const string StateShadowed = "shadowed";
+        private const string StateOccupied = "occupied";
+        private const string StateHighlighted = "highlighted";
+
         [SerializeField] private Image image;
 
         private CellViewModel _cellViewModel;
@@ -41,25 +45,25 @@ namespace GameScripts.UI
 
         private void InitializeStateMachine()
         {
-            _stateMachine.AddState("normal", image.TTColor(Color.white, Duration));
-            _stateMachine.AddState("shadowed", image.TTColor(new Color(0.73f, 0.74f, 0.84f), Duration));
-            _stateMachine.AddState("occupied", image.TTColor(new Color(0.74f, 0.81f, 1f), Duration));
-            _stateMachine.AddState("highlighted", image.TTColor(new Color(0.46f, 1f, 0.65f), Duration));
+            _stateMachine.AddState(StateNormal, image.TTColor(Color.white, Duration));
+            _stateMachine.AddState(StateShadowed, image.TTColor(new Color(0.73f, 0.74f, 0.84f), Duration));
+            _stateMachine.AddState(StateOccupied, image.TTColor(new Color(0.74f, 0.81f, 1f), Duration));
+            _stateMachine.AddState(StateHighlighted, image.TTColor(new Color(0.46f, 1f, 0.65f), Duration));
 
-            _stateMachine.AddTransition("normal", "occupied", Occupied);
-            _stateMachine.AddTransition("normal", "highlighted", Highlighted);
-            _stateMachine.AddTransition("normal", "shadowed", Shadowed);
+            _stateMachine.AddTransition(StateNormal, StateOccupied, Occupied);
+            _stateMachine.AddTransition(StateNormal, StateHighlighted, Highlighted);
+            _stateMachine.AddTransition(StateNormal, StateShadowed, Shadowed);
             
-            _stateMachine.AddTransition("shadowed", "normal", () => !Shadowed());
-            _stateMachine.AddTransition("shadowed", "highlighted", Highlighted);
+            _stateMachine.AddTransition(StateShadowed, StateNormal, () => !Shadowed());
+            _stateMachine.AddTransition(StateShadowed, StateHighlighted, Highlighted);
             
-            _stateMachine.AddTransition("occupied", "normal", () => !Occupied());
-            _stateMachine.AddTransition("occupied", "highlighted", Highlighted);
+            _stateMachine.AddTransition(StateOccupied, StateNormal, () => !Occupied());
+            _stateMachine.AddTransition(StateOccupied, StateHighlighted, Highlighted);
 
-            _stateMachine.AddTransition("highlighted", "normal", () => !Highlighted());
-            _stateMachine.AddTransition("highlighted", "occupied", () => !Highlighted());
+            _stateMachine.AddTransition(StateHighlighted, StateNormal, () => !Highlighted());
+            _stateMachine.AddTransition(StateHighlighted, StateOccupied, () => !Highlighted());
 
-            _stateMachine.SetState("normal");
+            _stateMachine.SetState(StateNormal);
         }
 
         private bool Shadowed() => _shadowed;
