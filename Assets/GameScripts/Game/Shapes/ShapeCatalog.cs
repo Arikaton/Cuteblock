@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace GameScripts.Game
@@ -18,7 +19,7 @@ namespace GameScripts.Game
                 if (_shapes == null)
                 {
                     _shapes = new Dictionary<int, ShapeData>();
-                    foreach (var shape in shapes) Shapes.Add(shape.Uid, shape);
+                    foreach (var shape in shapes.Where(shape => shape != null)) Shapes.Add(shape.Uid, shape);
                 }
 
                 return _shapes;

@@ -16,11 +16,11 @@ namespace GameScripts.Game
         public int Uid => _model.Uid;
         public Vector2Int Rect { get; private set; }
 
-        public ShapeViewModel(ShapeModel model, Vector2Int rect, ShapeData shapeData)
+        public ShapeViewModel(ShapeModel model, ShapeData shapeData)
         {
             _model = model;
             ShapeData = shapeData;
-            Rect = rect;
+            Rect = shapeData.Rect;
             Rotation = _model.Rotation;
             _positionOnGrid = new ReactiveProperty<Vector2Int>(new Vector2Int(-1, -1));
             PositionOnGrid = _positionOnGrid;

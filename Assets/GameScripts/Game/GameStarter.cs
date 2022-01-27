@@ -30,11 +30,11 @@ namespace GameScripts.Game
         public void StartGame()
         {
             var fieldModel = new FieldModel();
-            var shapeData1 = _shapeCatalog.Shapes[4];
-            var shapeData2 = _shapeCatalog.Shapes[5];
-            var availableShape0 = new ShapeModel(shapeData1.Uid, Rotation.Deg90);
-            var availableShape1 = new ShapeModel(shapeData2.Uid, Rotation.Deg90);
-            var availableShape2 = new ShapeModel(shapeData1.Uid, Rotation.Deg90);
+            var shapeData1 = _shapeCatalog.Shapes[Random.Range(1, 16)];
+            var shapeData2 = _shapeCatalog.Shapes[Random.Range(1, 16)];
+            var availableShape0 = new ShapeModel(shapeData1.Uid, ExtensionMethods.GetRandomRotation());
+            var availableShape1 = new ShapeModel(shapeData2.Uid, ExtensionMethods.GetRandomRotation());
+            var availableShape2 = new ShapeModel(shapeData1.Uid, ExtensionMethods.GetRandomRotation());
             fieldModel.AvailableShapes = new ShapeModel[3] {availableShape0, availableShape1, availableShape2};
             
             var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog);

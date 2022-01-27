@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Zenject;
 using GameScripts.Misc;
 using GameScripts.Providers;
+using TMPro;
 
 namespace GameScripts.UI
 {
@@ -18,6 +19,7 @@ namespace GameScripts.UI
         [SerializeField] private RectTransform shapesContainerRect;
         [SerializeField] private RectTransform[] availableFigureContainers = new RectTransform[3];
         [SerializeField] private GridLayoutGroup gridLayout;
+        [SerializeField] private TextMeshProUGUI currentResult;
 
         private FieldViewModelContainer _fieldViewModelContainer;
         private FieldViewModel _fieldViewModel;
@@ -60,6 +62,7 @@ namespace GameScripts.UI
             _fieldViewModel = fieldViewModel;
             _fieldViewModel.ShapesOnField.ObserveAdd().Subscribe(AddNewShapeOnField).AddTo(_tempDisposables);
             _fieldViewModel.AvailableShapes.ObserveAdd().Subscribe(AddNewAvailableShape).AddTo(_tempDisposables);
+            _fieldViewModel.Score.Subscribe(UpdateScore).AddTo(_tempDisposables);
 
             foreach (var shapeOnField in _fieldViewModel.ShapesOnField)
             {
@@ -143,6 +146,11 @@ namespace GameScripts.UI
             if (eventData.Value == null) return;
             var shapeView = CreateShapeView(eventData.Index);
             shapeView.Bind(eventData.Value);
+        }
+
+        private void UpdateScore(int score)
+        {
+            currentResult.text = score.ToString();
         }
 
         private void OnDestroy()

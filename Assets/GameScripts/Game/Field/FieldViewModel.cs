@@ -11,11 +11,13 @@ namespace GameScripts.Game
     {
         public IReadOnlyReactiveCollection<ShapeViewModel> ShapesOnField;
         public IReadOnlyReactiveCollection<ShapeViewModel> AvailableShapes;
+        public IReadOnlyReactiveProperty<int> Score;
         public CellViewModel[,] CellViewModels;
         public ReactiveCommand OnGameFinished;
 
         private IReactiveCollection<ShapeViewModel> _shapesOnField;
         private IReactiveCollection<ShapeViewModel> _availableShapes;
+        public IReactiveProperty<int> _score;
         private FieldModel _fieldModel;
         private IShapeCatalog _shapeCatalog;
         private List<Vector2Int> _shadowedCells;
@@ -29,8 +31,10 @@ namespace GameScripts.Game
             OnGameFinished = new ReactiveCommand();
             _shapesOnField = new ReactiveCollection<ShapeViewModel>();
             _availableShapes = new ReactiveCollection<ShapeViewModel>();
+            _score = new ReactiveProperty<int>(0);
             ShapesOnField = _shapesOnField;
             AvailableShapes = _availableShapes;
+            Score = _score;
             CellViewModels = new CellViewModel[9, 9];
             _shadowedCells = new List<Vector2Int>();
             _highlightedCells = new List<Vector2Int>();
@@ -51,15 +55,17 @@ namespace GameScripts.Game
             for (int i = 0; i < _fieldModel.AvailableShapes.Length; i++)
             {
                 var shapeModel = _fieldModel.AvailableShapes[i];
-                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid].Rect, _shapeCatalog.Shapes[shapeModel.Uid]);
+                if (shapeModel == null) continue;
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid]);
                 _availableShapes.Insert(i, shapeViewModel);
             }
-            //TODO: Предвартельно найти все сломанные фигуры и заменить на целые
+            // TODO: Предварительно найти клетки с количеством hp
+            //TODO: Предварительно найти все сломанные фигуры и заменить на целые
             var shapeModelsOnField = FindAllShapeModelsOnField();
             foreach (var foundShape in shapeModelsOnField)
             {
                 var shapeModel = foundShape.model;
-                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid].Rect, _shapeCatalog.Shapes[shapeModel.Uid]);
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid]);
                 shapeViewModel.PlaceShapeAt(foundShape.origin);
                 _shapesOnField.Add(shapeViewModel);
             }
@@ -99,6 +105,7 @@ namespace GameScripts.Game
             CancelAllShadowing();
             CancelAllHighlighting();
             var cellsToDelete = FindCellsToDelete();
+            AddScore(cellsToDelete.Count * 5);
             var shapesToDestroy = FindShapesToDestroy(cellsToDelete);
             ClearCells(cellsToDelete);
             DestroyShapes(shapesToDestroy);
@@ -107,6 +114,12 @@ namespace GameScripts.Game
             CreateNewAvailableShapes(shapeIndex);
             CheckRemainingShapesAvailability();
             return true;
+        }
+
+        private void AddScore(int count)
+        {
+            _score.Value += count;
+            _fieldModel.Score = _score.Value;
         }
 
         private void FillBrokenCells(HashSet<Vector2Int> brokenCells)
@@ -127,7 +140,7 @@ namespace GameScripts.Game
                 }
                 
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation);
-                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId].Rect, _shapeCatalog.Shapes[newShapeId]);
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId]);
                 shapeViewModel.PlaceShapeAt(cell);
                 shapeViewModel.CanBePlaced.Value = true;
                 _shapesOnField.Add(shapeViewModel);
@@ -149,7 +162,7 @@ namespace GameScripts.Game
                     CellViewModels[pointPositionOnGrid.x, pointPositionOnGrid.y].SwitchOccupied(true);
                 }
                 var shapeModel = new ShapeModel(region.shapeId, region.shapeRotation);
-                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[region.shapeId].Rect, _shapeCatalog.Shapes[region.shapeId]);
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[region.shapeId]);
                 shapeViewModel.PlaceShapeAt(region.origin);
                 shapeViewModel.CanBePlaced.Value = true;
                 _shapesOnField.Add(shapeViewModel);
@@ -212,16 +225,18 @@ namespace GameScripts.Game
         private void CreateNewAvailableShapes(int shapeIndex)
         {
             _availableShapes[shapeIndex] = null;
+            _fieldModel.AvailableShapes[shapeIndex] = null;
             if (_availableShapes[0] != null || _availableShapes[1] != null || _availableShapes[2] != null)
                 return;
 
             for (int i = 0; i < 3; i++)
             {
-                var newShapeId = Random.Range(1, 7);
-                var newShapeRotation = Rotation.Deg0;
+                var newShapeId = Random.Range(1, 16);
+                var newShapeRotation = ExtensionMethods.GetRandomRotation();
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
-                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId].Rect, _shapeCatalog.Shapes[newShapeId]);
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId]);
                 _availableShapes.Insert(i, shapeViewModel);
+                _fieldModel.AvailableShapes[i] = shapeModel;
             }
         }
 

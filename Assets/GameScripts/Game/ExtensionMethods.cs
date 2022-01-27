@@ -24,6 +24,11 @@ namespace GameScripts.Game
             new Vector2Int(1, 1)
         }; // TODO: Поменять порядок соседей
 
+        public static Rotation GetRandomRotation()
+        {
+            return (Rotation) UnityEngine.Random.Range(0, Enum.GetValues(typeof(Rotation)).Length);
+        }
+        
         public static IEnumerable<Vector2Int> Neighbours(this Vector2Int vector)
         {
             return neighbours.Select(neighbour => vector + neighbour);

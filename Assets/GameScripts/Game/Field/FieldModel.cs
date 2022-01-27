@@ -4,6 +4,7 @@ namespace GameScripts.Game
     {
         public Flat2DArray<Cell> FieldMatrix;
         public ShapeModel[] AvailableShapes;
+        public int Score;
 
         public FieldModel()
         {
