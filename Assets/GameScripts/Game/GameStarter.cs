@@ -1,3 +1,4 @@
+using GameScripts.ConsumeSystem.Module;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -9,6 +10,7 @@ namespace GameScripts.Game
         private IShapeCatalog _shapeCatalog;
         private FieldViewModelContainer _fieldViewModelContainer;
         private CompositeDisposable _disposables;
+        private AbstractConsumableFactory _consumableFactory;
 
         private void Awake()
         {
@@ -21,10 +23,11 @@ namespace GameScripts.Game
         }
 
         [Inject]
-        public void Construct(IShapeCatalog shapeCatalog, FieldViewModelContainer fieldViewModelContainer)
+        public void Construct(IShapeCatalog shapeCatalog, FieldViewModelContainer fieldViewModelContainer, AbstractConsumableFactory consumableFactory)
         {
             _shapeCatalog = shapeCatalog;
             _fieldViewModelContainer = fieldViewModelContainer;
+            _consumableFactory = consumableFactory;
         }
 
         public void StartGame()
@@ -37,7 +40,7 @@ namespace GameScripts.Game
             var availableShape2 = new ShapeModel(shapeData1.Uid, ExtensionMethods.GetRandomRotation());
             fieldModel.AvailableShapes = new ShapeModel[3] {availableShape0, availableShape1, availableShape2};
             
-            var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog);
+            var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog, _consumableFactory);
             fieldViewModel.OnGameFinished.Subscribe(_ => FinishGame()).AddTo(_disposables);
             _fieldViewModelContainer.FieldViewModel.Value = fieldViewModel;
             

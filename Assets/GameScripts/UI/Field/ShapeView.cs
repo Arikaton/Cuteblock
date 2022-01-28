@@ -55,6 +55,7 @@ namespace GameScripts.UI
             _viewModel.PositionOnGrid.Subscribe(SnapToPositionOnGrid).AddTo(_disposables);
             _viewModel.CanBePlaced.Subscribe(SwitchAvailability).AddTo(_disposables);
             _viewModel.Destroy.Subscribe(_ => DestroyShape()).AddTo(_disposables);
+            _viewModel.Rotation.Subscribe(ChangeRotation).AddTo(_disposables);
             LoadSprite();
         }
 
@@ -72,6 +73,11 @@ namespace GameScripts.UI
         private void OnDestroy()
         {
             _disposables.Dispose();
+        }
+
+        private void ChangeRotation(Rotation rotation)
+        {
+            containerRect.eulerAngles = new Vector3(containerRect.eulerAngles.x, containerRect.eulerAngles.y, rotation.AngleValue());
         }
 
         private Vector2Int CalculateShapeOriginInField()
@@ -161,6 +167,7 @@ namespace GameScripts.UI
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            _viewModel.Click();
             if(!DragAvailable)
                 return;
             if (eventData.pointerId != 0 && eventData.pointerId != -1)

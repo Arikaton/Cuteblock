@@ -20,6 +20,12 @@ namespace GameScripts.UI
         [SerializeField] private RectTransform[] availableFigureContainers = new RectTransform[3];
         [SerializeField] private GridLayoutGroup gridLayout;
         [SerializeField] private TextMeshProUGUI currentResult;
+        [SerializeField] private Transform backgroundShadowPanel;
+        [SerializeField] private Transform availableShapesContainer;
+        
+        [SerializeField] private Button rotateShapeButton;
+        [SerializeField] private Button newShapesButton;
+        [SerializeField] private Button removeShapeButton;
 
         private FieldViewModelContainer _fieldViewModelContainer;
         private FieldViewModel _fieldViewModel;
@@ -52,6 +58,7 @@ namespace GameScripts.UI
         private void Start()
         {
             _fieldViewModelContainer.FieldViewModel.SkipLatestValueOnSubscribe().Subscribe(Initialize).AddTo(_disposables);
+            rotateShapeButton.OnClickAsObservable().Subscribe(_ => BuyRotationHint()).AddTo(_disposables);
         }
 
         private void Initialize(FieldViewModel fieldViewModel)
@@ -63,6 +70,7 @@ namespace GameScripts.UI
             _fieldViewModel.ShapesOnField.ObserveAdd().Subscribe(AddNewShapeOnField).AddTo(_tempDisposables);
             _fieldViewModel.AvailableShapes.ObserveAdd().Subscribe(AddNewAvailableShape).AddTo(_tempDisposables);
             _fieldViewModel.Score.Subscribe(UpdateScore).AddTo(_tempDisposables);
+            _fieldViewModel.HighlightAvailableShapes.Subscribe(SwitchAvailableShapesHighlighting).AddTo(_disposables);
 
             foreach (var shapeOnField in _fieldViewModel.ShapesOnField)
             {
@@ -151,6 +159,39 @@ namespace GameScripts.UI
         private void UpdateScore(int score)
         {
             currentResult.text = score.ToString();
+        }
+
+        private void SwitchShapesOnFieldHighlighting(bool shadowing)
+        {
+            if (shadowing)
+            {
+                backgroundShadowPanel.SetAsLastSibling();
+                shapesContainerRect.SetAsLastSibling();
+                backgroundShadowPanel.gameObject.SetActive(true);
+                return;
+            }
+            backgroundShadowPanel.gameObject.SetActive(false);
+            shapesContainerRect.SetAsLastSibling();
+            availableShapesContainer.SetAsLastSibling();
+        }
+
+        private void SwitchAvailableShapesHighlighting(bool shadowing)
+        {
+            if (shadowing)
+            {
+                backgroundShadowPanel.SetAsLastSibling();
+                availableShapesContainer.SetAsLastSibling();
+                backgroundShadowPanel.gameObject.SetActive(true);
+                return;
+            }
+            backgroundShadowPanel.gameObject.SetActive(false);
+            shapesContainerRect.SetAsLastSibling();
+            availableShapesContainer.SetAsLastSibling();
+        }
+
+        private void BuyRotationHint()
+        {
+            _fieldViewModel.BuyRotateShape();
         }
 
         private void OnDestroy()

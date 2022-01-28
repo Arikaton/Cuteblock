@@ -7,6 +7,7 @@ namespace GameScripts.Game
     {
         private ShapeModel _model;
         private IReactiveProperty<Vector2Int> _positionOnGrid;
+        private  FieldViewModel _fieldViewModel;
 
         public ShapeData ShapeData;
         public IReadOnlyReactiveProperty<Vector2Int> PositionOnGrid;
@@ -16,10 +17,11 @@ namespace GameScripts.Game
         public int Uid => _model.Uid;
         public Vector2Int Rect { get; private set; }
 
-        public ShapeViewModel(ShapeModel model, ShapeData shapeData)
+        public ShapeViewModel(ShapeModel model, ShapeData shapeData, FieldViewModel fieldViewModel)
         {
             _model = model;
             ShapeData = shapeData;
+            _fieldViewModel = fieldViewModel;
             Rect = shapeData.Rect;
             Rotation = _model.Rotation;
             _positionOnGrid = new ReactiveProperty<Vector2Int>(new Vector2Int(-1, -1));
@@ -36,6 +38,16 @@ namespace GameScripts.Game
         public Vector2 OriginCenterToShapeCenterDistanceNormalized()
         {
             return ShapeData.OriginCenterToShapeCenterDistanceNormalized(Rotation.Value);
+        }
+
+        public void Click()
+        {
+            _fieldViewModel.ClickShape(this);
+        }
+
+        public void RotateClockwise()
+        {
+            _model.Rotation.Value = (Rotation) (((int) _model.Rotation.Value - 1) % 4);
         }
     }
 }

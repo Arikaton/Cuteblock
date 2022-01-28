@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GameScripts.ConsumeSystem.Interfaces;
+using GameScripts.ConsumeSystem.Module;
+using GameScripts.ResourceStorage.ResourceType;
 using UniRx;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -12,64 +15,121 @@ namespace GameScripts.Game
         public IReadOnlyReactiveCollection<ShapeViewModel> ShapesOnField;
         public IReadOnlyReactiveCollection<ShapeViewModel> AvailableShapes;
         public IReadOnlyReactiveProperty<int> Score;
+        public IReadOnlyReactiveProperty<bool> HighlightShapesOnField;
+        public IReadOnlyReactiveProperty<bool> HighlightAvailableShapes;
         public CellViewModel[,] CellViewModels;
         public ReactiveCommand OnGameFinished;
 
         private IReactiveCollection<ShapeViewModel> _shapesOnField;
         private IReactiveCollection<ShapeViewModel> _availableShapes;
-        public IReactiveProperty<int> _score;
+        private IReactiveProperty<int> _score;
+        public IReactiveProperty<bool> _highlightShapesOnField;
+        public IReactiveProperty<bool> _highlightAvailableShapes;
         private FieldModel _fieldModel;
         private IShapeCatalog _shapeCatalog;
+        private AbstractConsumableFactory _consumableFactory;
         private List<Vector2Int> _shadowedCells;
         private List<Vector2Int> _highlightedCells;
         private RectInt _rect = new RectInt(0, 0, 9, 9);
 
-        public FieldViewModel(FieldModel fieldModel, IShapeCatalog shapeCatalog)
+        private IConsumable _rotateShapeConsumable;
+        private IConsumable _newShapesConsumable;
+        private IConsumable _removeShapeConsumable;
+
+        public FieldViewModel(FieldModel fieldModel, IShapeCatalog shapeCatalog, AbstractConsumableFactory consumableFactory)
         {
             _fieldModel = fieldModel;
             _shapeCatalog = shapeCatalog;
+            _consumableFactory = consumableFactory;
             OnGameFinished = new ReactiveCommand();
             _shapesOnField = new ReactiveCollection<ShapeViewModel>();
             _availableShapes = new ReactiveCollection<ShapeViewModel>();
             _score = new ReactiveProperty<int>(0);
+            _highlightShapesOnField = new ReactiveProperty<bool>(false);
+            _highlightAvailableShapes = new ReactiveProperty<bool>(false);
             ShapesOnField = _shapesOnField;
             AvailableShapes = _availableShapes;
             Score = _score;
+            HighlightShapesOnField = _highlightShapesOnField;
+            HighlightAvailableShapes = _highlightAvailableShapes;
             CellViewModels = new CellViewModel[9, 9];
             _shadowedCells = new List<Vector2Int>();
             _highlightedCells = new List<Vector2Int>();
-            for (var x = 0; x < 9; x++)
-            {
-                for (var y = 0; y < 9; y++)
-                {
-                    var cellOccupied = fieldModel.FieldMatrix[x, y].uid != 0;
-                    CellViewModels[x, y] = new CellViewModel();
-                    CellViewModels[x, y].SwitchOccupied(cellOccupied);
-                }
-            }
+
+            _rotateShapeConsumable = _consumableFactory.CreateResourceConsumable<Coin>(100);
+            _newShapesConsumable = _consumableFactory.CreateResourceConsumable<Coin>(100);
+            _removeShapeConsumable = _consumableFactory.CreateResourceConsumable<Coin>(100);
+            
             Initialize();
         }
 
         private void Initialize()
         {
+            for (var x = 0; x < 9; x++)
+            {
+                for (var y = 0; y < 9; y++)
+                {
+                    var cellOccupied = _fieldModel.FieldMatrix[x, y].uid != 0;
+                    CellViewModels[x, y] = new CellViewModel();
+                    CellViewModels[x, y].SwitchOccupied(cellOccupied);
+                }
+            }
+            
             for (int i = 0; i < _fieldModel.AvailableShapes.Length; i++)
             {
                 var shapeModel = _fieldModel.AvailableShapes[i];
                 if (shapeModel == null) continue;
-                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid]);
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid], this);
                 _availableShapes.Insert(i, shapeViewModel);
             }
+            
             // TODO: Предварительно найти клетки с количеством hp
-            //TODO: Предварительно найти все сломанные фигуры и заменить на целые
+            // TODO: Предварительно найти все сломанные фигуры и заменить на целые
             var shapeModelsOnField = FindAllShapeModelsOnField();
             foreach (var foundShape in shapeModelsOnField)
             {
                 var shapeModel = foundShape.model;
-                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid]);
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid], this);
                 shapeViewModel.PlaceShapeAt(foundShape.origin);
                 _shapesOnField.Add(shapeViewModel);
             }
             CheckRemainingShapesAvailability();
+        }
+
+        public async void BuyRotateShape()
+        {
+            // if(!_rotateShapeConsumable.CanConsume()) return;
+            // _rotateShapeConsumable.Consume();
+            _highlightAvailableShapes.Value = true;
+        }
+
+        public void BuyNewShapes()
+        {
+            if(!_newShapesConsumable.CanConsume()) return;
+            _newShapesConsumable.Consume();
+        }
+        
+        public async void BuyRemoveShape()
+        {
+            _highlightShapesOnField.Value = true;
+            if(!_removeShapeConsumable.CanConsume()) return;
+            _removeShapeConsumable.Consume();
+        }
+
+        public void ClickShape(ShapeViewModel shapeViewModel)
+        {
+            if (_highlightAvailableShapes.Value)
+            {
+                _highlightAvailableShapes.Value = false;
+                shapeViewModel.RotateClockwise();
+                return;
+            }
+
+            if (_highlightShapesOnField.Value)
+            {
+                _highlightShapesOnField.Value = false;
+                return;
+            }
         }
 
         public bool PlaceShape(int shapeIndex, Vector2Int cell)
@@ -168,7 +228,7 @@ namespace GameScripts.Game
                 }
                 
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation);
-                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId]);
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId], this);
                 shapeViewModel.PlaceShapeAt(cell);
                 shapeViewModel.CanBePlaced.Value = true;
                 _shapesOnField.Add(shapeViewModel);
@@ -190,7 +250,7 @@ namespace GameScripts.Game
                     CellViewModels[pointPositionOnGrid.x, pointPositionOnGrid.y].SwitchOccupied(true);
                 }
                 var shapeModel = new ShapeModel(region.shapeId, region.shapeRotation);
-                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[region.shapeId]);
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[region.shapeId], this);
                 shapeViewModel.PlaceShapeAt(region.origin);
                 shapeViewModel.CanBePlaced.Value = true;
                 _shapesOnField.Add(shapeViewModel);
@@ -262,7 +322,7 @@ namespace GameScripts.Game
                 var newShapeId = Random.Range(1, 16);
                 var newShapeRotation = ExtensionMethods.GetRandomRotation();
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
-                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId]);
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId], this);
                 _availableShapes.Insert(i, shapeViewModel);
                 _fieldModel.AvailableShapes[i] = shapeModel;
             }
@@ -396,7 +456,7 @@ namespace GameScripts.Game
             return cells;
         }
 
-        private HashSet<Vector2Int> AllCellsInRow(int row)
+        private static HashSet<Vector2Int> AllCellsInRow(int row)
         {
             var cells = new HashSet<Vector2Int>();
             for (int i = 0; i < 9; i++)
@@ -406,7 +466,7 @@ namespace GameScripts.Game
             return cells;
         }
 
-        private HashSet<Vector2Int> AllCellsInSubgrid(int subgridId)
+        private static HashSet<Vector2Int> AllCellsInSubgrid(int subgridId)
         {
             var x0 = subgridId % 3 * 3;
             var y0 = subgridId / 3 * 3;
