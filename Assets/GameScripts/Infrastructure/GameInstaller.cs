@@ -1,7 +1,9 @@
 using GameScripts.Calendar;
+using GameScripts.ConsumeSystem.Module;
 using GameScripts.DailyTimer;
 using GameScripts.Game;
 using GameScripts.Providers;
+using GameScripts.ResourceStorage.Interfaces;
 using Zenject;
 
 namespace GameScripts.Infrastructure
@@ -18,6 +20,8 @@ namespace GameScripts.Infrastructure
             BindShapeCatalog();
             BindFieldViewModelContainer();
             BindShapeSpritesCatalog();
+            BindResourceStorage();
+            BindConsumableFactory();
         }
 
         private void BindDailyTimer()
@@ -43,6 +47,16 @@ namespace GameScripts.Infrastructure
         private void BindShapeSpritesCatalog()
         {
             Container.Bind<IShapeSpritesProvider>().To<ShapeSpritesCatalog>().FromInstance(shapeSpritesCatalog);
+        }
+
+        private void BindResourceStorage()
+        {
+            Container.Bind<IResourceStorage>().FromInstance(ResourceStorageFactory.CreateResourceStorage()).AsSingle();
+        }
+
+        private void BindConsumableFactory()
+        {
+            Container.Bind<AbstractConsumableFactory>().To<ConsumableFactory>().FromNew().AsSingle();
         }
     }
 }

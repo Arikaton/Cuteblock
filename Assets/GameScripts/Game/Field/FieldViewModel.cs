@@ -72,20 +72,6 @@ namespace GameScripts.Game
             CheckRemainingShapesAvailability();
         }
 
-        public bool CanPlaceShape(int uid, Rotation rotation, Vector2Int cell)
-        {
-            var shapeData = _shapeCatalog.Shapes[uid];
-            foreach (var point in shapeData.PointsAfterRotation(rotation))
-            {
-                var pointPositionOnGrid = cell + point;
-                if (!_rect.Contains(pointPositionOnGrid))
-                    return false;
-                if (_fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].uid != 0)
-                    return false;
-            }
-            return true;
-        }
-
         public bool PlaceShape(int shapeIndex, Vector2Int cell)
         {
             var shapeViewModel = _availableShapes[shapeIndex];
@@ -113,6 +99,48 @@ namespace GameScripts.Game
             FillBrokenCellsAdvanced(brokenCells);
             CreateNewAvailableShapes(shapeIndex);
             CheckRemainingShapesAvailability();
+            return true;
+        }
+
+        public void PreviewShapePlacement(int shapeIndex, Vector2Int cell)
+        {
+            if (cell == new Vector2Int(-1, -1))
+            {
+                CancelAllShadowing();
+                CancelAllHighlighting();
+                return;
+            }
+            var shapeViewModel = _availableShapes[shapeIndex];
+            var occupiedCells = new HashSet<Vector2Int>();
+            if (!CanPlaceShape(shapeViewModel.Uid, shapeViewModel.Rotation.Value, cell))
+            {
+                CancelAllShadowing();
+                CancelAllHighlighting();
+                return;
+            }
+
+            var shapeData = _shapeCatalog.Shapes[shapeViewModel.Uid];
+            foreach (var point in shapeData.PointsAfterRotation(shapeViewModel.Rotation.Value))
+            {
+                var pointPositionOnGrid = cell + point;
+                occupiedCells.Add(pointPositionOnGrid);
+            }
+            ShadowCells(occupiedCells);
+            var highlightedCells = FindCellsToDeleteAfterShapePlacement(occupiedCells);
+            HighlightCells(highlightedCells);
+        }
+
+        private bool CanPlaceShape(int uid, Rotation rotation, Vector2Int cell)
+        {
+            var shapeData = _shapeCatalog.Shapes[uid];
+            foreach (var point in shapeData.PointsAfterRotation(rotation))
+            {
+                var pointPositionOnGrid = cell + point;
+                if (!_rect.Contains(pointPositionOnGrid))
+                    return false;
+                if (_fieldModel.FieldMatrix[pointPositionOnGrid.x, pointPositionOnGrid.y].uid != 0)
+                    return false;
+            }
             return true;
         }
 
@@ -240,7 +268,7 @@ namespace GameScripts.Game
             }
         }
 
-        public HashSet<Vector2Int> FindCellsToDelete()
+        private HashSet<Vector2Int> FindCellsToDelete()
         {
             HashSet<Vector2Int> cellsToDelete = new HashSet<Vector2Int>();
             var completedRows = Enumerable.Range(0, 9).ToList();
@@ -270,7 +298,7 @@ namespace GameScripts.Game
             return cellsToDelete;
         }
 
-        public HashSet<Vector2Int> FindBrokenShapesCells()
+        private HashSet<Vector2Int> FindBrokenShapesCells()
         {
             var visitedCells = new HashSet<Vector2Int>();
             var brokenShapesCells = new HashSet<Vector2Int>();
@@ -391,34 +419,6 @@ namespace GameScripts.Game
                 }
             }
             return cells;
-        }
-
-        public void PreviewShapePlacement(int shapeIndex, Vector2Int cell)
-        {
-            if (cell == new Vector2Int(-1, -1))
-            {
-                CancelAllShadowing();
-                CancelAllHighlighting();
-                return;
-            }
-            var shapeViewModel = _availableShapes[shapeIndex];
-            var occupiedCells = new HashSet<Vector2Int>();
-            if (!CanPlaceShape(shapeViewModel.Uid, shapeViewModel.Rotation.Value, cell))
-            {
-                CancelAllShadowing();
-                CancelAllHighlighting();
-                return;
-            }
-
-            var shapeData = _shapeCatalog.Shapes[shapeViewModel.Uid];
-            foreach (var point in shapeData.PointsAfterRotation(shapeViewModel.Rotation.Value))
-            {
-                var pointPositionOnGrid = cell + point;
-                occupiedCells.Add(pointPositionOnGrid);
-            }
-            ShadowCells(occupiedCells);
-            var highlightedCells = FindCellsToDeleteAfterShapePlacement(occupiedCells);
-            HighlightCells(highlightedCells);
         }
 
         private bool ShapeCanBePlaced(int uid, Rotation rotation)
