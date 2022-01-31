@@ -9,6 +9,7 @@ namespace GameScripts.UIManagement
         Offer = 4,
         Calendar = 5,
         MainMenu = 6,
+        Prize = 7,
         
         //Popups
         PopupRoyalOffer = 100,

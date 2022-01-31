@@ -50,6 +50,7 @@ SpriteAtlas:
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 8efadc301fd23427a8cba864fb906ad7, type: 3}
   - {fileID: 21300000, guid: 4bab1850f9e102747bc33902b5aca086, type: 3}
   - {fileID: 21300000, guid: ecdf7db09d7ceb142b62d0a5673855af, type: 3}
   - {fileID: 21300000, guid: 02bb1cc0f24a66043afb87fed621af89, type: 3}
@@ -64,6 +65,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: d34d2523a9c565e45a82b77b093a2c0b, type: 3}
   - {fileID: 21300000, guid: 74135563fe6821e458cdad9f1008ec1f, type: 3}
   - {fileID: 21300000, guid: 5fd69b6340cdb2a41b54bbe2b4c825bf, type: 3}
+  - {fileID: 21300000, guid: b7e44ec331cc841519094feaf458d617, type: 3}
   - {fileID: 21300000, guid: a9211e14c18674c308585ab1705e9268, type: 3}
   - {fileID: 21300000, guid: cc29883428b011843b5d26093c621081, type: 3}
   - {fileID: 21300000, guid: 04e35a84d1b77b24c898054942d607fa, type: 3}
@@ -86,12 +88,14 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 0729b6c7b6ba24c9287b0a2b61afbe4c, type: 3}
   - {fileID: 21300000, guid: cf4abec7e7bb0054b93e0c43a8574f0f, type: 3}
   - {fileID: 21300000, guid: 617dabe7ecf457843994509ef72dd8f9, type: 3}
+  - {fileID: 21300000, guid: a4a4b5286a552480aa4d5a6842f6fa62, type: 3}
   - {fileID: 21300000, guid: 84884ad8efd6e9a47be00459098e88b0, type: 3}
   - {fileID: 21300000, guid: 114900798e926aa4f88162d205cbf6a1, type: 3}
   - {fileID: 21300000, guid: 31254199f84ff3f47ae00f2ddb0be0e1, type: 3}
   - {fileID: 21300000, guid: 7c5922f9fb70b6046851f338315c81ad, type: 3}
   - {fileID: 21300000, guid: a6a9bb0a94b6f9d44a2326e8f04d5313, type: 3}
   - {fileID: 21300000, guid: 99a2375a1a4c8f342b24c2530e0ba802, type: 3}
+  - {fileID: 21300000, guid: dc881f5ad54b14a1ea4d9cce29382094, type: 3}
   - {fileID: 21300000, guid: 51b10cda9a3386f40b92750f1ed80322, type: 3}
   - {fileID: 21300000, guid: ab153a0be94c9094aa97da1b8625d892, type: 3}
   - {fileID: 21300000, guid: 82aba35b6bef51e4593eba9c42e200a9, type: 3}
@@ -99,6 +103,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 3786e80c7a5941847ad68d3ef74aa400, type: 3}
   - {fileID: 21300000, guid: 6d7ceb3c6ea74484ba3c7aa05775fe23, type: 3}
   - {fileID: 21300000, guid: 777d456c40a39bb48b26b19a3a020ce7, type: 3}
+  - {fileID: 21300000, guid: d6f8f56c650d64fc59d2728435202b06, type: 3}
   - {fileID: 21300000, guid: 082a61bc7ca124313a2d40cb1fc34f2f, type: 3}
   - {fileID: 21300000, guid: 267bbccc7256b6348992e32891701a7d, type: 3}
   - {fileID: 21300000, guid: 1201fcfc59fa8bc4eb6b9445cb13bd51, type: 3}
@@ -124,6 +129,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 7ebecbdfd11f84b1e88a49809d383afc, type: 3}
   - {fileID: 21300000, guid: 0fd287ff2b4a2624491cd19540241545, type: 3}
   m_PackedSpriteNamesToIndex:
+  - no_ads 1
   - close
   - Round3
   - square_big
@@ -138,6 +144,7 @@ SpriteAtlas:
   - special_offers
   - bottom_panel
   - coin
+  - gift 1
   - hints
   - awards
   - daily_challenge
@@ -160,12 +167,14 @@ SpriteAtlas:
   - bubble
   - ellipse_shop
   - coin_gem_counter
+  - main_window
   - popup_name
   - plus
   - next_goal
   - Round50
   - plate_hint
   - home
+  - plate_dc
   - pattern
   - price_shop_2
   - Elipse
@@ -173,6 +182,7 @@ SpriteAtlas:
   - button
   - Round50_Thickness5
   - Round10_Thickness5
+  - plate_achievements
   - coins
   - crown
   - settings
