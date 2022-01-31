@@ -11,6 +11,26 @@ namespace GameScripts.UI
 {
     public class ShapeView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler
     {
+        public abstract class ShapeViewState
+        {
+            protected ShapeView shapeView;
+            protected Canvas mainCanvas;
+
+            public ShapeViewState(ShapeView shapeView)
+            {
+                this.shapeView = shapeView;
+                mainCanvas = shapeView._mainCanvas;
+            }
+
+            public abstract void OnEnter();
+            public abstract void OnExit();
+            public abstract void Update();
+            public abstract void OnPointerDown(PointerEventData eventData);
+            public abstract void OnBeginDrag(PointerEventData eventData);
+            public abstract void OnDrag(PointerEventData eventData);
+            public abstract void OnPointerUp(PointerEventData eventData);
+        }
+        
         private const float ShapeStartingOffset = 0.13f;
         private const float AnimationSpeed = 0.15f;
         
@@ -18,10 +38,10 @@ namespace GameScripts.UI
         public RectTransform shapeRect;
         public Image shapeImage;
 
-        private IReactiveProperty<Vector2Int> _hoveredCell;
+        public IReactiveProperty<Vector2Int> _hoveredCell;
         private ShapeViewModel _viewModel;
         private IShapeSpritesProvider _shapeSpritesProvider;
-        private FieldView _fieldView;
+        public FieldView _fieldView;
         private RectTransform _shapesContainer;
         private Canvas _mainCanvas;
         private int _shapeIndex;
@@ -33,6 +53,15 @@ namespace GameScripts.UI
         private CompositeDisposable _disposables = new CompositeDisposable();
 
         private bool DragAvailable => !_placedOnField && _available;
+
+        public NormalState normalState;
+
+        private ShapeViewState currentState;
+
+        private void Awake()
+        {
+            normalState = new NormalState(this);
+        }
 
         public void Initialize(RectTransform shapesContainer, IShapeSpritesProvider shapeSpritesProvider, int shapeIndex,
             FieldView fieldView)
@@ -57,6 +86,11 @@ namespace GameScripts.UI
             _viewModel.Destroy.Subscribe(_ => DestroyShape()).AddTo(_disposables);
             _viewModel.Rotation.Subscribe(ChangeRotation).AddTo(_disposables);
             LoadSprite();
+        }
+
+        public void ChangeState(ShapeViewState state)
+        {
+            
         }
 
         private void DestroyShape()

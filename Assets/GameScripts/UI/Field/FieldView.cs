@@ -70,7 +70,7 @@ namespace GameScripts.UI
             _fieldViewModel.ShapesOnField.ObserveAdd().Subscribe(AddNewShapeOnField).AddTo(_tempDisposables);
             _fieldViewModel.AvailableShapes.ObserveAdd().Subscribe(AddNewAvailableShape).AddTo(_tempDisposables);
             _fieldViewModel.Score.Subscribe(UpdateScore).AddTo(_tempDisposables);
-            _fieldViewModel.HighlightAvailableShapes.Subscribe(SwitchAvailableShapesHighlighting).AddTo(_disposables);
+            _fieldViewModel.HighlightAvailableShapes.Subscribe(SwitchAvailableShapesHighlighting).AddTo(_tempDisposables);
 
             foreach (var shapeOnField in _fieldViewModel.ShapesOnField)
             {

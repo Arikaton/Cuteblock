@@ -47,7 +47,9 @@ namespace GameScripts.Game
 
         public void RotateClockwise()
         {
-            _model.Rotation.Value = (Rotation) (((int) _model.Rotation.Value - 1) % 4);
+            _model.Rotation.Value = _model.Rotation.Value == Game.Rotation.Deg0
+                ? Game.Rotation.Deg270
+                : _model.Rotation.Value - 1;
         }
     }
 }
