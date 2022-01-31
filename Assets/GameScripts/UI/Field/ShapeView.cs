@@ -1,5 +1,3 @@
-using System;
-using DG.Tweening;
 using GameScripts.Game;
 using GameScripts.Providers;
 using UniRx;
@@ -11,56 +9,25 @@ namespace GameScripts.UI
 {
     public class ShapeView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler
     {
-        public abstract class ShapeViewState
-        {
-            protected ShapeView shapeView;
-            protected Canvas mainCanvas;
-
-            public ShapeViewState(ShapeView shapeView)
-            {
-                this.shapeView = shapeView;
-                mainCanvas = shapeView._mainCanvas;
-            }
-
-            public abstract void OnEnter();
-            public abstract void OnExit();
-            public abstract void Update();
-            public abstract void OnPointerDown(PointerEventData eventData);
-            public abstract void OnBeginDrag(PointerEventData eventData);
-            public abstract void OnDrag(PointerEventData eventData);
-            public abstract void OnPointerUp(PointerEventData eventData);
-        }
-        
-        private const float ShapeStartingOffset = 0.13f;
-        private const float AnimationSpeed = 0.15f;
-        
         public RectTransform containerRect;
         public RectTransform shapeRect;
         public Image shapeImage;
-
-        public IReactiveProperty<Vector2Int> _hoveredCell;
+        
         private ShapeViewModel _viewModel;
         private IShapeSpritesProvider _shapeSpritesProvider;
-        public FieldView _fieldView;
+        private FieldView _fieldView;
         private RectTransform _shapesContainer;
         private Canvas _mainCanvas;
-        private int _shapeIndex;
-        private bool _placedOnField;
         private float _cellSize;
-        private Sequence _sequence;
-        private bool _hovering;
-        private bool _available;
         private CompositeDisposable _disposables = new CompositeDisposable();
 
-        private bool DragAvailable => !_placedOnField && _available;
+        public int ShapeIndex { get; private set; }
 
-        public NormalState normalState;
-
-        private ShapeViewState currentState;
+        private ShapeViewState _currentState;
 
         private void Awake()
         {
-            normalState = new NormalState(this);
+            ChangeState(new InitializingState(this));
         }
 
         public void Initialize(RectTransform shapesContainer, IShapeSpritesProvider shapeSpritesProvider, int shapeIndex,
@@ -68,40 +35,51 @@ namespace GameScripts.UI
         {
             _shapesContainer = shapesContainer;
             _shapeSpritesProvider = shapeSpritesProvider;
-            _shapeIndex = shapeIndex;
+            ShapeIndex = shapeIndex;
             _fieldView = fieldView;
-            _hoveredCell = new ReactiveProperty<Vector2Int>(new Vector2Int(-1, -1));
             _cellSize = _shapesContainer.sizeDelta.x / 9;
             containerRect.anchoredPosition = Vector2.zero;
             _mainCanvas = GetComponentInParent<Canvas>().rootCanvas;
             shapeRect.localScale = new Vector3(0.6f, 0.6f, 1f);
-            _hoveredCell.DistinctUntilChanged().Subscribe(ChangeHoveredCell).AddTo(_disposables);
         }
 
         public void Bind(ShapeViewModel viewModel)
         {
             _viewModel = viewModel;
-            _viewModel.PositionOnGrid.Subscribe(SnapToPositionOnGrid).AddTo(_disposables);
-            _viewModel.CanBePlaced.Subscribe(SwitchAvailability).AddTo(_disposables);
+            _viewModel.PositionOnGrid.SkipLatestValueOnSubscribe().Subscribe(SnapToPositionOnGrid).AddTo(_disposables);
+            _viewModel.CanBePlaced.SkipLatestValueOnSubscribe().Subscribe(SwitchAvailability).AddTo(_disposables);
             _viewModel.Destroy.Subscribe(_ => DestroyShape()).AddTo(_disposables);
             _viewModel.Rotation.Subscribe(ChangeRotation).AddTo(_disposables);
             LoadSprite();
-        }
 
-        public void ChangeState(ShapeViewState state)
-        {
-            
+            if (_viewModel.PositionOnGrid.Value != new Vector2Int(-1, -1))
+                ChangeState(new PlacedOnFieldState(this));
+            else
+                ChangeState(new ActiveState(this));
         }
 
         private void DestroyShape()
         {
-            _sequence?.Kill();
-            Destroy(gameObject);
+            ChangeState(new DestroyingState(this));
+        }
+
+        public void ChangeState(ShapeViewState state)
+        {
+            _currentState?.OnExit();
+            _currentState = state;
+            _currentState.OnEnter();
+        }
+
+        private void LoadSprite()
+        {
+            shapeImage.sprite = _shapeSpritesProvider.GetShapeSprite(_viewModel.Uid);
+            shapeRect.sizeDelta = new Vector2(_viewModel.Rect.x * _cellSize, _viewModel.Rect.y * _cellSize);
+            containerRect.eulerAngles = new Vector3(containerRect.eulerAngles.x, containerRect.eulerAngles.y, _viewModel.Rotation.Value.AngleValue());
         }
 
         private void Update()
         {
-            _hoveredCell.Value = CalculateShapeOriginInField();
+            _currentState.Update();
         }
 
         private void OnDestroy()
@@ -114,164 +92,75 @@ namespace GameScripts.UI
             containerRect.eulerAngles = new Vector3(containerRect.eulerAngles.x, containerRect.eulerAngles.y, rotation.AngleValue());
         }
 
-        private Vector2Int CalculateShapeOriginInField()
-        {
-            if (!_hovering)
-            {
-                return new Vector2Int(-1, -1);
-            }
-            
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(_shapesContainer,
-                GetRayOrigin(),
-                null, out var shapeOriginInField);
-
-            var shapeOriginInFieldNormalized =
-                (shapeOriginInField + new Vector2(_shapesContainer.rect.width * 0.5f, _shapesContainer.rect.height * 0.5f))
-                / (_shapesContainer.rect.width / 9);
-
-            if (shapeOriginInFieldNormalized.x < -0.49f || shapeOriginInFieldNormalized.x >= 9.5f ||
-                shapeOriginInFieldNormalized.y < -0.49f || shapeOriginInFieldNormalized.y >= 9.5f)
-            {
-                return new Vector2Int(-1, -1);
-            }
-
-            var currentPlacementPosition = FindCurrentPlacementPosition(shapeOriginInFieldNormalized, _viewModel.Rotation.Value);
-
-            return currentPlacementPosition;
-        }
-
-        private static Vector2Int FindCurrentPlacementPosition(Vector2 shapeOriginInFieldNormalized, Rotation rotation)
-        {
-            var x = shapeOriginInFieldNormalized.x;
-            var y = shapeOriginInFieldNormalized.y;
-            switch (rotation)
-            {
-                case Rotation.Deg0:
-                    return new Vector2Int(
-                Math.Clamp((int) (x + 0.5f), 0, 8),
-                Math.Clamp((int) (y + 0.5f), 0, 8)
-            );
-                case Rotation.Deg90:
-                    return new Vector2Int(
-                Math.Clamp((int) (x + 0.5f) - 1, 0, 8),
-                Math.Clamp((int) (y + 0.5f), 0, 8)
-            );
-                case Rotation.Deg180:
-                    return new Vector2Int(
-                Math.Clamp((int) (x + 0.5f) - 1, 0, 8),
-                Math.Clamp((int) (y + 0.5f) - 1, 0, 8)
-            );
-                case Rotation.Deg270:
-                    return new Vector2Int(
-                Math.Clamp((int) (x + 0.5f), 0, 8),
-                Math.Clamp((int) (y + 0.5f) - 1, 0, 8)
-            );
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(rotation), rotation, null);
-            }
-        }
-
-        private void LoadSprite()
-        {
-            shapeImage.sprite = _shapeSpritesProvider.GetShapeSprite(_viewModel.Uid);
-            shapeRect.sizeDelta = new Vector2(_viewModel.Rect.x * _cellSize, _viewModel.Rect.y * _cellSize);
-            containerRect.eulerAngles = new Vector3(containerRect.eulerAngles.x, containerRect.eulerAngles.y, _viewModel.Rotation.Value.AngleValue());
-        }
-
         private void SnapToPositionOnGrid(Vector2Int cell)
         {
             if (cell == new Vector2Int(-1, -1))
                 return;
-            _sequence?.Kill();
-            _sequence = DOTween.Sequence();
-            containerRect.SetParent(_shapesContainer);
-            containerRect.anchoredPosition = FindAnchoredPositionOnField(cell);
-            _placedOnField = true;
-            _sequence.Insert(0.0f, shapeRect.DOAnchorPos(Vector2.zero, AnimationSpeed).SetEase(Ease.InOutQuad));
-            _sequence.Insert(0.0f, shapeRect.DOScale(Vector2.one, AnimationSpeed).SetEase(Ease.InOutQuad));
-        }
-
-        private Vector2 FindAnchoredPositionOnField(Vector2Int cell)
-        {
-            var originCellCenter = (Vector2) cell * _cellSize -
-                                   new Vector2(_shapesContainer.rect.width * 0.5f, _shapesContainer.rect.height * 0.5f) +
-                                   new Vector2(_cellSize * 0.5f, _cellSize * 0.5f);
-            return originCellCenter + _viewModel.OriginCenterToShapeCenterDistanceNormalized() * _cellSize;
+            ChangeState(new PlacedOnFieldState(this));
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            _viewModel.Click();
-            if(!DragAvailable)
-                return;
-            if (eventData.pointerId != 0 && eventData.pointerId != -1)
-                return;
-
-            var offset = _mainCanvas.pixelRect.height * ShapeStartingOffset;
-            RectTransformUtility.ScreenPointToWorldPointInRectangle(
-                _mainCanvas.GetComponent<RectTransform>(), eventData.position, null, out Vector3 worldPoint);
-            
-            shapeRect.SetParent(_mainCanvas.transform);
-            containerRect.position = worldPoint + new Vector3(0f, offset);
-            shapeRect.SetParent(containerRect);
-            
-            _sequence?.Kill();
-            _sequence = DOTween.Sequence();
-            _sequence.Insert(0.0f, shapeRect.DOAnchorPos(Vector2.zero, AnimationSpeed).SetEase(Ease.InOutQuad));
-            _sequence.Insert(0.0f, shapeRect.DOScale(Vector2.one, AnimationSpeed).SetEase(Ease.InOutQuad));
-            _hovering = true;
-
-            _fieldView.CurrentShapeIndex = _shapeIndex;
+            _currentState.OnPointerDown(eventData);
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (!DragAvailable || (eventData.pointerId != 0 && eventData.pointerId != -1)) 
-                eventData.pointerDrag = null;
+            _currentState.OnBeginDrag(eventData);
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            containerRect.anchoredPosition += eventData.delta / _mainCanvas.scaleFactor;
+            _currentState.OnDrag(eventData);
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            if (!DragAvailable)
-                return;
-            _hovering = false;
-            
-            if (_fieldView.TryPlaceShape(_hoveredCell.Value))
-            {
-                _fieldView.CurrentShapeIndex = -1;
-                return;
-            }
-            
-            shapeRect.SetParent(_mainCanvas.transform);
-            containerRect.anchoredPosition = Vector2.zero;
-            shapeRect.SetParent(containerRect);
-            _sequence?.Kill();
-            _sequence = DOTween.Sequence();
-            _sequence.Insert(0.0f, shapeRect.DOAnchorPos(Vector2.zero, AnimationSpeed).SetEase(Ease.InOutQuad));
-            _sequence.Insert(0.0f, shapeRect.DOScale(new Vector3(0.6f, 0.6f, 1f), AnimationSpeed).SetEase(Ease.InOutQuad));
-        }
-
-        private Vector2 GetRayOrigin()
-        {
-            var corners = new Vector3[4];
-            shapeRect.GetWorldCorners(corners);
-            return corners[0];
-        }
-
-        private void ChangeHoveredCell(Vector2Int cell)
-        {
-            _fieldView.ChangeHoveredCell(cell);
+            _currentState.OnPointerUp(eventData);
         }
 
         private void SwitchAvailability(bool available)
         {
-            _available = available;
-            shapeImage.DOFade(available ? 1f : 0.5f, 0.2f);
+            if(available)
+                ChangeState(new ActiveState(this));
+            else
+                ChangeState(new InactiveState(this));
+        }
+
+        public void Click()
+        {
+            _viewModel.Click();
+        }
+
+        public abstract class ShapeViewState
+        {
+            protected const float ShapeStartingOffset = 0.13f;
+            protected const float AnimationSpeed = 0.15f;
+            
+            protected ShapeView shapeView;
+            protected Canvas mainCanvas;
+            protected FieldView fieldView;
+            protected ShapeViewModel viewModel;
+            protected RectTransform shapesContainer;
+            protected float cellSize;
+
+            public ShapeViewState(ShapeView shapeView)
+            {
+                this.shapeView = shapeView;
+                fieldView = shapeView._fieldView;
+                mainCanvas = shapeView._mainCanvas;
+                viewModel = shapeView._viewModel;
+                shapesContainer = shapeView._shapesContainer;
+                cellSize = shapeView._cellSize;
+            }
+
+            public abstract void OnEnter();
+            public abstract void OnExit();
+            public abstract void Update();
+            public abstract void OnPointerDown(PointerEventData eventData);
+            public abstract void OnBeginDrag(PointerEventData eventData);
+            public abstract void OnDrag(PointerEventData eventData);
+            public abstract void OnPointerUp(PointerEventData eventData);
         }
     }
 }

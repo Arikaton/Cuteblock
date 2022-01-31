@@ -8,10 +8,12 @@ namespace GameScripts.Game
         private ShapeModel _model;
         private IReactiveProperty<Vector2Int> _positionOnGrid;
         private  FieldViewModel _fieldViewModel;
+        private IReactiveProperty<bool> _highlighted;
 
         public ShapeData ShapeData;
         public IReadOnlyReactiveProperty<Vector2Int> PositionOnGrid;
         public IReadOnlyReactiveProperty<Rotation> Rotation;
+        public IReadOnlyReactiveProperty<bool> Highlighted;
         public ReactiveProperty<bool> CanBePlaced;
         public ReactiveCommand Destroy;
         public int Uid => _model.Uid;
@@ -25,7 +27,9 @@ namespace GameScripts.Game
             Rect = shapeData.Rect;
             Rotation = _model.Rotation;
             _positionOnGrid = new ReactiveProperty<Vector2Int>(new Vector2Int(-1, -1));
+            _highlighted = new ReactiveProperty<bool>(false);
             PositionOnGrid = _positionOnGrid;
+            Highlighted = _highlighted;
             CanBePlaced = new ReactiveProperty<bool>(false);
             Destroy = new ReactiveCommand();
         }

@@ -134,6 +134,7 @@ namespace GameScripts.Game
 
         public bool PlaceShape(int shapeIndex, Vector2Int cell)
         {
+            if (cell == new Vector2Int(-1, 1)) return false;
             var shapeViewModel = _availableShapes[shapeIndex];
             if (!CanPlaceShape(shapeViewModel.Uid, shapeViewModel.Rotation.Value, cell))
                 return false;

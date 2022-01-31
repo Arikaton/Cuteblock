@@ -34,8 +34,6 @@ namespace GameScripts.UI
         private CompositeDisposable _disposables;
         private CompositeDisposable _tempDisposables;
         
-        public int CurrentShapeIndex { get; set; }
-
         [Inject]
         public void Construct(FieldViewModelContainer fieldViewModelContainer, IShapeSpritesProvider shapeSpritesProvider)
         {
@@ -43,9 +41,9 @@ namespace GameScripts.UI
             _shapeSpritesProvider = shapeSpritesProvider;
         }
 
-        public bool TryPlaceShape(Vector2Int cell)
+        public bool TryPlaceShape(Vector2Int cell, int shapeIndex)
         {
-            return _fieldViewModel.PlaceShape(CurrentShapeIndex, cell);
+            return _fieldViewModel.PlaceShape(shapeIndex, cell);
         }
 
         private void Awake()
@@ -137,9 +135,9 @@ namespace GameScripts.UI
             return shapeView;
         }
 
-        public void ChangeHoveredCell(Vector2Int hoveredCell)
+        public void ChangeHoveredCell(Vector2Int hoveredCell, int shapeIndex)
         {
-            _fieldViewModel.PreviewShapePlacement(CurrentShapeIndex, hoveredCell);
+            _fieldViewModel.PreviewShapePlacement(shapeIndex, hoveredCell);
         }
 
         private void AddNewShapeOnField(CollectionAddEvent<ShapeViewModel> eventData)
