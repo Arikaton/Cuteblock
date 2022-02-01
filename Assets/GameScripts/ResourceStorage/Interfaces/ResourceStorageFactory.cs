@@ -6,7 +6,7 @@ namespace GameScripts.ResourceStorage.Interfaces
     {
         public static IResourceStorage CreateResourceStorage()
         {
-            return new Module.ResourceStorage(new []{typeof(Coin), typeof(Gem)});
+            return new Module.ResourceStorage(new[] {typeof(Coin), typeof(Gem), typeof(DeleteHint), typeof(RotateHint), typeof(NewShapesHint)});
         }
     }
 }

@@ -24,6 +24,7 @@ namespace GameScripts.UI
         public int ShapeIndex { get; private set; }
 
         private ShapeViewState _currentState;
+        private bool _stateChanged;
 
         private void Awake()
         {
@@ -50,6 +51,7 @@ namespace GameScripts.UI
             _viewModel.CanBePlaced.SkipLatestValueOnSubscribe().Subscribe(SwitchAvailability).AddTo(_disposables);
             _viewModel.Destroy.Subscribe(_ => DestroyShape()).AddTo(_disposables);
             _viewModel.Rotation.Subscribe(ChangeRotation).AddTo(_disposables);
+            _viewModel.Highlighted.Subscribe(SwitchHighlighting).AddTo(_disposables);
             LoadSprite();
 
             if (_viewModel.PositionOnGrid.Value != new Vector2Int(-1, -1))
@@ -68,6 +70,8 @@ namespace GameScripts.UI
             _currentState?.OnExit();
             _currentState = state;
             _currentState.OnEnter();
+            _stateChanged = true;
+            Debug.Log($"Changed State {state.GetType()}" );
         }
 
         private void LoadSprite()
@@ -101,21 +105,25 @@ namespace GameScripts.UI
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            if (_stateChanged) _stateChanged = false;
             _currentState.OnPointerDown(eventData);
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            if (_stateChanged) return;
             _currentState.OnBeginDrag(eventData);
         }
 
         public void OnDrag(PointerEventData eventData)
         {
+            if (_stateChanged) return;
             _currentState.OnDrag(eventData);
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            if (_stateChanged) return;
             _currentState.OnPointerUp(eventData);
         }
 
@@ -125,6 +133,25 @@ namespace GameScripts.UI
                 ChangeState(new ActiveState(this));
             else
                 ChangeState(new InactiveState(this));
+        }
+        
+        private void SwitchHighlighting(bool highlighted)
+        {
+            if (highlighted)
+            {
+                ChangeState(new HighlightedState(this));
+                return;
+            }
+
+            if (_viewModel.PositionOnGrid.Value != new Vector2Int(-1, -1))
+                ChangeState(new PlacedOnFieldState(this));
+            else
+            {
+                if(_viewModel.CanBePlaced.Value)
+                    ChangeState(new ActiveState(this));
+                else
+                    ChangeState(new InactiveState(this));
+            }
         }
 
         public void Click()

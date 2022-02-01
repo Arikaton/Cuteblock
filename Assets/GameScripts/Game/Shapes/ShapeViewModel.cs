@@ -55,5 +55,15 @@ namespace GameScripts.Game
                 ? Game.Rotation.Deg270
                 : _model.Rotation.Value - 1;
         }
+
+        public void EnableHighlighting()
+        {
+            _highlighted.Value = true;
+        }
+        
+        public void DisableHighlighting()
+        {
+            _highlighted.Value = false;
+        }
     }
 }

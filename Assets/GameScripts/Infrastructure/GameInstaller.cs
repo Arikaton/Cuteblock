@@ -22,6 +22,7 @@ namespace GameScripts.Infrastructure
             BindShapeSpritesCatalog();
             BindResourceStorage();
             BindConsumableFactory();
+            BindHints();
         }
 
         private void BindDailyTimer()
@@ -57,6 +58,13 @@ namespace GameScripts.Infrastructure
         private void BindConsumableFactory()
         {
             Container.Bind<AbstractConsumableFactory>().To<ConsumableFactory>().FromNew().AsSingle();
+        }
+
+        private void BindHints()
+        {
+            Container.Bind<RotateHintViewModel>().FromNew().AsSingle();
+            Container.Bind<NewShapesHintViewModel>().FromNew().AsSingle();
+            Container.Bind<DeleteHintViewModel>().FromNew().AsSingle();
         }
     }
 }

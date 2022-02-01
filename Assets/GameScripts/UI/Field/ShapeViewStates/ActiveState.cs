@@ -12,7 +12,6 @@ namespace GameScripts.UI
         private IReactiveProperty<Vector2Int> _hoveredCell;
         private Sequence _sequence;
         private CompositeDisposable _disposables;
-        private bool _highlighted;
 
         public ActiveState(ShapeView shapeView) : base(shapeView)
         {
@@ -23,7 +22,6 @@ namespace GameScripts.UI
             _disposables = new CompositeDisposable();
             _hoveredCell = new ReactiveProperty<Vector2Int>(new Vector2Int(-1, -1));
             _hoveredCell.DistinctUntilChanged().Subscribe(ChangeHoveredCell).AddTo(_disposables);
-            viewModel.Highlighted.Subscribe(SwitchHighlighting).AddTo(_disposables);
         }
 
         public override void OnExit()
@@ -43,12 +41,6 @@ namespace GameScripts.UI
             if (eventData.pointerId != 0 && eventData.pointerId != -1)
                 return;
 
-            if (_highlighted)
-            {
-                shapeView.Click();
-                return;
-            }
-
             var offset = mainCanvas.pixelRect.height * ShapeStartingOffset;
             RectTransformUtility.ScreenPointToWorldPointInRectangle(
                 mainCanvas.GetComponent<RectTransform>(), eventData.position, null, out Vector3 worldPoint);
@@ -60,25 +52,22 @@ namespace GameScripts.UI
             _sequence?.Kill();
             _sequence = DOTween.Sequence();
             _sequence.Insert(0.0f, shapeView.shapeRect.DOAnchorPos(Vector2.zero, AnimationSpeed).SetEase(Ease.InOutQuad));
-            _sequence.Insert(0.0f, shapeView.shapeRect.DOScale(Vector2.one, AnimationSpeed).SetEase(Ease.InOutQuad));
+            _sequence.Insert(0.0f, shapeView.shapeRect.DOScale(Vector3.one, AnimationSpeed).SetEase(Ease.InOutQuad));
         }
 
         public override void OnBeginDrag(PointerEventData eventData)
         {
-            if (_highlighted) return;
             if (eventData.pointerId != 0 && eventData.pointerId != -1) 
                 eventData.pointerDrag = null;
         }
 
         public override void OnDrag(PointerEventData eventData)
         {
-            if (_highlighted) return;
             shapeView.containerRect.anchoredPosition += eventData.delta / mainCanvas.scaleFactor;
         }
 
         public override void OnPointerUp(PointerEventData eventData)
         {
-            if (_highlighted) return;
             if (fieldView.TryPlaceShape(_hoveredCell.Value, shapeView.ShapeIndex))
                 return;
 
@@ -89,11 +78,6 @@ namespace GameScripts.UI
             _sequence = DOTween.Sequence();
             _sequence.Insert(0.0f, shapeView.shapeRect.DOAnchorPos(Vector2.zero, AnimationSpeed).SetEase(Ease.InOutQuad));
             _sequence.Insert(0.0f, shapeView.shapeRect.DOScale(new Vector3(0.6f, 0.6f, 1f), AnimationSpeed).SetEase(Ease.InOutQuad));
-        }
-
-        private void SwitchHighlighting(bool highlighted)
-        {
-            _highlighted = highlighted;
         }
 
         private Vector2Int CalculateShapeOriginInField()

@@ -9,7 +9,6 @@ namespace GameScripts.UI
     {
         private Sequence _sequence;
         private CompositeDisposable _disposables;
-        private bool _highlighted;
 
         public PlacedOnFieldState(ShapeView shapeView) : base(shapeView)
         {
@@ -24,7 +23,6 @@ namespace GameScripts.UI
             _sequence.Insert(0.0f, shapeView.shapeRect.DOScale(Vector2.one, AnimationSpeed).SetEase(Ease.InOutQuad));
 
             _disposables = new CompositeDisposable();
-            viewModel.Highlighted.Subscribe(SwitchHighlighting).AddTo(_disposables);
         }
 
         public override void OnExit()
@@ -39,8 +37,6 @@ namespace GameScripts.UI
 
         public override void OnPointerDown(PointerEventData eventData)
         {
-            if(_highlighted)
-                shapeView.Click();
         }
 
         public override void OnBeginDrag(PointerEventData eventData)
@@ -61,11 +57,6 @@ namespace GameScripts.UI
                                    new Vector2(shapesContainer.rect.width * 0.5f, shapesContainer.rect.height * 0.5f) +
                                    new Vector2(cellSize * 0.5f, cellSize * 0.5f);
             return originCellCenter + viewModel.OriginCenterToShapeCenterDistanceNormalized() * cellSize;
-        }
-
-        private void SwitchHighlighting(bool highlighted)
-        {
-            _highlighted = highlighted;
         }
     }
 }

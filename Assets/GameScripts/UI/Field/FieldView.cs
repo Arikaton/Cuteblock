@@ -22,10 +22,6 @@ namespace GameScripts.UI
         [SerializeField] private TextMeshProUGUI currentResult;
         [SerializeField] private Transform backgroundShadowPanel;
         [SerializeField] private Transform availableShapesContainer;
-        
-        [SerializeField] private Button rotateShapeButton;
-        [SerializeField] private Button newShapesButton;
-        [SerializeField] private Button removeShapeButton;
 
         private FieldViewModelContainer _fieldViewModelContainer;
         private FieldViewModel _fieldViewModel;
@@ -56,7 +52,6 @@ namespace GameScripts.UI
         private void Start()
         {
             _fieldViewModelContainer.FieldViewModel.SkipLatestValueOnSubscribe().Subscribe(Initialize).AddTo(_disposables);
-            rotateShapeButton.OnClickAsObservable().Subscribe(_ => BuyRotationHint()).AddTo(_disposables);
         }
 
         private void Initialize(FieldViewModel fieldViewModel)
@@ -69,6 +64,7 @@ namespace GameScripts.UI
             _fieldViewModel.AvailableShapes.ObserveAdd().Subscribe(AddNewAvailableShape).AddTo(_tempDisposables);
             _fieldViewModel.Score.Subscribe(UpdateScore).AddTo(_tempDisposables);
             _fieldViewModel.HighlightAvailableShapes.Subscribe(SwitchAvailableShapesHighlighting).AddTo(_tempDisposables);
+            _fieldViewModel.HighlightShapesOnField.Subscribe(SwitchShapesOnFieldHighlighting).AddTo(_tempDisposables);
 
             foreach (var shapeOnField in _fieldViewModel.ShapesOnField)
             {
@@ -185,11 +181,6 @@ namespace GameScripts.UI
             backgroundShadowPanel.gameObject.SetActive(false);
             shapesContainerRect.SetAsLastSibling();
             availableShapesContainer.SetAsLastSibling();
-        }
-
-        private void BuyRotationHint()
-        {
-            _fieldViewModel.BuyRotateShape();
         }
 
         private void OnDestroy()

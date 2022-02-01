@@ -32,10 +32,6 @@ namespace GameScripts.Game
         private List<Vector2Int> _highlightedCells;
         private RectInt _rect = new RectInt(0, 0, 9, 9);
 
-        private IConsumable _rotateShapeConsumable;
-        private IConsumable _newShapesConsumable;
-        private IConsumable _removeShapeConsumable;
-
         public FieldViewModel(FieldModel fieldModel, IShapeCatalog shapeCatalog, AbstractConsumableFactory consumableFactory)
         {
             _fieldModel = fieldModel;
@@ -56,10 +52,6 @@ namespace GameScripts.Game
             _shadowedCells = new List<Vector2Int>();
             _highlightedCells = new List<Vector2Int>();
 
-            _rotateShapeConsumable = _consumableFactory.CreateResourceConsumable<Coin>(100);
-            _newShapesConsumable = _consumableFactory.CreateResourceConsumable<Coin>(100);
-            _removeShapeConsumable = _consumableFactory.CreateResourceConsumable<Coin>(100);
-            
             Initialize();
         }
 
@@ -96,24 +88,27 @@ namespace GameScripts.Game
             CheckRemainingShapesAvailability();
         }
 
-        public async void BuyRotateShape()
+        public void UseRotateHint()
         {
-            // if(!_rotateShapeConsumable.CanConsume()) return;
-            // _rotateShapeConsumable.Consume();
             _highlightAvailableShapes.Value = true;
+            foreach (var shapeViewModel in _availableShapes)
+            {
+                shapeViewModel?.EnableHighlighting();
+            }
         }
 
-        public void BuyNewShapes()
+        public void UseNewShapesHint()
         {
-            if(!_newShapesConsumable.CanConsume()) return;
-            _newShapesConsumable.Consume();
+            
         }
         
-        public async void BuyRemoveShape()
+        public void UseDeleteHint()
         {
             _highlightShapesOnField.Value = true;
-            if(!_removeShapeConsumable.CanConsume()) return;
-            _removeShapeConsumable.Consume();
+            foreach (var shapeViewModel in _shapesOnField)
+            {
+                shapeViewModel.EnableHighlighting();
+            }
         }
 
         public void ClickShape(ShapeViewModel shapeViewModel)
@@ -121,15 +116,45 @@ namespace GameScripts.Game
             if (_highlightAvailableShapes.Value)
             {
                 _highlightAvailableShapes.Value = false;
+                foreach (var shape in _availableShapes)
+                {
+                    shape?.DisableHighlighting();
+                }
                 shapeViewModel.RotateClockwise();
+                CheckRemainingShapesAvailability();
                 return;
             }
 
             if (_highlightShapesOnField.Value)
             {
                 _highlightShapesOnField.Value = false;
-                return;
+                foreach (var shape in _shapesOnField)
+                {
+                    shape?.DisableHighlighting();
+                }
+                var cellsToDelete = FindCellsOfShapeViewModel(shapeViewModel);
+                ClearCells(cellsToDelete);
+                shapeViewModel.Destroy.Execute();
+                _shapesOnField.Remove(shapeViewModel);
+                CheckRemainingShapesAvailability();
             }
+        }
+
+        private HashSet<Vector2Int> FindCellsOfShapeViewModel(ShapeViewModel shape)
+        {
+            if (shape.PositionOnGrid.Value == new Vector2Int(-1, -1))
+                throw new InvalidOperationException("Cannot find cells of shape which is not placed on field");
+            var output = new HashSet<Vector2Int>();
+            var originOnField = shape.PositionOnGrid.Value;
+            var rotation = shape.Rotation.Value;
+            foreach (var point in shape.ShapeData.PointsAfterRotation(rotation))
+            {
+                var pointOnField = originOnField + point;
+                output.Add(pointOnField);
+                if (_fieldModel.FieldMatrix[pointOnField].uid != shape.Uid)
+                    throw new InvalidOperationException("Cannot find cell of shape which has already been broken");
+            }
+            return output;
         }
 
         public bool PlaceShape(int shapeIndex, Vector2Int cell)
@@ -320,7 +345,7 @@ namespace GameScripts.Game
 
             for (int i = 0; i < 3; i++)
             {
-                var newShapeId = Random.Range(1, 16);
+                var newShapeId = Random.Range(1, 11);
                 var newShapeRotation = ExtensionMethods.GetRandomRotation();
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId], this);
