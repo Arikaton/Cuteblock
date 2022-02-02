@@ -1,4 +1,5 @@
 using DG.Tweening;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace GameScripts.UI
@@ -19,9 +20,10 @@ namespace GameScripts.UI
 
         public override void OnExit()
         {
-            _sequence?.Kill();
-            _sequence = DOTween.Sequence();
-            _sequence.Insert(0f, shapeView.shapeImage.DOFade(1f, 0.13f));
+            shapeView.shapeImage.color = new Color(1, 1, 1, 1);
+            // _sequence?.Kill();
+            // _sequence = DOTween.Sequence();
+            // _sequence.Insert(0f, shapeView.shapeImage.DOFade(1f, 0.13f));
         }
 
         public override void Update()

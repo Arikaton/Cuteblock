@@ -42,8 +42,6 @@ namespace GameScripts.UI
             containerRect.anchoredPosition = Vector2.zero;
             _mainCanvas = GetComponentInParent<Canvas>().rootCanvas;
             shapeRect.localScale = new Vector3(0.6f, 0.6f, 6f);
-            var color = shapeImage.color;
-            shapeImage.color = new Color(color.r, color.g, color.b, 0.0f);
         }
 
         public void Bind(ShapeViewModel viewModel)

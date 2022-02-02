@@ -4,7 +4,8 @@ namespace GameScripts.Game
 {
     public class CellViewModel
     {
-        private IReactiveProperty<bool> _occupied;
+        private CellModel _model;
+        
         private IReactiveProperty<bool> _shadowed;
         private IReactiveProperty<bool> _highlighted;
         
@@ -12,19 +13,14 @@ namespace GameScripts.Game
         public IReadOnlyReactiveProperty<bool> Shadowed;
         public IReadOnlyReactiveProperty<bool> Highlighted;
 
-        public CellViewModel()
+        public CellViewModel(CellModel model)
         {
-            _occupied = new ReactiveProperty<bool>(false);
+            _model = model;
             _shadowed = new ReactiveProperty<bool>(false);
             _highlighted = new ReactiveProperty<bool>(false);
-            Occupied = _occupied;
+            Occupied = _model.uid.Select(uid => uid != 0).ToReadOnlyReactiveProperty();
             Shadowed = _shadowed;
             Highlighted = _highlighted;
-        }
-
-        public void SwitchOccupied(bool occupied)
-        {
-            _occupied.Value = occupied;
         }
 
         public void TurnOnShadow()
