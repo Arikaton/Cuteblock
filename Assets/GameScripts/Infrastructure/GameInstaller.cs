@@ -63,7 +63,7 @@ namespace GameScripts.Infrastructure
         private void BindHints()
         {
             Container.Bind<RotateHintViewModel>().FromNew().AsSingle();
-            Container.Bind<NewShapesHintViewModel>().FromNew().AsSingle();
+            Container.Bind<ReplacementHintViewModel>().FromNew().AsSingle();
             Container.Bind<DeleteHintViewModel>().FromNew().AsSingle();
         }
     }

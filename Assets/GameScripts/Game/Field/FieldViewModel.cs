@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GameScripts.ConsumeSystem.Interfaces;
 using GameScripts.ConsumeSystem.Module;
-using GameScripts.ResourceStorage.ResourceType;
 using UniRx;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -39,7 +37,7 @@ namespace GameScripts.Game
             _consumableFactory = consumableFactory;
             OnGameFinished = new ReactiveCommand();
             _shapesOnField = new ReactiveCollection<ShapeViewModel>();
-            _availableShapes = new ReactiveCollection<ShapeViewModel>();
+            _availableShapes = new ReactiveCollection<ShapeViewModel>(new List<ShapeViewModel>(3) {null, null, null});
             _score = new ReactiveProperty<int>(0);
             _highlightShapesOnField = new ReactiveProperty<bool>(false);
             _highlightAvailableShapes = new ReactiveProperty<bool>(false);
@@ -72,7 +70,7 @@ namespace GameScripts.Game
                 var shapeModel = _fieldModel.AvailableShapes[i];
                 if (shapeModel == null) continue;
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[shapeModel.Uid], this);
-                _availableShapes.Insert(i, shapeViewModel);
+                _availableShapes[i] = shapeViewModel;
             }
             
             // TODO: Предварительно найти клетки с количеством hp
@@ -97,9 +95,22 @@ namespace GameScripts.Game
             }
         }
 
-        public void UseNewShapesHint()
+        public void UseReplacementHint()
         {
-            
+            for (int i = 0; i < 3; i++)
+            {
+                _availableShapes[i]?.Destroy.Execute();
+                _availableShapes[i] = null;
+                _fieldModel.AvailableShapes[i] = null;
+                
+                var newShapeId = Random.Range(1, 11);
+                var newShapeRotation = ExtensionMethods.GetRandomRotation();
+                var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
+                var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId], this);
+                _availableShapes[i] = shapeViewModel;
+                _fieldModel.AvailableShapes[i] = shapeModel;
+            }
+            CheckRemainingShapesAvailability();
         }
         
         public void UseDeleteHint()
@@ -349,7 +360,7 @@ namespace GameScripts.Game
                 var newShapeRotation = ExtensionMethods.GetRandomRotation();
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId], this);
-                _availableShapes.Insert(i, shapeViewModel);
+                _availableShapes[i] = shapeViewModel;
                 _fieldModel.AvailableShapes[i] = shapeModel;
             }
         }

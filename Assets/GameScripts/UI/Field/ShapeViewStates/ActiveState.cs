@@ -22,6 +22,10 @@ namespace GameScripts.UI
             _disposables = new CompositeDisposable();
             _hoveredCell = new ReactiveProperty<Vector2Int>(new Vector2Int(-1, -1));
             _hoveredCell.DistinctUntilChanged().Subscribe(ChangeHoveredCell).AddTo(_disposables);
+            shapeView.shapeImage.DOFade(1, AnimationDuration).SetEase(Ease.OutQuad);
+            _sequence?.Kill();
+            _sequence = DOTween.Sequence();
+            _sequence.Insert(0.0f, shapeView.shapeRect.DOScale(new Vector3(0.6f, 0.6f, 1f), AnimationDuration).SetEase(Ease.OutQuad));
         }
 
         public override void OnExit()
@@ -51,8 +55,8 @@ namespace GameScripts.UI
             
             _sequence?.Kill();
             _sequence = DOTween.Sequence();
-            _sequence.Insert(0.0f, shapeView.shapeRect.DOAnchorPos(Vector2.zero, AnimationSpeed).SetEase(Ease.InOutQuad));
-            _sequence.Insert(0.0f, shapeView.shapeRect.DOScale(Vector3.one, AnimationSpeed).SetEase(Ease.InOutQuad));
+            _sequence.Insert(0.0f, shapeView.shapeRect.DOAnchorPos(Vector2.zero, AnimationDuration).SetEase(Ease.InOutQuad));
+            _sequence.Insert(0.0f, shapeView.shapeRect.DOScale(Vector3.one, AnimationDuration).SetEase(Ease.InOutQuad));
         }
 
         public override void OnBeginDrag(PointerEventData eventData)
@@ -76,8 +80,8 @@ namespace GameScripts.UI
             shapeView.shapeRect.SetParent(shapeView.containerRect);
             _sequence?.Kill();
             _sequence = DOTween.Sequence();
-            _sequence.Insert(0.0f, shapeView.shapeRect.DOAnchorPos(Vector2.zero, AnimationSpeed).SetEase(Ease.InOutQuad));
-            _sequence.Insert(0.0f, shapeView.shapeRect.DOScale(new Vector3(0.6f, 0.6f, 1f), AnimationSpeed).SetEase(Ease.InOutQuad));
+            _sequence.Insert(0.0f, shapeView.shapeRect.DOAnchorPos(Vector2.zero, AnimationDuration).SetEase(Ease.InOutQuad));
+            _sequence.Insert(0.0f, shapeView.shapeRect.DOScale(new Vector3(0.6f, 0.6f, 1f), AnimationDuration).SetEase(Ease.InOutQuad));
         }
 
         private Vector2Int CalculateShapeOriginInField()

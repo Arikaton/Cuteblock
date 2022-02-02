@@ -19,9 +19,9 @@ namespace GameScripts.UI
             _sequence = DOTween.Sequence();
             shapeView.containerRect.SetParent(shapesContainer);
             shapeView.containerRect.anchoredPosition = FindAnchoredPositionOnField(viewModel.PositionOnGrid.Value);
-            _sequence.Insert(0.0f, shapeView.shapeRect.DOAnchorPos(Vector2.zero, AnimationSpeed).SetEase(Ease.InOutQuad));
-            _sequence.Insert(0.0f, shapeView.shapeRect.DOScale(Vector2.one, AnimationSpeed).SetEase(Ease.InOutQuad));
-
+            _sequence.Insert(0.0f, shapeView.shapeRect.DOAnchorPos(Vector2.zero, AnimationDuration).SetEase(Ease.InOutQuad));
+            _sequence.Insert(0.0f, shapeView.shapeRect.DOScale(Vector2.one, AnimationDuration).SetEase(Ease.InOutQuad));
+            shapeView.shapeImage.color = new Color(shapeView.shapeImage.color.r, shapeView.shapeImage.color.g, shapeView.shapeImage.color.b, 1);
             _disposables = new CompositeDisposable();
         }
 

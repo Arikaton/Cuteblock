@@ -41,7 +41,9 @@ namespace GameScripts.UI
             _cellSize = _shapesContainer.sizeDelta.x / 9;
             containerRect.anchoredPosition = Vector2.zero;
             _mainCanvas = GetComponentInParent<Canvas>().rootCanvas;
-            shapeRect.localScale = new Vector3(0.6f, 0.6f, 1f);
+            shapeRect.localScale = new Vector3(0.6f, 0.6f, 6f);
+            var color = shapeImage.color;
+            shapeImage.color = new Color(color.r, color.g, color.b, 0.0f);
         }
 
         public void Bind(ShapeViewModel viewModel)
@@ -51,7 +53,7 @@ namespace GameScripts.UI
             _viewModel.CanBePlaced.SkipLatestValueOnSubscribe().Subscribe(SwitchAvailability).AddTo(_disposables);
             _viewModel.Destroy.Subscribe(_ => DestroyShape()).AddTo(_disposables);
             _viewModel.Rotation.Subscribe(ChangeRotation).AddTo(_disposables);
-            _viewModel.Highlighted.Subscribe(SwitchHighlighting).AddTo(_disposables);
+            _viewModel.Highlighted.SkipLatestValueOnSubscribe().Subscribe(SwitchHighlighting).AddTo(_disposables);
             LoadSprite();
 
             if (_viewModel.PositionOnGrid.Value != new Vector2Int(-1, -1))
@@ -162,7 +164,7 @@ namespace GameScripts.UI
         public abstract class ShapeViewState
         {
             protected const float ShapeStartingOffset = 0.13f;
-            protected const float AnimationSpeed = 0.15f;
+            protected const float AnimationDuration = 0.15f;
             
             protected ShapeView shapeView;
             protected Canvas mainCanvas;

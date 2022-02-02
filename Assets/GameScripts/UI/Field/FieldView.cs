@@ -61,7 +61,7 @@ namespace GameScripts.UI
             _tempDisposables = new CompositeDisposable();
             _fieldViewModel = fieldViewModel;
             _fieldViewModel.ShapesOnField.ObserveAdd().Subscribe(AddNewShapeOnField).AddTo(_tempDisposables);
-            _fieldViewModel.AvailableShapes.ObserveAdd().Subscribe(AddNewAvailableShape).AddTo(_tempDisposables);
+            _fieldViewModel.AvailableShapes.ObserveReplace().Subscribe(AddNewAvailableShape).AddTo(_tempDisposables);
             _fieldViewModel.Score.Subscribe(UpdateScore).AddTo(_tempDisposables);
             _fieldViewModel.HighlightAvailableShapes.Subscribe(SwitchAvailableShapesHighlighting).AddTo(_tempDisposables);
             _fieldViewModel.HighlightShapesOnField.Subscribe(SwitchShapesOnFieldHighlighting).AddTo(_tempDisposables);
@@ -143,11 +143,11 @@ namespace GameScripts.UI
             shapeView.Bind(eventData.Value);
         }
 
-        private void AddNewAvailableShape(CollectionAddEvent<ShapeViewModel> eventData)
+        private void AddNewAvailableShape(CollectionReplaceEvent<ShapeViewModel> eventData)
         {
-            if (eventData.Value == null) return;
+            if (eventData.NewValue == null) return;
             var shapeView = CreateShapeView(eventData.Index);
-            shapeView.Bind(eventData.Value);
+            shapeView.Bind(eventData.NewValue);
         }
 
         private void UpdateScore(int score)
