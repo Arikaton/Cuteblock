@@ -1,6 +1,7 @@
 using System;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GameScripts.UIManagement.Animations
 {
@@ -21,8 +22,10 @@ namespace GameScripts.UIManagement.Animations
         private void Awake()
         {
             _uiViewRect = _uiView.GetComponent<RectTransform>();
-            _canvasRect = _uiView.GetComponent<Canvas>().rootCanvas.GetComponent<RectTransform>();
-            _screenSize = _canvasRect.sizeDelta;
+            var rootCanvas = _uiView.GetComponent<Canvas>().rootCanvas;
+            _canvasRect = rootCanvas.GetComponent<RectTransform>();
+            float canvasScale = Screen.width / rootCanvas.GetComponent<CanvasScaler>().referenceResolution.x;
+            _screenSize = _canvasRect.sizeDelta / canvasScale;
             _viewSize = _uiViewRect.sizeDelta;
         }
 
