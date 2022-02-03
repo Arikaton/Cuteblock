@@ -63,6 +63,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 3e29b1d2bd7322740a91ce8ea18ee0b3, type: 3}
   - {fileID: 21300000, guid: 958ae01341c427d42ba006b41d26c55d, type: 3}
   - {fileID: 21300000, guid: d34d2523a9c565e45a82b77b093a2c0b, type: 3}
+  - {fileID: 21300000, guid: 72a22c53c7a5cd84684e1d34348b2178, type: 3}
   - {fileID: 21300000, guid: 74135563fe6821e458cdad9f1008ec1f, type: 3}
   - {fileID: 21300000, guid: 5fd69b6340cdb2a41b54bbe2b4c825bf, type: 3}
   - {fileID: 21300000, guid: b7e44ec331cc841519094feaf458d617, type: 3}
@@ -99,6 +100,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: a6a9bb0a94b6f9d44a2326e8f04d5313, type: 3}
   - {fileID: 21300000, guid: 99a2375a1a4c8f342b24c2530e0ba802, type: 3}
   - {fileID: 21300000, guid: dc881f5ad54b14a1ea4d9cce29382094, type: 3}
+  - {fileID: 21300000, guid: a4dc757a9813efb4a8f73fd26fbbeae1, type: 3}
   - {fileID: 21300000, guid: 51b10cda9a3386f40b92750f1ed80322, type: 3}
   - {fileID: 21300000, guid: ab153a0be94c9094aa97da1b8625d892, type: 3}
   - {fileID: 21300000, guid: 82aba35b6bef51e4593eba9c42e200a9, type: 3}
@@ -148,6 +150,7 @@ SpriteAtlas:
   - figure_replacement
   - daily_rewards
   - special_offers
+  - back_menu
   - bottom_panel
   - coin
   - gift 1
@@ -184,6 +187,7 @@ SpriteAtlas:
   - plate_hint
   - home
   - plate_dc
+  - figure_rotation_big
   - pattern
   - price_shop_2
   - Elipse
