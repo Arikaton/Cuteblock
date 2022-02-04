@@ -58,7 +58,8 @@ namespace GameScripts.UIManagement
         public void ShowPopup(UIViewId popupId)
         {
             var popup = _views[popupId];
-            _popupStack.Push(popup);
+            if(_popupStack.Count == 0 || _popupStack.Peek() != popup.GetUIView())
+                _popupStack.Push(popup.GetUIView());
             popup.Show();
         }
 

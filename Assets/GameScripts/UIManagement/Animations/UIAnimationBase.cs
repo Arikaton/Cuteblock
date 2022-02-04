@@ -16,8 +16,8 @@ namespace GameScripts.UIManagement.Animations
             if (_sequence.IsActive())
                 return;
             _sequence = DOTween.Sequence();
-            StartAnimationInternal(_sequence, Mathf.Clamp01(durationPercent));
             _sequence.OnComplete(OnAnimationComplete);
+            StartAnimationInternal(_sequence, Mathf.Clamp01(durationPercent));
         }
 
         public override void ForceStopAnimation()

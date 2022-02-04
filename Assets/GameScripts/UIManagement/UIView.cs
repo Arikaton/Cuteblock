@@ -10,16 +10,16 @@ namespace GameScripts.UIManagement
     [RequireComponent(typeof(Canvas), typeof(GraphicRaycaster), typeof(RectTransform))]
     public class UIView : MonoBehaviour
     {
-        [SerializeField] private bool _isPopup;
+        [SerializeField] private bool _changeVisibility = true;
         public UIViewId ViewId;
         [HorizontalGroup(GroupID = "Start Position")]
         public Vector2 StartPosition;
         [SerializeField] 
         private UIViewAwakeAction AwakeAction = UIViewAwakeAction.InstantHide;
         [SerializeField] 
-        private UIAnimation _showAnimation;
+        protected UIAnimation _showAnimation;
         [SerializeField] 
-        private UIAnimation _hideAnimation;
+        protected UIAnimation _hideAnimation;
 
         [FoldoutGroup("Events")]
         public UnityEvent ShowAnimationStarted = new();
@@ -35,13 +35,17 @@ namespace GameScripts.UIManagement
         private GraphicRaycaster _graphicRaycaster;
         private RectTransform _rectTransform;
 
-        public bool IsPopup => _isPopup;
+        public virtual bool IsPopup => false;
 
-        private void Start()
+        protected virtual void Awake()
         {
             _canvas = GetComponent<Canvas>();
             _graphicRaycaster = GetComponent<GraphicRaycaster>();
             _rectTransform = GetComponent<RectTransform>();
+        }
+
+        private void Start()
+        {
             _rectTransform.anchoredPosition = StartPosition;
             
             CallAwakeAction();
@@ -82,7 +86,7 @@ namespace GameScripts.UIManagement
         [ButtonGroup]
         [Button]
         [HideInEditorMode]
-        public void Show()
+        public virtual void Show()
         {
             if (!_showAnimation)
             {
@@ -111,7 +115,7 @@ namespace GameScripts.UIManagement
         [ButtonGroup]
         [Button]
         [HideInEditorMode]
-        public void Hide()
+        public virtual void Hide()
         {
             if (!_hideAnimation)
             {
@@ -140,7 +144,7 @@ namespace GameScripts.UIManagement
         [ButtonGroup]
         [Button]
         [HideInEditorMode]
-        public void InstantShow()
+        public virtual void InstantShow()
         {
             ChangeVisibility(true);
             if (_showAnimation)
@@ -151,9 +155,11 @@ namespace GameScripts.UIManagement
         [ButtonGroup]
         [Button]
         [HideInEditorMode]
-        public void InstantHide()
+        public virtual void InstantHide()
         {
             ChangeVisibility(false);
+            if (_showAnimation)
+                _showAnimation.ForceStopAnimation();
             if (_hideAnimation)
                 _hideAnimation.StartInstantAnimation();
             _state = UIViewState.Hidden;
@@ -178,8 +184,14 @@ namespace GameScripts.UIManagement
 
         private void ChangeVisibility(bool visible)
         {
+            if(!_changeVisibility) return;
             _canvas.enabled = visible;
             _graphicRaycaster.enabled = visible;
+        }
+        
+        public virtual UIView GetUIView()
+        {
+            return this;
         }
 
     }
