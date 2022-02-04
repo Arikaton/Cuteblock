@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3458689204590964137, guid: 5ab48a8f70a88da4f820ea6568119035, type: 3}
       propertyPath: m_Name
-      value: Toggle - Daily Challenge Bottom Bar
+      value: Toggle - Daily Challenge Bottom Bar Variant
       objectReference: {fileID: 0}
     - target: {fileID: 3458689204590964138, guid: 5ab48a8f70a88da4f820ea6568119035, type: 3}
       propertyPath: m_Pivot.x
@@ -121,3 +121,21 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: ef54a5833f1598b439d9d6d9e99fd737, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5ab48a8f70a88da4f820ea6568119035, type: 3}
+--- !u!1 &5216173327204601425 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3458689204590964137, guid: 5ab48a8f70a88da4f820ea6568119035, type: 3}
+  m_PrefabInstance: {fileID: 7465887914606109688}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6175664492726465632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5216173327204601425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e9e740f84904ce5a943982b124e361f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _nodeId: 4

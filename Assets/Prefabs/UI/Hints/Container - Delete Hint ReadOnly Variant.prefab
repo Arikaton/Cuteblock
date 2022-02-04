@@ -97,7 +97,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3351919477095422675, guid: 6155b40580166a0498aa3cdb2d79cc0c, type: 3}
       propertyPath: m_Name
-      value: Container - Delete Hint Variant
+      value: Container - Delete Hint ReadOnly Variant
       objectReference: {fileID: 0}
     - target: {fileID: 5681679161409447456, guid: 6155b40580166a0498aa3cdb2d79cc0c, type: 3}
       propertyPath: m_RootOrder
@@ -158,17 +158,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc2a5faf383b4c4390822cdd7933039b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useButton: {fileID: 9072703231327842295}
   quantityText: {fileID: 481715131465427855}
   plusSign: {fileID: 3548748982302557415}
---- !u!114 &9072703231327842295 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4536851136263202023, guid: 6155b40580166a0498aa3cdb2d79cc0c, type: 3}
-  m_PrefabInstance: {fileID: 4836467526422366992}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7897902619398656451}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

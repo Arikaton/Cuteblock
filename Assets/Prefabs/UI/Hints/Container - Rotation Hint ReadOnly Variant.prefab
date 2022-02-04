@@ -97,7 +97,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3351919477095422675, guid: 6155b40580166a0498aa3cdb2d79cc0c, type: 3}
       propertyPath: m_Name
-      value: Container - Rotation Hint Variant
+      value: Container - Rotation Hint ReadOnly Variant
       objectReference: {fileID: 0}
     - target: {fileID: 4737530068137412312, guid: 6155b40580166a0498aa3cdb2d79cc0c, type: 3}
       propertyPath: offset.x
@@ -145,17 +145,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4661024864100871133 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4536851136263202023, guid: 6155b40580166a0498aa3cdb2d79cc0c, type: 3}
-  m_PrefabInstance: {fileID: 9104426289245540154}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5826816208745862633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5826816208745862633 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3351919477095422675, guid: 6155b40580166a0498aa3cdb2d79cc0c, type: 3}
@@ -173,6 +162,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27419b31aa8940db8ec11f1fb812335b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useButton: {fileID: 4661024864100871133}
   quantityText: {fileID: 4316871432375512997}
   plusSign: {fileID: 898554486732554445}

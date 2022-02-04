@@ -10,13 +10,15 @@ namespace GameScripts.UIManagement
         Calendar = 5,
         MainMenu = 6,
         Prize = 7,
-        
+
         //Popups
         PopupRoyalOffer = 100,
-        PopupShop = 101,
         PopupOutOfMoves = 102,
         PopupGameOver = 103,
         PopupDailyBonus = 104,
-        PopupStatistic = 105
+        PopupStatistic = 105,
+        ShopGems = 106,
+        ShopCoins = 107,
+        ShopHints = 108,
     }
 }

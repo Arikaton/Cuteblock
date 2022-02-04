@@ -314,6 +314,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1990145960744650803, guid: 659c38ce74cd2b34795ed4ce8ecb6dc4, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4134424880860230070, guid: 659c38ce74cd2b34795ed4ce8ecb6dc4, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4493739942015202349, guid: 659c38ce74cd2b34795ed4ce8ecb6dc4, type: 3}
       propertyPath: ViewId
       value: 102
@@ -406,11 +414,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7148760748565006692, guid: 659c38ce74cd2b34795ed4ce8ecb6dc4, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 659c38ce74cd2b34795ed4ce8ecb6dc4, type: 3}
---- !u!224 &5256309431718104524 stripped
+--- !u!224 &1231526532044168453 stripped
 RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6954972660922327423, guid: 659c38ce74cd2b34795ed4ce8ecb6dc4, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4134424880860230070, guid: 659c38ce74cd2b34795ed4ce8ecb6dc4, type: 3}
   m_PrefabInstance: {fileID: 2915851360354430131}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2915851361627640090
@@ -529,7 +541,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 5256309431718104524}
+    m_TransformParent: {fileID: 1231526532044168453}
     m_Modifications:
     - target: {fileID: 3074483523441686975, guid: 0242a71f30dfc9e4baaf5c6bcd792d87, type: 3}
       propertyPath: offset.x
@@ -549,7 +561,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4721496030422090238, guid: 0242a71f30dfc9e4baaf5c6bcd792d87, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4721496030422090238, guid: 0242a71f30dfc9e4baaf5c6bcd792d87, type: 3}
       propertyPath: m_AnchorMax.x
@@ -593,15 +605,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4721496030422090238, guid: 0242a71f30dfc9e4baaf5c6bcd792d87, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4721496030422090238, guid: 0242a71f30dfc9e4baaf5c6bcd792d87, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4721496030422090238, guid: 0242a71f30dfc9e4baaf5c6bcd792d87, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4721496030422090238, guid: 0242a71f30dfc9e4baaf5c6bcd792d87, type: 3}
       propertyPath: m_AnchoredPosition.x

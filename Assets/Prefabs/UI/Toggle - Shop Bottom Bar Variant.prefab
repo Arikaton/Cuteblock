@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3458689204590964137, guid: 5ab48a8f70a88da4f820ea6568119035, type: 3}
       propertyPath: m_Name
-      value: Toggle - Shop Bottom Bar
+      value: Toggle - Shop Bottom Bar Variant
       objectReference: {fileID: 0}
     - target: {fileID: 3458689204590964138, guid: 5ab48a8f70a88da4f820ea6568119035, type: 3}
       propertyPath: m_Pivot.x
