@@ -20,5 +20,6 @@ namespace GameScripts.UIManagement
         ShopGems = 106,
         ShopCoins = 107,
         ShopHints = 108,
+        Shop_DO_NOT_USE = 109
     }
 }
