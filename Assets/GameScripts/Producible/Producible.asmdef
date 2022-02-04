@@ -1,0 +1,16 @@
+{
+    "name": "Producible",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c52d8dcfa7fe34d46b2b7469e8a95e14"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
