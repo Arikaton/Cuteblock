@@ -1,4 +1,6 @@
+using System;
 using GameScripts.ResourceStorage.Interfaces;
+using GameScripts.ResourceStorage.ResourceType;
 
 namespace GameScripts.Producible
 {
@@ -13,6 +15,11 @@ namespace GameScripts.Producible
         public override IProducible CreateProducible<T>(int count)
         {
             return new Producible<T>(_storage, count);
+        }
+
+        public override IProducible CreateProducible(ResourceType resourceType, int count)
+        {
+            return new Producible(_storage, resourceType, count);
         }
     }
 }

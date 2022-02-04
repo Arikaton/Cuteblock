@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
 using GameScripts.ConsumeSystem.Interfaces;
 using GameScripts.ResourceStorage.Interfaces;
+using GameScripts.ResourceStorage.ResourceType;
 
 namespace GameScripts.ConsumeSystem.Module
 {
@@ -13,5 +12,7 @@ namespace GameScripts.ConsumeSystem.Module
             where T1 : IResource where T2 : IResource;
 
         public abstract IConsumable CreateResourceConsumable(PriceTemplate priceTemplate);
+
+        public abstract IConsumable CreateResourceConsumable(ResourceType resourceType, int price);
     }
 }

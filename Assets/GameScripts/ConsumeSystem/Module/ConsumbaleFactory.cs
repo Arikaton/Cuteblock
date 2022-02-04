@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using GameScripts.ConsumeSystem.Interfaces;
 using GameScripts.ResourceStorage.Interfaces;
+using GameScripts.ResourceStorage.ResourceType;
 
 namespace GameScripts.ConsumeSystem.Module
 {
@@ -25,6 +27,11 @@ namespace GameScripts.ConsumeSystem.Module
         public override IConsumable CreateResourceConsumable(PriceTemplate priceTemplate)
         {
             return new ResourceConsumable(priceTemplate, _storage);
+        }
+
+        public override IConsumable CreateResourceConsumable(ResourceType resourceType, int price)
+        {
+            return new ResourceConsumable(new PriceTemplate(new List<PriceData>{new PriceData(price, resourceType)}), _storage);
         }
     }
 }

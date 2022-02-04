@@ -8,5 +8,11 @@ namespace GameScripts.ConsumeSystem.Module
     {
         public int price;
         public ResourceType resourceType;
+
+        public PriceData(int price, ResourceType resourceType)
+        {
+            this.price = price;
+            this.resourceType = resourceType;
+        }
     }
 }
