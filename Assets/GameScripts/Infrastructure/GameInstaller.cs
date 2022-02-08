@@ -12,6 +12,7 @@ namespace GameScripts.Infrastructure
     {
         public ShapeCatalog shapeCatalog;
         public ShapeSpritesCatalog shapeSpritesCatalog;
+        public GameStarter gameStarter;
 
         public override void InstallBindings()
         {
@@ -23,6 +24,8 @@ namespace GameScripts.Infrastructure
             BindResourceStorage();
             BindConsumableFactory();
             BindHints();
+            BindGameSaveProvider();
+            BindGameStarter();
         }
 
         private void BindDailyTimer()
@@ -65,6 +68,16 @@ namespace GameScripts.Infrastructure
             Container.Bind<RotateHintViewModel>().FromNew().AsSingle();
             Container.Bind<ReplacementHintViewModel>().FromNew().AsSingle();
             Container.Bind<DeleteHintViewModel>().FromNew().AsSingle();
+        }
+
+        private void BindGameSaveProvider()
+        {
+            Container.Bind<IGameSaveProvider>().To<GameSaveProvider>().AsSingle();
+        }
+
+        private void BindGameStarter()
+        {
+            Container.Bind<GameStarter>().FromInstance(gameStarter).AsSingle();
         }
     }
 }

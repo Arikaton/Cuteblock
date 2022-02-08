@@ -80,6 +80,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shapeCatalog: {fileID: 11400000, guid: 4a068dd05a2836042af6348358abad49, type: 2}
   shapeSpritesCatalog: {fileID: 11400000, guid: 2fc1779c1977950499bc8b0b6400b65f, type: 2}
+  gameStarter: {fileID: 3155742857032595460}
 --- !u!114 &3155742857032595460
 MonoBehaviour:
   m_ObjectHideFlags: 0

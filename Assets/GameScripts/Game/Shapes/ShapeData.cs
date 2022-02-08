@@ -13,7 +13,7 @@ namespace GameScripts.Game
 
         public int Uid => uid;
         public Vector2Int Rect => rect;
-        private List<Vector2Int> Points => points;
+        public List<Vector2Int> Points => points;
 
         public ShapeData(int uid, Vector2Int rect, params (int x, int y)[] points)
         {

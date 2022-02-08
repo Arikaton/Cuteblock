@@ -74,6 +74,7 @@ namespace GameScripts.UI
 
             for (int i = 0; i < _fieldViewModel.AvailableShapes.Count; i++)
             {
+                if(_fieldViewModel.AvailableShapes[i] == null) continue;
                 var shapeView = CreateShapeView(i);
                 shapeView.Bind(_fieldViewModel.AvailableShapes[i]);
             }

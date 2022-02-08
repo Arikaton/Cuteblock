@@ -1,4 +1,5 @@
 using GameScripts.ConsumeSystem.Module;
+using GameScripts.Providers;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -9,30 +10,32 @@ namespace GameScripts.Game
     {
         private IShapeCatalog _shapeCatalog;
         private FieldViewModelContainer _fieldViewModelContainer;
-        private CompositeDisposable _disposables;
         private AbstractConsumableFactory _consumableFactory;
-
-        private void Awake()
-        {
-            _disposables = new CompositeDisposable();
-        }
-
-        private void OnDestroy()
-        {
-            _disposables.Dispose();
-        }
+        private IGameSaveProvider _gameSaveProvider;
 
         [Inject]
-        public void Construct(IShapeCatalog shapeCatalog, FieldViewModelContainer fieldViewModelContainer, AbstractConsumableFactory consumableFactory)
+        public void Construct(IShapeCatalog shapeCatalog, FieldViewModelContainer fieldViewModelContainer, AbstractConsumableFactory consumableFactory, IGameSaveProvider gameSaveProvider)
         {
             _shapeCatalog = shapeCatalog;
             _fieldViewModelContainer = fieldViewModelContainer;
             _consumableFactory = consumableFactory;
+            _gameSaveProvider = gameSaveProvider;
         }
 
-        public void StartGame()
+        public void StartSavedGame()
+        {
+            var fieldModel = _gameSaveProvider.LoadSavedGame();
+            
+            var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog, _consumableFactory);
+            fieldViewModel.OnGameFinished.Subscribe(_ => FinishGame()).AddTo(this);
+            fieldViewModel.OnModelChanged.Subscribe(_ => SaveFieldModel(fieldModel)).AddTo(this);
+            _fieldViewModelContainer.FieldViewModel.Value = fieldViewModel;
+        }
+
+        public void StartNewGame()
         {
             var fieldModel = new FieldModel();
+                
             var shapeData1 = _shapeCatalog.Shapes[Random.Range(1, 11)];
             var shapeData2 = _shapeCatalog.Shapes[Random.Range(1, 11)];
             var availableShape0 = new ShapeModel(shapeData1.Uid, ExtensionMethods.GetRandomRotation());
@@ -41,15 +44,20 @@ namespace GameScripts.Game
             fieldModel.AvailableShapes = new ShapeModel[3] {availableShape0, availableShape1, availableShape2};
             
             var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog, _consumableFactory);
-            fieldViewModel.OnGameFinished.Subscribe(_ => FinishGame()).AddTo(_disposables);
+            fieldViewModel.OnGameFinished.Subscribe(_ => FinishGame()).AddTo(this);
+            fieldViewModel.OnModelChanged.Subscribe(_ => SaveFieldModel(fieldModel)).AddTo(this);
             _fieldViewModelContainer.FieldViewModel.Value = fieldViewModel;
-            
-            Debug.Log("Game Started");
         }
 
         public void FinishGame()
         {
             Debug.Log("Game Finished");
+            _gameSaveProvider.ClearSaveData();
+        }
+
+        private void SaveFieldModel(FieldModel fieldModel)
+        {
+            _gameSaveProvider.SaveGame(fieldModel);
         }
     }
 }

@@ -17,12 +17,12 @@ namespace GameScripts.Game
         public IReadOnlyReactiveProperty<bool> HighlightAvailableShapes;
         public CellViewModel[,] CellViewModels;
         public ReactiveCommand OnGameFinished;
+        public ReactiveCommand OnModelChanged;
 
         private IReactiveCollection<ShapeViewModel> _shapesOnField;
         private IReactiveCollection<ShapeViewModel> _availableShapes;
-        private IReactiveProperty<int> _score;
-        public IReactiveProperty<bool> _highlightShapesOnField;
-        public IReactiveProperty<bool> _highlightAvailableShapes;
+        private IReactiveProperty<bool> _highlightShapesOnField;
+        private IReactiveProperty<bool> _highlightAvailableShapes;
         private FieldModel _model;
         private IShapeCatalog _shapeCatalog;
         private AbstractConsumableFactory _consumableFactory;
@@ -36,14 +36,14 @@ namespace GameScripts.Game
             _shapeCatalog = shapeCatalog;
             _consumableFactory = consumableFactory;
             OnGameFinished = new ReactiveCommand();
+            OnModelChanged = new ReactiveCommand();
             _shapesOnField = new ReactiveCollection<ShapeViewModel>();
             _availableShapes = new ReactiveCollection<ShapeViewModel>(new List<ShapeViewModel>(3) {null, null, null});
-            _score = new ReactiveProperty<int>(0);
             _highlightShapesOnField = new ReactiveProperty<bool>(false);
             _highlightAvailableShapes = new ReactiveProperty<bool>(false);
             ShapesOnField = _shapesOnField;
             AvailableShapes = _availableShapes;
-            Score = _score;
+            Score = _model.Score;
             HighlightShapesOnField = _highlightShapesOnField;
             HighlightAvailableShapes = _highlightAvailableShapes;
             CellViewModels = new CellViewModel[9, 9];
@@ -109,6 +109,7 @@ namespace GameScripts.Game
                 _model.AvailableShapes[i] = shapeModel;
             }
             CheckRemainingShapesAvailability();
+            SaveGame();
         }
         
         public void UseDeleteHint()
@@ -131,6 +132,7 @@ namespace GameScripts.Game
                 }
                 shapeViewModel.RotateClockwise();
                 CheckRemainingShapesAvailability();
+                SaveGame();
                 return;
             }
 
@@ -146,24 +148,8 @@ namespace GameScripts.Game
                 shapeViewModel.Destroy.Execute();
                 _shapesOnField.Remove(shapeViewModel);
                 CheckRemainingShapesAvailability();
+                SaveGame();
             }
-        }
-
-        private HashSet<Vector2Int> FindCellsOfShapeViewModel(ShapeViewModel shape)
-        {
-            if (shape.PositionOnGrid.Value == new Vector2Int(-1, -1))
-                throw new InvalidOperationException("Cannot find cells of shape which is not placed on field");
-            var output = new HashSet<Vector2Int>();
-            var originOnField = shape.PositionOnGrid.Value;
-            var rotation = shape.Rotation.Value;
-            foreach (var point in shape.ShapeData.PointsAfterRotation(rotation))
-            {
-                var pointOnField = originOnField + point;
-                output.Add(pointOnField);
-                if (_model.FieldMatrix[pointOnField].uid.Value != shape.Uid)
-                    throw new InvalidOperationException("Cannot find cell of shape which has already been broken");
-            }
-            return output;
         }
 
         public bool PlaceShape(int shapeIndex, Vector2Int cell)
@@ -185,7 +171,7 @@ namespace GameScripts.Game
             CancelAllShadowing();
             CancelAllHighlighting();
             var cellsToDelete = FindCellsToDelete();
-            AddScore(cellsToDelete.Count * 5);
+            AddScore(shapeViewModel.ShapeData.Points.Count, cellsToDelete.Count);
             var shapesToDestroy = FindShapesToDestroy(cellsToDelete);
             ClearCells(cellsToDelete);
             DestroyShapes(shapesToDestroy);
@@ -193,6 +179,7 @@ namespace GameScripts.Game
             FillBrokenCellsAdvanced(brokenCells);
             CreateNewAvailableShapes(shapeIndex);
             CheckRemainingShapesAvailability();
+            SaveGame();
             return true;
         }
 
@@ -224,6 +211,23 @@ namespace GameScripts.Game
             HighlightCells(highlightedCells);
         }
 
+        private HashSet<Vector2Int> FindCellsOfShapeViewModel(ShapeViewModel shape)
+        {
+            if (shape.PositionOnGrid.Value == new Vector2Int(-1, -1))
+                throw new InvalidOperationException("Cannot find cells of shape which is not placed on field");
+            var output = new HashSet<Vector2Int>();
+            var originOnField = shape.PositionOnGrid.Value;
+            var rotation = shape.Rotation.Value;
+            foreach (var point in shape.ShapeData.PointsAfterRotation(rotation))
+            {
+                var pointOnField = originOnField + point;
+                output.Add(pointOnField);
+                if (_model.FieldMatrix[pointOnField].uid.Value != shape.Uid)
+                    throw new InvalidOperationException("Cannot find cell of shape which has already been broken");
+            }
+            return output;
+        }
+
         private bool CanPlaceShape(int uid, Rotation rotation, Vector2Int cell)
         {
             var shapeData = _shapeCatalog.Shapes[uid];
@@ -238,10 +242,9 @@ namespace GameScripts.Game
             return true;
         }
 
-        private void AddScore(int count)
+        private void AddScore(int shapeCells, int deletedCells)
         {
-            _score.Value += count;
-            _model.Score = _score.Value;
+            _model.Score.Value += shapeCells + deletedCells * 2;
         }
 
         private void FillBrokenCells(HashSet<Vector2Int> brokenCells)
@@ -591,6 +594,11 @@ namespace GameScripts.Game
                 cellsToDelete.UnionWith(AllCellsInSubgrid(subgrid));
 
             return cellsToDelete;
+        }
+
+        private void SaveGame()
+        {
+            OnModelChanged.Execute();
         }
     }
 }

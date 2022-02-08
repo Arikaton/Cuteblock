@@ -20,12 +20,10 @@ namespace GameScripts.UI
         private RectTransform _shapesContainer;
         private Canvas _mainCanvas;
         private float _cellSize;
-        private CompositeDisposable _disposables = new CompositeDisposable();
-
-        public int ShapeIndex { get; private set; }
-
         private ShapeViewState _currentState;
         private bool _stateChanged;
+
+        public int ShapeIndex { get; private set; }
 
         private void Awake()
         {
@@ -48,11 +46,11 @@ namespace GameScripts.UI
         public void Bind(ShapeViewModel viewModel)
         {
             _viewModel = viewModel;
-            _viewModel.PositionOnGrid.SkipLatestValueOnSubscribe().Subscribe(SnapToPositionOnGrid).AddTo(_disposables);
-            _viewModel.CanBePlaced.SkipLatestValueOnSubscribe().Subscribe(SwitchAvailability).AddTo(_disposables);
-            _viewModel.Destroy.Subscribe(_ => DestroyShape()).AddTo(_disposables);
-            _viewModel.Rotation.Subscribe(ChangeRotation).AddTo(_disposables);
-            _viewModel.Highlighted.SkipLatestValueOnSubscribe().Subscribe(SwitchHighlighting).AddTo(_disposables);
+            _viewModel.PositionOnGrid.SkipLatestValueOnSubscribe().Subscribe(SnapToPositionOnGrid).AddTo(this);
+            _viewModel.CanBePlaced.SkipLatestValueOnSubscribe().Subscribe(SwitchAvailability).AddTo(this);
+            _viewModel.Destroy.Subscribe(_ => DestroyShape()).AddTo(this);
+            _viewModel.Rotation.Subscribe(ChangeRotation).AddTo(this);
+            _viewModel.Highlighted.SkipLatestValueOnSubscribe().Subscribe(SwitchHighlighting).AddTo(this);
             LoadSprite();
 
             if (_viewModel.PositionOnGrid.Value != new Vector2Int(-1, -1))
@@ -72,7 +70,6 @@ namespace GameScripts.UI
             _currentState = state;
             _currentState.OnEnter();
             _stateChanged = true;
-            Debug.Log($"Changed State {state.GetType()}" );
         }
 
         private void LoadSprite()
@@ -85,11 +82,6 @@ namespace GameScripts.UI
         private void Update()
         {
             _currentState.Update();
-        }
-
-        private void OnDestroy()
-        {
-            _disposables.Dispose();
         }
 
         private void ChangeRotation(Rotation rotation)
