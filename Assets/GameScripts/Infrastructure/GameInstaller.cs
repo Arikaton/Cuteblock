@@ -11,8 +11,9 @@ namespace GameScripts.Infrastructure
     public class GameInstaller : MonoInstaller
     {
         public ShapeCatalog shapeCatalog;
-        public ShapeSpritesCatalog shapeSpritesCatalog;
+        public ShapeSpritesProvider shapeSpritesProvider;
         public GameStarter gameStarter;
+        public WeightsCatalog weightsCatalog;
 
         public override void InstallBindings()
         {
@@ -26,6 +27,7 @@ namespace GameScripts.Infrastructure
             BindHints();
             BindGameSaveProvider();
             BindGameStarter();
+            BindWeightsProvider();
         }
 
         private void BindDailyTimer()
@@ -50,7 +52,7 @@ namespace GameScripts.Infrastructure
 
         private void BindShapeSpritesCatalog()
         {
-            Container.Bind<IShapeSpritesProvider>().To<ShapeSpritesCatalog>().FromInstance(shapeSpritesCatalog);
+            Container.Bind<IShapeSpritesProvider>().To<ShapeSpritesProvider>().FromInstance(shapeSpritesProvider);
         }
 
         private void BindResourceStorage()
@@ -78,6 +80,11 @@ namespace GameScripts.Infrastructure
         private void BindGameStarter()
         {
             Container.Bind<GameStarter>().FromInstance(gameStarter).AsSingle();
+        }
+
+        private void BindWeightsProvider()
+        {
+            Container.Bind<IWeightsProvider>().FromInstance(weightsCatalog).AsSingle();
         }
     }
 }

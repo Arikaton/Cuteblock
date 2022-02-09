@@ -4,7 +4,6 @@ using System.Linq;
 using GameScripts.ConsumeSystem.Module;
 using UniRx;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace GameScripts.Game
 {
@@ -29,12 +28,14 @@ namespace GameScripts.Game
         private List<Vector2Int> _shadowedCells;
         private List<Vector2Int> _highlightedCells;
         private RectInt _rect = new RectInt(0, 0, 9, 9);
+        private List<int> _weights;
 
-        public FieldViewModel(FieldModel model, IShapeCatalog shapeCatalog, AbstractConsumableFactory consumableFactory)
+        public FieldViewModel(FieldModel model, IShapeCatalog shapeCatalog, AbstractConsumableFactory consumableFactory, List<int> weights)
         {
             _model = model;
             _shapeCatalog = shapeCatalog;
             _consumableFactory = consumableFactory;
+            _weights = weights;
             OnGameFinished = new ReactiveCommand();
             OnModelChanged = new ReactiveCommand();
             _shapesOnField = new ReactiveCollection<ShapeViewModel>();
@@ -100,8 +101,8 @@ namespace GameScripts.Game
                 _availableShapes[i]?.Destroy.Execute();
                 _availableShapes[i] = null;
                 _model.AvailableShapes[i] = null;
-                
-                var newShapeId = Random.Range(1, 11);
+
+                var newShapeId = _weights.GetRandomWeightedIndex();
                 var newShapeRotation = ExtensionMethods.GetRandomRotation();
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId], this);
@@ -355,7 +356,7 @@ namespace GameScripts.Game
 
             for (int i = 0; i < 3; i++)
             {
-                var newShapeId = Random.Range(1, 11);
+                var newShapeId = _weights.GetRandomWeightedIndex();
                 var newShapeRotation = ExtensionMethods.GetRandomRotation();
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId], this);

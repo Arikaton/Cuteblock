@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7389843809429824881}
   - component: {fileID: 7389843809429824880}
   - component: {fileID: 3155742857032595460}
+  - component: {fileID: 4595572056020990550}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -79,8 +80,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shapeCatalog: {fileID: 11400000, guid: 4a068dd05a2836042af6348358abad49, type: 2}
-  shapeSpritesCatalog: {fileID: 11400000, guid: 2fc1779c1977950499bc8b0b6400b65f, type: 2}
+  shapeSpritesProvider: {fileID: 4595572056020990550}
   gameStarter: {fileID: 3155742857032595460}
+  weightsCatalog: {fileID: 11400000, guid: bca15268258d3cf4fbbbc9b22bf68840, type: 2}
 --- !u!114 &3155742857032595460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,3 +95,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8ae8d1b2c3f423696322c38a6f8aa7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4595572056020990550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7389843809429824883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a958bb7769eb4e35b17816fae11b0997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cats1: {fileID: 11400000, guid: 3f3bd495329995443a8a3b86603bf627, type: 2}
+  cats2: {fileID: 11400000, guid: 2fc1779c1977950499bc8b0b6400b65f, type: 2}

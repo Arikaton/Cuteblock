@@ -23,6 +23,23 @@ namespace GameScripts.Game
             new Vector2Int(0, 1),
             new Vector2Int(1, 1)
         }; // TODO: Поменять порядок соседей
+        
+        public static int GetRandomWeightedIndex(this List<int> weights)
+        {
+            int totalSum = weights.Sum(i => i > 0 ? i : 0);
+
+            int index = 0;
+            int lastIndex = weights.Count - 1;
+            while (index < lastIndex)
+            {
+                if (UnityEngine.Random.Range(0, totalSum) < weights[index])
+                {
+                    return index;
+                }
+                totalSum -= weights[index++];
+            }
+            return index;
+        }
 
         public static Rotation GetRandomRotation()
         {
