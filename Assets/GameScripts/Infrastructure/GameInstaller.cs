@@ -28,6 +28,7 @@ namespace GameScripts.Infrastructure
             BindGameSaveProvider();
             BindGameStarter();
             BindWeightsProvider();
+            BindSoundAndHapticSettingsProvider();
         }
 
         private void BindDailyTimer()
@@ -85,6 +86,11 @@ namespace GameScripts.Infrastructure
         private void BindWeightsProvider()
         {
             Container.Bind<IWeightsProvider>().FromInstance(weightsCatalog).AsSingle();
+        }
+
+        private void BindSoundAndHapticSettingsProvider()
+        {
+            Container.Bind<ISoundAndHapticSettingsProvider>().To<SoundAndHapticSettingsProvider>().AsSingle();
         }
     }
 }
