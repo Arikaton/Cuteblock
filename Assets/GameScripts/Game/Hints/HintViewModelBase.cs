@@ -34,20 +34,10 @@ namespace GameScripts.Game
         public void TryUse()
         {
             if(!CanUse()) return;
+            var consumable = _consumableFactory.CreateResourceConsumable<T>(1);
+            if (!consumable.CanConsume()) return;
+            consumable.Consume();
             Use();
-            // var consumable = _consumableFactory.CreateResourceConsumable<T>(1);
-            // if (!consumable.CanConsume())
-            //     OpenShopPopup();
-            // else
-            // {
-            //     consumable.Consume();
-            //     Use();
-            // }
-        }
-
-        private void OpenShopPopup()
-        {
-            
         }
 
         protected virtual bool CanUse() => true;

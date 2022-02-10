@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7389843809429824880}
   - component: {fileID: 3155742857032595460}
   - component: {fileID: 4595572056020990550}
+  - component: {fileID: 8015333363153483456}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -109,3 +110,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cats1: {fileID: 11400000, guid: 3f3bd495329995443a8a3b86603bf627, type: 2}
   cats2: {fileID: 11400000, guid: 2fc1779c1977950499bc8b0b6400b65f, type: 2}
+--- !u!114 &8015333363153483456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7389843809429824883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c6be697c6e04d17985cbd39a26ff52a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

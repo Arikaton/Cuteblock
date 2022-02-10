@@ -8,7 +8,6 @@ namespace GameScripts.UI
     public class PlacedOnFieldState : ShapeView.ShapeViewState
     {
         private Sequence _sequence;
-        private CompositeDisposable _disposables;
 
         public PlacedOnFieldState(ShapeView shapeView) : base(shapeView)
         {
@@ -21,13 +20,13 @@ namespace GameScripts.UI
             shapeView.containerRect.anchoredPosition = FindAnchoredPositionOnField(viewModel.PositionOnGrid.Value);
             _sequence.Insert(0.0f, shapeView.shapeRect.DOAnchorPos(Vector2.zero, AnimationDuration).SetEase(Ease.InOutQuad));
             _sequence.Insert(0.0f, shapeView.shapeRect.DOScale(Vector2.one, AnimationDuration).SetEase(Ease.InOutQuad));
-            _disposables = new CompositeDisposable();
+
+            shapeView.shapeImage.alphaHitTestMinimumThreshold = 1;
         }
 
         public override void OnExit()
         {
             _sequence?.Kill();
-            _disposables.Dispose();
         }
 
         public override void Update()
