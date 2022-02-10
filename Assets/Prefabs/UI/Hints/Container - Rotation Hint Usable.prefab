@@ -101,7 +101,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5826816208745862633, guid: 129085f20e8f6884ba691ce1cade7745, type: 3}
       propertyPath: m_Name
-      value: Container - Rotation Hint
+      value: Container - Rotation Hint Usable
       objectReference: {fileID: 0}
     - target: {fileID: 7723392651160643386, guid: 129085f20e8f6884ba691ce1cade7745, type: 3}
       propertyPath: m_RootOrder
@@ -156,4 +156,78 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   quantityText: {fileID: 4042873327525861117}
   plusSign: {fileID: 1120269198909880725}
-  useButton: {fileID: 4854028302918898309}
+--- !u!114 &5173302233969984834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5993923959238405297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b3df937b92b4abcaae40d073a2b4556, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _popupId: 108
+--- !u!114 &8754734650377593034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5993923959238405297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7d68ee04f314feba36403c674ea0c8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 4854028302918898309}
+  condition: {fileID: 14921802409665688}
+  immediateClickAction:
+    m_PersistentCalls:
+      m_Calls: []
+  conditionIsMetAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 865205381679315731}
+        m_TargetAssemblyTypeName: GameScripts.UI.HintViewUsableBase`1[[GameScripts.Game.RotateHintViewModel,
+          Game
+        m_MethodName: TryUse
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  conditionNotMetAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5173302233969984834}
+        m_TargetAssemblyTypeName: GameScripts.UIManagement.OpenPopupAction, Assembly-CSharp
+        m_MethodName: OpenPopup
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &14921802409665688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5993923959238405297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af03af26d8c8483ea7a131b2064f1a33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourceType: 2
+  price: 1

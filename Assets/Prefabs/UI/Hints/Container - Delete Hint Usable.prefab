@@ -113,7 +113,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7897902619398656451, guid: bdace91880c75944887238d8de7a2f56, type: 3}
       propertyPath: m_Name
-      value: Container - Delete Hint
+      value: Container - Delete Hint Usable
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4945039673287820584, guid: bdace91880c75944887238d8de7a2f56, type: 3}
@@ -164,4 +164,78 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   quantityText: {fileID: 2225821315075119663}
   plusSign: {fileID: 2986838218248992071}
-  useButton: {fileID: 7324091492630486615}
+--- !u!114 &3753704562374283660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8491024153967894627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7d68ee04f314feba36403c674ea0c8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 7324091492630486615}
+  condition: {fileID: 5610453686320993537}
+  immediateClickAction:
+    m_PersistentCalls:
+      m_Calls: []
+  conditionIsMetAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1288604402227551068}
+        m_TargetAssemblyTypeName: GameScripts.UI.HintViewUsableBase`1[[GameScripts.Game.DeleteHintViewModel,
+          Game
+        m_MethodName: TryUse
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  conditionNotMetAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7188815951421273009}
+        m_TargetAssemblyTypeName: GameScripts.UIManagement.OpenPopupAction, Assembly-CSharp
+        m_MethodName: OpenPopup
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &7188815951421273009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8491024153967894627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b3df937b92b4abcaae40d073a2b4556, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _popupId: 108
+--- !u!114 &5610453686320993537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8491024153967894627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af03af26d8c8483ea7a131b2064f1a33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourceType: 4
+  price: 1

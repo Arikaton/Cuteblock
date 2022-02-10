@@ -7,7 +7,7 @@ using Zenject;
 
 namespace GameScripts.UI.ConditionalButtons
 {
-    public class ConsumableCondition : Condition
+    public class ConsumableConditionWithConsume : Condition
     {
         private AbstractConsumableFactory _consumableFactory;
         
