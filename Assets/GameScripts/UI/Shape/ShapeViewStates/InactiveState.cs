@@ -20,10 +20,8 @@ namespace GameScripts.UI
 
         public override void OnExit()
         {
+            _sequence?.Kill();
             shapeView.shapeImage.color = new Color(1, 1, 1, 1);
-            // _sequence?.Kill();
-            // _sequence = DOTween.Sequence();
-            // _sequence.Insert(0f, shapeView.shapeImage.DOFade(1f, 0.13f));
         }
 
         public override void Update()

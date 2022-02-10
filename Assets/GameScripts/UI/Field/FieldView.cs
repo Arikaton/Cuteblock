@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Zenject;
 using GameScripts.Misc;
 using GameScripts.Providers;
+using GameScripts.UIManagement;
 using TMPro;
 
 namespace GameScripts.UI
@@ -65,6 +66,7 @@ namespace GameScripts.UI
             _fieldViewModel.Score.Subscribe(UpdateScore).AddTo(_tempDisposables);
             _fieldViewModel.HighlightAvailableShapes.Subscribe(SwitchAvailableShapesHighlighting).AddTo(_tempDisposables);
             _fieldViewModel.HighlightShapesOnField.Subscribe(SwitchShapesOnFieldHighlighting).AddTo(_tempDisposables);
+            _fieldViewModel.OnGameFinished.Subscribe(_ => FinishGame()).AddTo(_tempDisposables);
 
             foreach (var shapeOnField in _fieldViewModel.ShapesOnField)
             {
@@ -85,6 +87,11 @@ namespace GameScripts.UI
                     _cellViews[x, y].Bind(_fieldViewModel.CellViewModels[x, y]);
                 }
             }
+        }
+
+        private void FinishGame()
+        {
+            UIManager.Instance.ShowPopup(UIViewId.PopupGameOver);
         }
 
         private void CleanFromPreviousGame()

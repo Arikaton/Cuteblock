@@ -33,8 +33,9 @@ namespace GameScripts.UI
                 UIManager.Instance.ShowPopup(UIViewId.PopupContinueOrNewGame);
                 return;
             }
-
+            
             _gameStarter.StartNewGame();
+            UIManager.Instance.ShowViewNode(UINodeId.Game);
         }
     }
 }

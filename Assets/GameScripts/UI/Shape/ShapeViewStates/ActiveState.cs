@@ -43,6 +43,8 @@ namespace GameScripts.UI
         {
             if (eventData.pointerId != 0 && eventData.pointerId != -1)
                 return;
+            
+            shapeView.containerRect.transform.parent.SetAsLastSibling();
 
             var offset = mainCanvas.pixelRect.height * ShapeStartingOffset;
             RectTransformUtility.ScreenPointToWorldPointInRectangle(

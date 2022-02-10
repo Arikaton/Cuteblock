@@ -109,8 +109,8 @@ namespace GameScripts.Game
                 _availableShapes[i] = shapeViewModel;
                 _model.AvailableShapes[i] = shapeModel;
             }
-            CheckRemainingShapesAvailability();
             SaveGame();
+            CheckRemainingShapesAvailability();
         }
         
         public void UseDeleteHint()
@@ -132,8 +132,8 @@ namespace GameScripts.Game
                     shape?.DisableHighlighting();
                 }
                 shapeViewModel.RotateClockwise();
-                CheckRemainingShapesAvailability();
                 SaveGame();
+                CheckRemainingShapesAvailability();
                 return;
             }
 
@@ -148,8 +148,8 @@ namespace GameScripts.Game
                 ClearCells(cellsToDelete);
                 shapeViewModel.Destroy.Execute();
                 _shapesOnField.Remove(shapeViewModel);
-                CheckRemainingShapesAvailability();
                 SaveGame();
+                CheckRemainingShapesAvailability();
             }
         }
 
@@ -179,8 +179,8 @@ namespace GameScripts.Game
             var brokenCells = FindBrokenShapesCells();
             FillBrokenCellsAdvanced(brokenCells);
             CreateNewAvailableShapes(shapeIndex);
-            CheckRemainingShapesAvailability();
             SaveGame();
+            CheckRemainingShapesAvailability();
             return true;
         }
 

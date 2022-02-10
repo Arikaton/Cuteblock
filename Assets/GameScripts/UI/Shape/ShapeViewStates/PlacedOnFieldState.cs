@@ -20,8 +20,9 @@ namespace GameScripts.UI
             shapeView.containerRect.anchoredPosition = FindAnchoredPositionOnField(viewModel.PositionOnGrid.Value);
             _sequence.Insert(0.0f, shapeView.shapeRect.DOAnchorPos(Vector2.zero, AnimationDuration).SetEase(Ease.InOutQuad));
             _sequence.Insert(0.0f, shapeView.shapeRect.DOScale(Vector2.one, AnimationDuration).SetEase(Ease.InOutQuad));
-
+            
             shapeView.shapeImage.alphaHitTestMinimumThreshold = 1;
+            shapeView.containerRectImage.raycastTarget = false;
         }
 
         public override void OnExit()

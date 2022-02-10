@@ -13,6 +13,7 @@ namespace GameScripts.UI
         public RectTransform shapeRect;
         public Image shapeImage;
         public RectTransform rotationLabel;
+        public Image containerRectImage;
         
         private ShapeViewModel _viewModel;
         private IShapeSpritesProvider _shapeSpritesProvider;

@@ -2,6 +2,7 @@ using GameScripts.Calendar;
 using GameScripts.ConsumeSystem.Module;
 using GameScripts.DailyTimer;
 using GameScripts.Game;
+using GameScripts.PlayerStats;
 using GameScripts.Providers;
 using GameScripts.ResourceStorage.Interfaces;
 using Zenject;
@@ -29,6 +30,7 @@ namespace GameScripts.Infrastructure
             BindGameStarter();
             BindWeightsProvider();
             BindSoundAndHapticSettingsProvider();
+            BindPlayerStats();
         }
 
         private void BindDailyTimer()
@@ -91,6 +93,13 @@ namespace GameScripts.Infrastructure
         private void BindSoundAndHapticSettingsProvider()
         {
             Container.Bind<ISoundAndHapticSettingsProvider>().To<SoundAndHapticSettingsProvider>().AsSingle();
+        }
+
+        private void BindPlayerStats()
+        {
+            var model = new PlayerStatsModel();
+            var viewModel = new PlayerStatsViewModel(model);
+            Container.Bind<PlayerStatsViewModel>().FromInstance(viewModel).AsSingle();
         }
     }
 }
