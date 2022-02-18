@@ -190,15 +190,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
       propertyPath: m_text
-      value: 1234124
+      value: coming soon..
       objectReference: {fileID: 0}
     - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
       propertyPath: m_fontSize
-      value: 46
+      value: 27.2
       objectReference: {fileID: 0}
     - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
       propertyPath: m_fontSizeMax
       value: 46
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
       propertyPath: m_HorizontalAlignment
@@ -301,6 +305,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7897407155294455889}
     m_Modifications:
+    - target: {fileID: 4474190412724538492, guid: 347be5ac3e46ad34ea6ae957d42204a5, type: 3}
+      propertyPath: m_text
+      value: coming soon..
+      objectReference: {fileID: 0}
+    - target: {fileID: 4474190412724538492, guid: 347be5ac3e46ad34ea6ae957d42204a5, type: 3}
+      propertyPath: m_fontSize
+      value: 72
+      objectReference: {fileID: 0}
     - target: {fileID: 8934570438047874161, guid: 347be5ac3e46ad34ea6ae957d42204a5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -513,15 +525,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
       propertyPath: m_text
-      value: 1234124
+      value: coming soon..
       objectReference: {fileID: 0}
     - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
       propertyPath: m_fontSize
-      value: 46
+      value: 27.2
       objectReference: {fileID: 0}
     - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
       propertyPath: m_fontSizeMax
       value: 46
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 17.22
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
+      propertyPath: m_lineSpacingMax
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1537648558345304728, guid: 07e4da555383c9a4a9988a0e2d24ef97, type: 3}
       propertyPath: m_HorizontalAlignment
@@ -729,6 +753,38 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7897407155294455889}
     m_Modifications:
+    - target: {fileID: 1115253998441410322, guid: 47a55e14f0be59449aaff71eb4899c93, type: 3}
+      propertyPath: m_text
+      value: coming soon..
+      objectReference: {fileID: 0}
+    - target: {fileID: 1115253998441410322, guid: 47a55e14f0be59449aaff71eb4899c93, type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1433078726190514176, guid: 47a55e14f0be59449aaff71eb4899c93, type: 3}
+      propertyPath: m_text
+      value: coming soon..
+      objectReference: {fileID: 0}
+    - target: {fileID: 1433078726190514176, guid: 47a55e14f0be59449aaff71eb4899c93, type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1653607490175277376, guid: 47a55e14f0be59449aaff71eb4899c93, type: 3}
+      propertyPath: m_text
+      value: coming soon..
+      objectReference: {fileID: 0}
+    - target: {fileID: 1653607490175277376, guid: 47a55e14f0be59449aaff71eb4899c93, type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3102851754204352830, guid: 47a55e14f0be59449aaff71eb4899c93, type: 3}
+      propertyPath: m_text
+      value: coming soon..
+      objectReference: {fileID: 0}
+    - target: {fileID: 3102851754204352830, guid: 47a55e14f0be59449aaff71eb4899c93, type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3285699334866718807, guid: 47a55e14f0be59449aaff71eb4899c93, type: 3}
       propertyPath: m_Name
       value: Plate - Score
