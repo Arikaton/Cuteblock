@@ -66,6 +66,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 72a22c53c7a5cd84684e1d34348b2178, type: 3}
   - {fileID: 21300000, guid: 74135563fe6821e458cdad9f1008ec1f, type: 3}
   - {fileID: 21300000, guid: 5fd69b6340cdb2a41b54bbe2b4c825bf, type: 3}
+  - {fileID: 21300000, guid: 50a5afa343309bd41b6e7d0a72cd04fe, type: 3}
   - {fileID: 21300000, guid: b7e44ec331cc841519094feaf458d617, type: 3}
   - {fileID: 21300000, guid: a9211e14c18674c308585ab1705e9268, type: 3}
   - {fileID: 21300000, guid: cc29883428b011843b5d26093c621081, type: 3}
@@ -109,6 +110,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 6d7ceb3c6ea74484ba3c7aa05775fe23, type: 3}
   - {fileID: 21300000, guid: 777d456c40a39bb48b26b19a3a020ce7, type: 3}
   - {fileID: 21300000, guid: d6f8f56c650d64fc59d2728435202b06, type: 3}
+  - {fileID: 21300000, guid: 8f79bc8c8b9f41c42a2a8260def4ebe2, type: 3}
   - {fileID: 21300000, guid: 082a61bc7ca124313a2d40cb1fc34f2f, type: 3}
   - {fileID: 21300000, guid: 9c6222ccc714ac7478215458e059ff41, type: 3}
   - {fileID: 21300000, guid: 267bbccc7256b6348992e32891701a7d, type: 3}
@@ -153,6 +155,7 @@ SpriteAtlas:
   - back_menu
   - bottom_panel
   - coin
+  - Rectangle 281
   - gift 1
   - hints
   - awards
@@ -196,6 +199,7 @@ SpriteAtlas:
   - Round50_Thickness5
   - Round10_Thickness5
   - plate_achievements
+  - Rectangle white
   - coins
   - settings_icon
   - crown

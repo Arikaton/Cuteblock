@@ -7,7 +7,7 @@ namespace GameScripts.Game
     {
         private ShapeModel _model;
         private IReactiveProperty<Vector2Int> _positionOnGrid;
-        private  FieldViewModel _fieldViewModel;
+        private FieldViewModel _fieldViewModel;
         private IReactiveProperty<bool> _highlighted;
 
         public ShapeData ShapeData;

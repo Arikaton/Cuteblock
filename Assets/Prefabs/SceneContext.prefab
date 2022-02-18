@@ -83,7 +83,7 @@ MonoBehaviour:
   shapeCatalog: {fileID: 11400000, guid: 4a068dd05a2836042af6348358abad49, type: 2}
   shapeSpritesProvider: {fileID: 4595572056020990550}
   gameStarter: {fileID: 3155742857032595460}
-  weightsCatalog: {fileID: 11400000, guid: bca15268258d3cf4fbbbc9b22bf68840, type: 2}
+  weightsCatalogue: {fileID: 11400000, guid: bca15268258d3cf4fbbbc9b22bf68840, type: 2}
 --- !u!114 &3155742857032595460
 MonoBehaviour:
   m_ObjectHideFlags: 0

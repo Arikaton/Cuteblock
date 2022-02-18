@@ -31,8 +31,9 @@ namespace GameScripts.Game
         public void StartSavedGame()
         {
             var fieldModel = _gameSaveProvider.LoadSavedGame();
-            
-            var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog, _consumableFactory, _weightsProvider.Weights);
+
+            var weightsCatalog = new WeightsCatalog(_weightsProvider.Weights);
+            var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog, _consumableFactory, weightsCatalog);
             fieldViewModel.OnGameFinished.Subscribe(_ => FinishGame(fieldModel)).AddTo(this);
             fieldViewModel.OnModelChanged.Subscribe(_ => SaveFieldModel(fieldModel)).AddTo(this);
             _fieldViewModelContainer.FieldViewModel.Value = fieldViewModel;
@@ -41,16 +42,17 @@ namespace GameScripts.Game
         public void StartNewGame()
         {
             var fieldModel = new FieldModel();
-                
-            var shapeData1 = _shapeCatalog.Shapes[_weightsProvider.Weights.GetRandomWeightedIndex()];
-            var shapeData2 = _shapeCatalog.Shapes[_weightsProvider.Weights.GetRandomWeightedIndex()];
-            var shapeData3 = _shapeCatalog.Shapes[_weightsProvider.Weights.GetRandomWeightedIndex()];
+            var weightsCatalog = new WeightsCatalog(_weightsProvider.Weights);
+            
+            var shapeData1 = _shapeCatalog.Shapes[weightsCatalog.GetRandomWeightedShapeId(0)];
+            var shapeData2 = _shapeCatalog.Shapes[weightsCatalog.GetRandomWeightedShapeId(0)];
+            var shapeData3 = _shapeCatalog.Shapes[weightsCatalog.GetRandomWeightedShapeId(0)];
             var availableShape0 = new ShapeModel(shapeData1.Uid, ExtensionMethods.GetRandomRotation());
             var availableShape1 = new ShapeModel(shapeData2.Uid, ExtensionMethods.GetRandomRotation());
             var availableShape2 = new ShapeModel(shapeData3.Uid, ExtensionMethods.GetRandomRotation());
             fieldModel.AvailableShapes = new ShapeModel[3] {availableShape0, availableShape1, availableShape2};
             
-            var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog, _consumableFactory, _weightsProvider.Weights);
+            var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog, _consumableFactory, weightsCatalog);
             fieldViewModel.OnGameFinished.Subscribe(_ => FinishGame(fieldModel)).AddTo(this);
             fieldViewModel.OnModelChanged.Subscribe(_ => SaveFieldModel(fieldModel)).AddTo(this);
             _fieldViewModelContainer.FieldViewModel.Value = fieldViewModel;

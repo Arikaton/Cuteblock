@@ -28,14 +28,14 @@ namespace GameScripts.Game
         private List<Vector2Int> _shadowedCells;
         private List<Vector2Int> _highlightedCells;
         private RectInt _rect = new RectInt(0, 0, 9, 9);
-        private List<int> _weights;
+        private WeightsCatalog _weightsCatalog;
 
-        public FieldViewModel(FieldModel model, IShapeCatalog shapeCatalog, AbstractConsumableFactory consumableFactory, List<int> weights)
+        public FieldViewModel(FieldModel model, IShapeCatalog shapeCatalog, AbstractConsumableFactory consumableFactory, WeightsCatalog weightsCatalog)
         {
             _model = model;
             _shapeCatalog = shapeCatalog;
             _consumableFactory = consumableFactory;
-            _weights = weights;
+            _weightsCatalog = weightsCatalog;
             OnGameFinished = new ReactiveCommand();
             OnModelChanged = new ReactiveCommand();
             _shapesOnField = new ReactiveCollection<ShapeViewModel>();
@@ -102,7 +102,7 @@ namespace GameScripts.Game
                 _availableShapes[i] = null;
                 _model.AvailableShapes[i] = null;
 
-                var newShapeId = _weights.GetRandomWeightedIndex();
+                var newShapeId = _weightsCatalog.GetRandomWeightedShapeId(_model.Score.Value);
                 var newShapeRotation = ExtensionMethods.GetRandomRotation();
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId], this);
@@ -316,7 +316,9 @@ namespace GameScripts.Game
                 var shapeOrigin = cellPosition - cell.positionInShape;
                 foreach (var shapePoint in shapeData.PointsAfterRotation(cell.shapeRotation))
                     visitedCells.Add(shapeOrigin + shapePoint);
-                var shapeOnField = _shapesOnField.First(x => x.PositionOnGrid.Value == shapeOrigin);
+                var shapeOnField = _shapesOnField.First(x =>
+                    x.PositionOnGrid.Value == shapeOrigin && x.Uid == cell.uid.Value &&
+                    x.Rotation.Value == cell.shapeRotation);
                 if (shapeOnField == null)
                     throw new InvalidOperationException("Field contains occupied cells which do not belong to any shapes");
                 foundShapes.Add(shapeOnField);
@@ -356,7 +358,7 @@ namespace GameScripts.Game
 
             for (int i = 0; i < 3; i++)
             {
-                var newShapeId = _weights.GetRandomWeightedIndex();
+                var newShapeId = _weightsCatalog.GetRandomWeightedShapeId(_model.Score.Value);
                 var newShapeRotation = ExtensionMethods.GetRandomRotation();
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId], this);

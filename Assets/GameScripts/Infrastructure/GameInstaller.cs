@@ -14,7 +14,7 @@ namespace GameScripts.Infrastructure
         public ShapeCatalog shapeCatalog;
         public ShapeSpritesProvider shapeSpritesProvider;
         public GameStarter gameStarter;
-        public WeightsCatalog weightsCatalog;
+        public WeightsCatalogue weightsCatalogue;
 
         public override void InstallBindings()
         {
@@ -87,7 +87,7 @@ namespace GameScripts.Infrastructure
 
         private void BindWeightsProvider()
         {
-            Container.Bind<IWeightsProvider>().FromInstance(weightsCatalog).AsSingle();
+            Container.Bind<IWeightsProvider>().FromInstance(weightsCatalogue).AsSingle();
         }
 
         private void BindSoundAndHapticSettingsProvider()

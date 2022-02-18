@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using GameScripts.Game;
 
 namespace GameScripts.Providers
 {
     public interface IWeightsProvider
     {
-        List<int> Weights { get; }
+        List<WeightsCatalog.WeightsPreset> Weights { get; }
     }
 }
