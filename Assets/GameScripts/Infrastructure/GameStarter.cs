@@ -43,10 +43,11 @@ namespace GameScripts.Game
         {
             var fieldModel = new FieldModel();
             var weightsCatalog = new WeightsCatalog(_weightsProvider.Weights);
-            
-            var shapeData1 = _shapeCatalog.Shapes[weightsCatalog.GetRandomWeightedShapeId(0)];
-            var shapeData2 = _shapeCatalog.Shapes[weightsCatalog.GetRandomWeightedShapeId(0)];
-            var shapeData3 = _shapeCatalog.Shapes[weightsCatalog.GetRandomWeightedShapeId(0)];
+
+            var shapeIds = weightsCatalog.GetThreeUniqueRandomShapeId(0);
+            var shapeData1 = _shapeCatalog.Shapes[shapeIds[0]];
+            var shapeData2 = _shapeCatalog.Shapes[shapeIds[1]];
+            var shapeData3 = _shapeCatalog.Shapes[shapeIds[2]];
             var availableShape0 = new ShapeModel(shapeData1.Uid, ExtensionMethods.GetRandomRotation());
             var availableShape1 = new ShapeModel(shapeData2.Uid, ExtensionMethods.GetRandomRotation());
             var availableShape2 = new ShapeModel(shapeData3.Uid, ExtensionMethods.GetRandomRotation());

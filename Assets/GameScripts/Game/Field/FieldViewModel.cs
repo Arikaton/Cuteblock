@@ -96,13 +96,14 @@ namespace GameScripts.Game
 
         public void UseReplacementHint()
         {
+            var shapeIds = _weightsCatalog.GetThreeUniqueRandomShapeId(_model.Score.Value);
             for (int i = 0; i < 3; i++)
             {
                 _availableShapes[i]?.Destroy.Execute();
                 _availableShapes[i] = null;
                 _model.AvailableShapes[i] = null;
 
-                var newShapeId = _weightsCatalog.GetRandomWeightedShapeId(_model.Score.Value);
+                var newShapeId = shapeIds[i];
                 var newShapeRotation = ExtensionMethods.GetRandomRotation();
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId], this);
@@ -356,9 +357,10 @@ namespace GameScripts.Game
             if (_availableShapes[0] != null || _availableShapes[1] != null || _availableShapes[2] != null)
                 return;
 
+            var shapeId = _weightsCatalog.GetThreeUniqueRandomShapeId(_model.Score.Value);
             for (int i = 0; i < 3; i++)
             {
-                var newShapeId = _weightsCatalog.GetRandomWeightedShapeId(_model.Score.Value);
+                var newShapeId = shapeId[i];
                 var newShapeRotation = ExtensionMethods.GetRandomRotation();
                 var shapeModel = new ShapeModel(newShapeId, newShapeRotation); 
                 var shapeViewModel = new ShapeViewModel(shapeModel, _shapeCatalog.Shapes[newShapeId], this);

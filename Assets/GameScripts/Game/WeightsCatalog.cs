@@ -18,6 +18,22 @@ namespace GameScripts.Game
             var preset = presets.First();
             return preset.weights.GetRandomWeightedIndex();
         }
+
+        public int[] GetThreeUniqueRandomShapeId(int currentScore)
+        {
+            var output = new int[3];
+            var presets = _weightsPresets.Where(x => x.startingScore <= currentScore).OrderByDescending(x => x.startingScore);
+            var preset = presets.First();
+            var weightsList = preset.weights.ToList();
+            
+            for (int i = 0; i < 3; i++)
+            {
+                var randomIndex = weightsList.GetRandomWeightedIndex();
+                output[i] = randomIndex;
+                weightsList[randomIndex] = 0;
+            }
+            return output;
+        }
         
         [System.Serializable]
         public class WeightsPreset

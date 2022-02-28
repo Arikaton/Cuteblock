@@ -21,6 +21,7 @@ namespace GameScripts.UIManagement
         ShopCoins = 107,
         ShopHints = 108,
         Shop_DO_NOT_USE = 109,
-        PopupContinueOrNewGame = 110
+        PopupContinueOrNewGame = 110,
+        PopupTutorial = 111
     }
 }
