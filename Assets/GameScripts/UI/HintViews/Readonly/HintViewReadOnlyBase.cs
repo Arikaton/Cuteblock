@@ -1,3 +1,4 @@
+using System;
 using GameScripts.Game;
 using TMPro;
 using UniRx;
@@ -21,10 +22,16 @@ namespace GameScripts.UI
             viewModel.Quantity.Subscribe(UpdateQuantity).AddTo(this);
         }
 
+        private void Start()
+        {
+            plusSign.SetActive(false);
+        }
+
         private void UpdateQuantity(int quantity)
         {
             quantityText.text = quantity.ToString();
-            plusSign.gameObject.SetActive(quantity == 0);
+            // TODO: uncomment below
+            //plusSign.gameObject.SetActive(quantity == 0);
         }
     }
 }
