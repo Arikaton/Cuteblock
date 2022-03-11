@@ -36,7 +36,10 @@
       <Path>Logs</Path>
       <Path>Temp</Path>
       <Path>UserSettings</Path>
+      <Path>cuteblock_BurstDebugInformation_DoNotShip</Path>
       <Path>obj</Path>
+      <Path>test1_BurstDebugInformation_DoNotShip</Path>
+      <Path>test2_BurstDebugInformation_DoNotShip</Path>
     </explicitExcludes>
   </component>
   <component name="UserContentModel">

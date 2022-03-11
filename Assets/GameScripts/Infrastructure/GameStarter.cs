@@ -30,6 +30,7 @@ namespace GameScripts.Game
 
         public void StartSavedGame()
         {
+            if (!_gameSaveProvider.HasSavedGame) return;
             var fieldModel = _gameSaveProvider.LoadSavedGame();
 
             var weightsCatalog = new WeightsCatalog(_weightsProvider.Weights);
@@ -41,6 +42,8 @@ namespace GameScripts.Game
 
         public void StartNewGame()
         {
+            _gameSaveProvider.ClearSaveData();
+            
             var fieldModel = new FieldModel();
             var weightsCatalog = new WeightsCatalog(_weightsProvider.Weights);
 

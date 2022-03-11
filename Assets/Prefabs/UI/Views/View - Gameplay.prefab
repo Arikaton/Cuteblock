@@ -2059,6 +2059,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3753704562374283660, guid: 0c16c118305dedd4a89dbee049cbd027, type: 3}
+      propertyPath: conditionNotMetAction.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5630677873255207600, guid: 0c16c118305dedd4a89dbee049cbd027, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -7091,6 +7095,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -15.252686
       objectReference: {fileID: 0}
+    - target: {fileID: 4929712778416570200, guid: 63f3dca702a451846862ad8072037d80, type: 3}
+      propertyPath: conditionNotMetAction.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7695400666414127951, guid: 63f3dca702a451846862ad8072037d80, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -10206,6 +10214,14 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8754734650377593034, guid: cfd422826421b0a46b07975c9b32fdeb, type: 3}
+      propertyPath: conditionNotMetAction.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8754734650377593034, guid: cfd422826421b0a46b07975c9b32fdeb, type: 3}
+      propertyPath: conditionNotMetAction.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cfd422826421b0a46b07975c9b32fdeb, type: 3}
 --- !u!224 &2878749150118385875 stripped
@@ -10835,6 +10851,10 @@ PrefabInstance:
     - target: {fileID: 2444556630301431012, guid: f0be877dfaa07144e981371be189ac76, type: 3}
       propertyPath: m_Name
       value: 'Container - Coin Resource '
+      objectReference: {fileID: 0}
+    - target: {fileID: 2444556630301431012, guid: f0be877dfaa07144e981371be189ac76, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2444556630301431013, guid: f0be877dfaa07144e981371be189ac76, type: 3}
       propertyPath: m_Pivot.x

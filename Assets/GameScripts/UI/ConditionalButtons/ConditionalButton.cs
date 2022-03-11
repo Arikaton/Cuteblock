@@ -28,7 +28,8 @@ namespace GameScripts.UI.ConditionalButtons
         private void Click()
         {
             immediateClickAction?.Invoke();
-            condition?.Check(Callback);
+            if(condition != null)
+                condition.Check(Callback);
         }
 
         private void Callback(bool conditionIsMet)
