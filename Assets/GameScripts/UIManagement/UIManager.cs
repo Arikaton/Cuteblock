@@ -6,10 +6,10 @@ namespace GameScripts.UIManagement
     public class UIManager : Singleton<UIManager>
     {
         [SerializeField] private NodesCollections _nodesCollections;
-        private Dictionary<UIViewId, UIView> _views = new();
-        private Dictionary<UINodeId, ViewNode> _nodes = new(10);
-        private HashSet<UIViewId> _activeViews = new();
-        private Stack<UIView> _popupStack = new();
+        private Dictionary<UIViewId, UIView> _views = new Dictionary<UIViewId, UIView>();
+        private Dictionary<UINodeId, ViewNode> _nodes = new Dictionary<UINodeId, ViewNode>(10);
+        private HashSet<UIViewId> _activeViews = new HashSet<UIViewId>();
+        private Stack<UIView> _popupStack = new Stack<UIView>();
 
         public UINodeId ActiveNode { get; private set; }
         public bool HasActivePopup => _popupStack.Count > 0;

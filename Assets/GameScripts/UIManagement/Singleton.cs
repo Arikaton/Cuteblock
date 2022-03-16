@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace GameScripts
+namespace GameScripts.UIManagement
 {
     public class Singleton<T> : MonoBehaviour
     {
