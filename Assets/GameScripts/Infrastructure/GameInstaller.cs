@@ -16,7 +16,7 @@ namespace GameScripts.Infrastructure
         public ShapeSpritesProvider shapeSpritesProvider;
         public GameStarter gameStarter;
         public WeightsCatalogue weightsCatalogue;
-        public List<LevelData> levels;
+        public LevelsCatalog levelsCatalog;
 
         public override void InstallBindings()
         {
@@ -107,7 +107,7 @@ namespace GameScripts.Infrastructure
 
         private void BindLevelsProvider()
         {
-            Container.Bind<LevelsProvider>().FromInstance(new LevelsProvider(levels)).AsSingle();
+            Container.Bind<LevelsProvider>().FromInstance(new LevelsProvider(levelsCatalog.levels)).AsSingle();
         }
     }
 }

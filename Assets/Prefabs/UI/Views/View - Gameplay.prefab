@@ -5632,6 +5632,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Container - Best Result
       objectReference: {fileID: 0}
+    - target: {fileID: 7641890590637310165, guid: 4ede1114efa25e047914c527d31814fd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8957891074945077095, guid: 4ede1114efa25e047914c527d31814fd, type: 3}
       propertyPath: offset.x
       value: 0.0000004768372

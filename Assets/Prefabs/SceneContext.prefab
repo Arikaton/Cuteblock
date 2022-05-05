@@ -84,14 +84,7 @@ MonoBehaviour:
   shapeSpritesProvider: {fileID: 4595572056020990550}
   gameStarter: {fileID: 3155742857032595460}
   weightsCatalogue: {fileID: 11400000, guid: bca15268258d3cf4fbbbc9b22bf68840, type: 2}
-  levels:
-  - cellsWithGems:
-    - {x: 1, y: 1}
-    - {x: 1, y: 2}
-  - cellsWithGems:
-    - {x: 5, y: 5}
-    - {x: 6, y: 5}
-    - {x: 7, y: 5}
+  levelsCatalog: {fileID: 11400000, guid: f16b5778c0f6de044a808b7860a90ce7, type: 2}
 --- !u!114 &3155742857032595460
 MonoBehaviour:
   m_ObjectHideFlags: 0
