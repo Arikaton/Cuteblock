@@ -84,6 +84,14 @@ MonoBehaviour:
   shapeSpritesProvider: {fileID: 4595572056020990550}
   gameStarter: {fileID: 3155742857032595460}
   weightsCatalogue: {fileID: 11400000, guid: bca15268258d3cf4fbbbc9b22bf68840, type: 2}
+  levels:
+  - cellsWithGems:
+    - {x: 1, y: 1}
+    - {x: 1, y: 2}
+  - cellsWithGems:
+    - {x: 5, y: 5}
+    - {x: 6, y: 5}
+    - {x: 7, y: 5}
 --- !u!114 &3155742857032595460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,7 +117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cats1: {fileID: 11400000, guid: 3f3bd495329995443a8a3b86603bf627, type: 2}
-  cats2: {fileID: 11400000, guid: 2fc1779c1977950499bc8b0b6400b65f, type: 2}
+  cats2: {fileID: 11400000, guid: 88974d02e6926d142b5dd6555d4b7125, type: 2}
 --- !u!114 &8015333363153483456
 MonoBehaviour:
   m_ObjectHideFlags: 0

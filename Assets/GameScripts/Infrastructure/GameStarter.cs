@@ -12,39 +12,33 @@ namespace GameScripts.Game
         private IShapeCatalog _shapeCatalog;
         private FieldViewModelContainer _fieldViewModelContainer;
         private AbstractConsumableFactory _consumableFactory;
-        private IGameSaveProvider _gameSaveProvider;
+        private CurrentLevelProvider _currentLevelProvider;
         private IWeightsProvider _weightsProvider;
         private PlayerStatsViewModel _playerStats;
+        private LevelsProvider _levelsProvider;
 
         [Inject]
         public void Construct(IShapeCatalog shapeCatalog, FieldViewModelContainer fieldViewModelContainer, AbstractConsumableFactory consumableFactory,
-            IGameSaveProvider gameSaveProvider, IWeightsProvider weightsProvider, PlayerStatsViewModel playerStats)
+            CurrentLevelProvider currentLevelProvider, LevelsProvider levelsProvider, IWeightsProvider weightsProvider, PlayerStatsViewModel playerStats)
         {
             _shapeCatalog = shapeCatalog;
             _fieldViewModelContainer = fieldViewModelContainer;
             _consumableFactory = consumableFactory;
-            _gameSaveProvider = gameSaveProvider;
+            _currentLevelProvider = currentLevelProvider;
+            _levelsProvider = levelsProvider;
             _weightsProvider = weightsProvider;
             _playerStats = playerStats;
         }
 
         public void StartSavedGame()
         {
-            if (!_gameSaveProvider.HasSavedGame) return;
-            var fieldModel = _gameSaveProvider.LoadSavedGame();
-
-            var weightsCatalog = new WeightsCatalog(_weightsProvider.Weights);
-            var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog, _consumableFactory, weightsCatalog);
-            fieldViewModel.OnGameFinished.Subscribe(_ => FinishGame(fieldModel)).AddTo(this);
-            fieldViewModel.OnModelChanged.Subscribe(_ => SaveFieldModel(fieldModel)).AddTo(this);
-            _fieldViewModelContainer.FieldViewModel.Value = fieldViewModel;
+            StartNewGame();
         }
 
         public void StartNewGame()
         {
-            _gameSaveProvider.ClearSaveData();
-            
-            var fieldModel = new FieldModel();
+            var levelData = _levelsProvider.GetLevelData(_currentLevelProvider.CurrentLevel.Value);
+            var fieldModel = new FieldModel(levelData.cellsWithGems);
             var weightsCatalog = new WeightsCatalog(_weightsProvider.Weights);
 
             var shapeIds = weightsCatalog.GetThreeUniqueRandomShapeId(0);
@@ -58,20 +52,13 @@ namespace GameScripts.Game
             
             var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog, _consumableFactory, weightsCatalog);
             fieldViewModel.OnGameFinished.Subscribe(_ => FinishGame(fieldModel)).AddTo(this);
-            fieldViewModel.OnModelChanged.Subscribe(_ => SaveFieldModel(fieldModel)).AddTo(this);
             _fieldViewModelContainer.FieldViewModel.Value = fieldViewModel;
         }
 
         public void FinishGame(FieldModel fieldModel)
         {
-            Debug.Log("Game Finished");
             _playerStats.RecordGameScore(fieldModel.Score.Value);
-            _gameSaveProvider.ClearSaveData();
-        }
-
-        private void SaveFieldModel(FieldModel fieldModel)
-        {
-            _gameSaveProvider.SaveGame(fieldModel);
+            _currentLevelProvider.CurrentLevel.Value += 1;
         }
     }
 }

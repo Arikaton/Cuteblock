@@ -365,7 +365,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6954972660922327420, guid: 659c38ce74cd2b34795ed4ce8ecb6dc4, type: 3}
       propertyPath: m_Name
-      value: Popup - Game Over
+      value: Popup - Game Over Variant
       objectReference: {fileID: 0}
     - target: {fileID: 6954972660922327420, guid: 659c38ce74cd2b34795ed4ce8ecb6dc4, type: 3}
       propertyPath: m_IsActive

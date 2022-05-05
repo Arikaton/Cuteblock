@@ -20,7 +20,7 @@ namespace GameScripts.UI
         [SerializeField] private RectTransform shapesContainerRect;
         [SerializeField] private RectTransform[] availableFigureContainers = new RectTransform[3];
         [SerializeField] private GridLayoutGroup gridLayout;
-        [SerializeField] private TextMeshProUGUI currentResult;
+        [SerializeField] private TextMeshProUGUI gemsCount;
         [SerializeField] private Transform backgroundShadowPanel;
         [SerializeField] private Transform availableShapesContainer;
 
@@ -63,7 +63,7 @@ namespace GameScripts.UI
             _fieldViewModel = fieldViewModel;
             _fieldViewModel.ShapesOnField.ObserveAdd().Subscribe(AddNewShapeOnField).AddTo(_tempDisposables);
             _fieldViewModel.AvailableShapes.ObserveReplace().Subscribe(AddNewAvailableShape).AddTo(_tempDisposables);
-            _fieldViewModel.Score.Subscribe(UpdateScore).AddTo(_tempDisposables);
+            _fieldViewModel.GemsLeftToCollect.Subscribe(UpdateGemsCount).AddTo(_tempDisposables);
             _fieldViewModel.HighlightAvailableShapes.Subscribe(SwitchAvailableShapesHighlighting).AddTo(_tempDisposables);
             _fieldViewModel.HighlightShapesOnField.Subscribe(SwitchShapesOnFieldHighlighting).AddTo(_tempDisposables);
             _fieldViewModel.OnGameFinished.Subscribe(_ => FinishGame()).AddTo(_tempDisposables);
@@ -158,9 +158,9 @@ namespace GameScripts.UI
             shapeView.Bind(eventData.NewValue);
         }
 
-        private void UpdateScore(int score)
+        private void UpdateGemsCount(int count)
         {
-            currentResult.text = score.ToString();
+            gemsCount.text = count.ToString();
         }
 
         private void SwitchShapesOnFieldHighlighting(bool shadowing)

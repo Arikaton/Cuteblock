@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GameScripts.Calendar;
 using GameScripts.ConsumeSystem.Module;
 using GameScripts.DailyTimer;
@@ -15,6 +16,7 @@ namespace GameScripts.Infrastructure
         public ShapeSpritesProvider shapeSpritesProvider;
         public GameStarter gameStarter;
         public WeightsCatalogue weightsCatalogue;
+        public List<LevelData> levels;
 
         public override void InstallBindings()
         {
@@ -26,11 +28,12 @@ namespace GameScripts.Infrastructure
             BindResourceStorage();
             BindConsumableFactory();
             BindHints();
-            BindGameSaveProvider();
             BindGameStarter();
             BindWeightsProvider();
             BindSoundAndHapticSettingsProvider();
             BindPlayerStats();
+            BindCurrentLevelProvider();
+            BindLevelsProvider();
         }
 
         private void BindDailyTimer()
@@ -75,11 +78,6 @@ namespace GameScripts.Infrastructure
             Container.Bind<DeleteHintViewModel>().FromNew().AsSingle();
         }
 
-        private void BindGameSaveProvider()
-        {
-            Container.Bind<IGameSaveProvider>().To<GameSaveProvider>().AsSingle();
-        }
-
         private void BindGameStarter()
         {
             Container.Bind<GameStarter>().FromInstance(gameStarter).AsSingle();
@@ -100,6 +98,16 @@ namespace GameScripts.Infrastructure
             var model = new PlayerStatsModel();
             var viewModel = new PlayerStatsViewModel(model);
             Container.Bind<PlayerStatsViewModel>().FromInstance(viewModel).AsSingle();
+        }
+
+        private void BindCurrentLevelProvider()
+        {
+            Container.Bind<CurrentLevelProvider>().FromNew().AsSingle();
+        }
+
+        private void BindLevelsProvider()
+        {
+            Container.Bind<LevelsProvider>().FromInstance(new LevelsProvider(levels)).AsSingle();
         }
     }
 }

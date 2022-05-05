@@ -14,6 +14,7 @@ namespace GameScripts.Game
         public IReadOnlyReactiveProperty<int> Score;
         public IReadOnlyReactiveProperty<bool> HighlightShapesOnField;
         public IReadOnlyReactiveProperty<bool> HighlightAvailableShapes;
+        public IReadOnlyReactiveProperty<int> GemsLeftToCollect;
         public CellViewModel[,] CellViewModels;
         public ReactiveCommand OnGameFinished;
         public ReactiveCommand OnModelChanged;
@@ -45,6 +46,7 @@ namespace GameScripts.Game
             ShapesOnField = _shapesOnField;
             AvailableShapes = _availableShapes;
             Score = _model.Score;
+            GemsLeftToCollect = _model.GemsLeftToCollect;
             HighlightShapesOnField = _highlightShapesOnField;
             HighlightAvailableShapes = _highlightAvailableShapes;
             CellViewModels = new CellViewModel[9, 9];
@@ -174,6 +176,7 @@ namespace GameScripts.Game
             CancelAllHighlighting();
             var cellsToDelete = FindCellsToDelete();
             AddScore(shapeViewModel.ShapeData.Points.Count, cellsToDelete.Count);
+            SubtractGems(cellsToDelete);
             var shapesToDestroy = FindShapesToDestroy(cellsToDelete);
             ClearCells(cellsToDelete);
             DestroyShapes(shapesToDestroy);
@@ -211,6 +214,23 @@ namespace GameScripts.Game
             ShadowCells(occupiedCells);
             var highlightedCells = FindCellsToDeleteAfterShapePlacement(occupiedCells);
             HighlightCells(highlightedCells);
+        }
+
+        private void SubtractGems(HashSet<Vector2Int> cellsToDelete)
+        {
+            foreach (var cell in cellsToDelete)
+            {
+                if (_model.FieldMatrix[cell.x, cell.y].uid.Value == -1)
+                {
+                    var gems = _model.GemsLeftToCollect.Value;
+                    _model.GemsLeftToCollect.Value -= 1;
+                    if (_model.GemsLeftToCollect.Value == 0)
+                    {
+                        OnGameFinished.Execute();
+                        break;
+                    }
+                }
+            }
         }
 
         private HashSet<Vector2Int> FindCellsOfShapeViewModel(ShapeViewModel shape)

@@ -12,10 +12,10 @@ namespace GameScripts.Providers
         public Sprite GetShapeSprite(int uid)
         {
             if (_assetPackId == "cats_1")
-                return cats1.shapes[uid];
+                return cats1.GetShapeSprite(uid);
             if (_assetPackId == "cats_2")
-                return cats2.shapes[uid];
-            return cats1.shapes[uid];
+                return cats2.GetShapeSprite(uid);
+            return cats1.GetShapeSprite(uid);
         }
     }
 }
