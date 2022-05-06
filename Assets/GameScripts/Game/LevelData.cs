@@ -6,6 +6,6 @@ namespace GameScripts.Game
     [System.Serializable]
     public class LevelData
     {
-        public List<Vector2Int> cellsWithGems;
+        public List<Vector2Int> cellsWithGems = new List<Vector2Int>();
     }
 }
