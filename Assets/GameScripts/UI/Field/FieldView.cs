@@ -23,6 +23,7 @@ namespace GameScripts.UI
         [SerializeField] private TextMeshProUGUI gemsCount;
         [SerializeField] private Transform backgroundShadowPanel;
         [SerializeField] private Transform availableShapesContainer;
+        [SerializeField] private RectTransform gemsAnimationTarget;
 
         private FieldViewModelContainer _fieldViewModelContainer;
         private FieldViewModel _fieldViewModel;
@@ -66,7 +67,8 @@ namespace GameScripts.UI
             _fieldViewModel.GemsLeftToCollect.Subscribe(UpdateGemsCount).AddTo(_tempDisposables);
             _fieldViewModel.HighlightAvailableShapes.Subscribe(SwitchAvailableShapesHighlighting).AddTo(_tempDisposables);
             _fieldViewModel.HighlightShapesOnField.Subscribe(SwitchShapesOnFieldHighlighting).AddTo(_tempDisposables);
-            _fieldViewModel.OnGameFinished.Subscribe(_ => FinishGame()).AddTo(_tempDisposables);
+            _fieldViewModel.OnGameWon.Subscribe(_ => ShowWinPopup()).AddTo(_tempDisposables);
+            _fieldViewModel.OnGameLost.Subscribe(_ => ShowOutOfMovesPopup()).AddTo(_tempDisposables);
 
             foreach (var shapeOnField in _fieldViewModel.ShapesOnField)
             {
@@ -89,9 +91,14 @@ namespace GameScripts.UI
             }
         }
 
-        private void FinishGame()
+        private void ShowWinPopup()
         {
-            UIManager.Instance.ShowPopup(UIViewId.PopupGameOver);
+            UIManager.Instance.ShowPopup(UIViewId.PopupLevelCompleted);
+        }
+        
+        private void ShowOutOfMovesPopup()
+        {
+            UIManager.Instance.ShowPopup(UIViewId.PopupOutOfMoves);
         }
 
         private void CleanFromPreviousGame()
@@ -106,12 +113,6 @@ namespace GameScripts.UI
         private void SetupCells()
         {
             gridLayout.enabled = true;
-            gridLayout.cellSize = new Vector2(cellsContainerRect.rect.width / 9, cellsContainerRect.rect.height / 9);
-            gridLayout.startCorner = GridLayoutGroup.Corner.LowerLeft;
-            gridLayout.startAxis = GridLayoutGroup.Axis.Vertical;
-            gridLayout.childAlignment = TextAnchor.LowerLeft;
-            gridLayout.constraint = GridLayoutGroup.Constraint.FixedRowCount;
-            gridLayout.constraintCount = 9;
             
             for (var x = 0; x < 9; x++)
             {
@@ -135,7 +136,7 @@ namespace GameScripts.UI
         private ShapeView CreateShapeView(int shapeIndex)
         {
             var shapeView = Instantiate(shapeViewPrefab, availableFigureContainers[shapeIndex]);
-            shapeView.Initialize(shapesContainerRect, _shapeSpritesProvider, shapeIndex, this);
+            shapeView.Initialize(shapesContainerRect, _shapeSpritesProvider, shapeIndex, this, gemsAnimationTarget);
             return shapeView;
         }
 

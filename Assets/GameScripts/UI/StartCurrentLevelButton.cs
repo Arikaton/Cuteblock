@@ -1,5 +1,4 @@
 using GameScripts.Game;
-using GameScripts.Providers;
 using GameScripts.UIManagement;
 using UniRx;
 using UnityEngine;
@@ -8,7 +7,7 @@ using Zenject;
 
 namespace GameScripts.UI
 {
-    public class PlayButton : MonoBehaviour
+    public class StartCurrentLevelButton : MonoBehaviour
     {
         public Button button;
         private GameStarter _gameStarter;
@@ -26,7 +25,7 @@ namespace GameScripts.UI
 
         private void Play()
         {
-            _gameStarter.StartNewGame();
+            _gameStarter.StartCurrentLevel();
             UIManager.Instance.ShowViewNode(UINodeId.Game);
         }
     }

@@ -18,7 +18,6 @@ namespace GameScripts.UI
         [SerializeField] private Image image;
 
         private CellViewModel _cellViewModel;
-        private CompositeDisposable _disposables = new();
         private TweenStateMachine _stateMachine;
         private bool _shadowed;
         private bool _occupied;
@@ -38,9 +37,9 @@ namespace GameScripts.UI
         public void Bind(CellViewModel cellViewModel)
         {
             _cellViewModel = cellViewModel;
-            _cellViewModel.Occupied.Subscribe(value => _occupied = value ).AddTo(_disposables);
-            _cellViewModel.Shadowed.Subscribe(value =>_shadowed = value).AddTo(_disposables);
-            _cellViewModel.Highlighted.Subscribe(value => _highlighted = value).AddTo(_disposables);
+            _cellViewModel.Occupied.Subscribe(value => _occupied = value ).AddTo(this);
+            _cellViewModel.Shadowed.Subscribe(value =>_shadowed = value).AddTo(this);
+            _cellViewModel.Highlighted.Subscribe(value => _highlighted = value).AddTo(this);
         }
 
         private void InitializeStateMachine()
@@ -69,10 +68,5 @@ namespace GameScripts.UI
         private bool Shadowed() => _shadowed;
         private bool Occupied() => _occupied;
         private bool Highlighted() => _highlighted;
-
-        private void OnDestroy()
-        {
-            _disposables.Dispose();
-        }
     }
 }

@@ -51,11 +51,13 @@ SpriteAtlas:
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 8efadc301fd23427a8cba864fb906ad7, type: 3}
+  - {fileID: 21300000, guid: e8512250fb175b4409734757e4d2f9a4, type: 3}
   - {fileID: 21300000, guid: 4bab1850f9e102747bc33902b5aca086, type: 3}
   - {fileID: 21300000, guid: ecdf7db09d7ceb142b62d0a5673855af, type: 3}
   - {fileID: 21300000, guid: 02bb1cc0f24a66043afb87fed621af89, type: 3}
   - {fileID: 21300000, guid: 6e57a9d000641024f83b72ed61b876ac, type: 3}
   - {fileID: 21300000, guid: 058746e0bcbddd34fb3688afe1575c00, type: 3}
+  - {fileID: 21300000, guid: cfd7380164d10394790422c643b39b88, type: 3}
   - {fileID: 21300000, guid: a61ad81115bbc78438e554a7299d18ee, type: 3}
   - {fileID: 21300000, guid: c8ad31913fe844b1ba83e46ba9eb7981, type: 3}
   - {fileID: 21300000, guid: 1aa8bdb16e7cf9842a616b23cea7ac1f, type: 3}
@@ -99,6 +101,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 31254199f84ff3f47ae00f2ddb0be0e1, type: 3}
   - {fileID: 21300000, guid: 7c5922f9fb70b6046851f338315c81ad, type: 3}
   - {fileID: 21300000, guid: a6a9bb0a94b6f9d44a2326e8f04d5313, type: 3}
+  - {fileID: 21300000, guid: 1451c45a7fb64d84586f493496e31752, type: 3}
   - {fileID: 21300000, guid: 99a2375a1a4c8f342b24c2530e0ba802, type: 3}
   - {fileID: 21300000, guid: dc881f5ad54b14a1ea4d9cce29382094, type: 3}
   - {fileID: 21300000, guid: a4dc757a9813efb4a8f73fd26fbbeae1, type: 3}
@@ -115,6 +118,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 9c6222ccc714ac7478215458e059ff41, type: 3}
   - {fileID: 21300000, guid: 267bbccc7256b6348992e32891701a7d, type: 3}
   - {fileID: 21300000, guid: 1201fcfc59fa8bc4eb6b9445cb13bd51, type: 3}
+  - {fileID: 21300000, guid: 6f76b30de84cb424ba126ab8d530480f, type: 3}
   - {fileID: 21300000, guid: ff290b1d0e3be4d7ba7d71220446a92b, type: 3}
   - {fileID: 21300000, guid: d86f382dd2e2f8b47940899d6ab28aef, type: 3}
   - {fileID: 21300000, guid: f6adc73d4be7a84478e985c72a73b019, type: 3}
@@ -140,11 +144,13 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 0fd287ff2b4a2624491cd19540241545, type: 3}
   m_PackedSpriteNamesToIndex:
   - no_ads 1
+  - field_new
   - close
   - Round3
   - square_big
   - plate_score
   - Round5
+  - next_level
   - Round30
   - IMG_4097 1
   - gem
@@ -188,6 +194,7 @@ SpriteAtlas:
   - next_goal
   - Round50
   - plate_hint
+  - play_again
   - home
   - plate_dc
   - figure_rotation_big
@@ -204,6 +211,7 @@ SpriteAtlas:
   - settings_icon
   - crown
   - settings
+  - rectangle_field
   - gems
   - gift
   - sound_off

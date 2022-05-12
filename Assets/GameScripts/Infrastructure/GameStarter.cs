@@ -14,12 +14,11 @@ namespace GameScripts.Game
         private AbstractConsumableFactory _consumableFactory;
         private CurrentLevelProvider _currentLevelProvider;
         private IWeightsProvider _weightsProvider;
-        private PlayerStatsViewModel _playerStats;
         private LevelsProvider _levelsProvider;
 
         [Inject]
         public void Construct(IShapeCatalog shapeCatalog, FieldViewModelContainer fieldViewModelContainer, AbstractConsumableFactory consumableFactory,
-            CurrentLevelProvider currentLevelProvider, LevelsProvider levelsProvider, IWeightsProvider weightsProvider, PlayerStatsViewModel playerStats)
+            CurrentLevelProvider currentLevelProvider, LevelsProvider levelsProvider, IWeightsProvider weightsProvider)
         {
             _shapeCatalog = shapeCatalog;
             _fieldViewModelContainer = fieldViewModelContainer;
@@ -27,17 +26,23 @@ namespace GameScripts.Game
             _currentLevelProvider = currentLevelProvider;
             _levelsProvider = levelsProvider;
             _weightsProvider = weightsProvider;
-            _playerStats = playerStats;
         }
 
-        public void StartSavedGame()
+        public void StartCurrentLevel()
         {
-            StartNewGame();
+            int level = _currentLevelProvider.CurrentLevel.Value;
+            StartLevelInternal(level);
         }
 
-        public void StartNewGame()
+        public void StartNextLevel()
         {
-            var levelData = _levelsProvider.GetLevelData(_currentLevelProvider.CurrentLevel.Value);
+            int level = ++_currentLevelProvider.CurrentLevel.Value;
+            StartLevelInternal(level);
+        }
+
+        private void StartLevelInternal(int level)
+        {
+            var levelData = _levelsProvider.GetLevelData(level);
             var fieldModel = new FieldModel(levelData.cellsWithGems);
             var weightsCatalog = new WeightsCatalog(_weightsProvider.Weights);
 
@@ -51,14 +56,7 @@ namespace GameScripts.Game
             fieldModel.AvailableShapes = new ShapeModel[3] {availableShape0, availableShape1, availableShape2};
             
             var fieldViewModel = new FieldViewModel(fieldModel, _shapeCatalog, _consumableFactory, weightsCatalog);
-            fieldViewModel.OnGameFinished.Subscribe(_ => FinishGame(fieldModel)).AddTo(this);
             _fieldViewModelContainer.FieldViewModel.Value = fieldViewModel;
-        }
-
-        public void FinishGame(FieldModel fieldModel)
-        {
-            _playerStats.RecordGameScore(fieldModel.Score.Value);
-            _currentLevelProvider.CurrentLevel.Value += 1;
         }
     }
 }
