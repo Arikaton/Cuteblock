@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using GameScripts.Calendar;
 using GameScripts.ConsumeSystem.Module;
 using GameScripts.DailyTimer;

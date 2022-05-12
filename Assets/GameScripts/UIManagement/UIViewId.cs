@@ -22,6 +22,7 @@ namespace GameScripts.UIManagement
         ShopHints = 108,
         Shop_DO_NOT_USE = 109,
         PopupContinueOrNewGame = 110,
-        PopupTutorial = 111
+        PopupTutorial = 111,
+        PopupLevelCompleted = 112
     }
 }

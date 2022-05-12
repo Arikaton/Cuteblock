@@ -14,6 +14,8 @@ namespace GameScripts.UI
         public Image shapeImage;
         public RectTransform rotationLabel;
         public Image containerRectImage;
+        [HideInInspector]
+        public RectTransform gemsAnimationTarget;
         
         private ShapeViewModel _viewModel;
         private IShapeSpritesProvider _shapeSpritesProvider;
@@ -25,6 +27,7 @@ namespace GameScripts.UI
         private bool _stateChanged;
 
         public int ShapeIndex { get; private set; }
+        public int ShapeUid => _viewModel.Uid;
 
         private void Awake()
         {
@@ -32,12 +35,13 @@ namespace GameScripts.UI
         }
 
         public void Initialize(RectTransform shapesContainer, IShapeSpritesProvider shapeSpritesProvider, int shapeIndex,
-            FieldView fieldView)
+            FieldView fieldView, RectTransform gemsAnimationTgt)
         {
             _shapesContainer = shapesContainer;
             _shapeSpritesProvider = shapeSpritesProvider;
             ShapeIndex = shapeIndex;
             _fieldView = fieldView;
+            gemsAnimationTarget = gemsAnimationTgt;
             _cellSize = _shapesContainer.sizeDelta.x / 9;
             containerRect.anchoredPosition = Vector2.zero;
             _mainCanvas = GetComponentInParent<Canvas>().rootCanvas;

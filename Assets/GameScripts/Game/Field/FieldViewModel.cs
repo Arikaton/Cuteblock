@@ -16,7 +16,8 @@ namespace GameScripts.Game
         public IReadOnlyReactiveProperty<bool> HighlightAvailableShapes;
         public IReadOnlyReactiveProperty<int> GemsLeftToCollect;
         public CellViewModel[,] CellViewModels;
-        public ReactiveCommand OnGameFinished;
+        public ReactiveCommand OnGameWon;
+        public ReactiveCommand OnGameLost;
         public ReactiveCommand OnModelChanged;
 
         private IReactiveCollection<ShapeViewModel> _shapesOnField;
@@ -30,6 +31,7 @@ namespace GameScripts.Game
         private List<Vector2Int> _highlightedCells;
         private RectInt _rect = new RectInt(0, 0, 9, 9);
         private WeightsCatalog _weightsCatalog;
+        private bool _gameWon;
 
         public FieldViewModel(FieldModel model, IShapeCatalog shapeCatalog, AbstractConsumableFactory consumableFactory, WeightsCatalog weightsCatalog)
         {
@@ -37,7 +39,8 @@ namespace GameScripts.Game
             _shapeCatalog = shapeCatalog;
             _consumableFactory = consumableFactory;
             _weightsCatalog = weightsCatalog;
-            OnGameFinished = new ReactiveCommand();
+            OnGameWon = new ReactiveCommand();
+            OnGameLost = new ReactiveCommand();
             OnModelChanged = new ReactiveCommand();
             _shapesOnField = new ReactiveCollection<ShapeViewModel>();
             _availableShapes = new ReactiveCollection<ShapeViewModel>(new List<ShapeViewModel>(3) {null, null, null});
@@ -222,11 +225,11 @@ namespace GameScripts.Game
             {
                 if (_model.FieldMatrix[cell.x, cell.y].uid.Value == -1)
                 {
-                    var gems = _model.GemsLeftToCollect.Value;
                     _model.GemsLeftToCollect.Value -= 1;
                     if (_model.GemsLeftToCollect.Value == 0)
                     {
-                        OnGameFinished.Execute();
+                        _gameWon = true;
+                        OnGameWon.Execute();
                         break;
                     }
                 }
@@ -349,17 +352,18 @@ namespace GameScripts.Game
 
         private void CheckRemainingShapesAvailability()
         {
-            bool gameFinished = true;
+            if (_gameWon) return;
+            bool gameLost = true;
             foreach (var shape in _availableShapes)
             {
                 if (shape == null) continue;
                 var shapeCanBePlaced = ShapeCanBePlaced(shape.Uid, shape.Rotation.Value);
                 shape.CanBePlaced.SetValueAndForceNotify(shapeCanBePlaced);
                 if (shapeCanBePlaced)
-                    gameFinished = false;
+                    gameLost = false;
             }
-            if (gameFinished)
-                OnGameFinished.Execute();
+            if (gameLost)
+                OnGameLost.Execute();
         }
 
         private void PlaceShapeViewModel(int shapeIndex, Vector2Int cell)
