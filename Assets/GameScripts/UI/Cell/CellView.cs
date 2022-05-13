@@ -16,6 +16,9 @@ namespace GameScripts.UI
         private const string StateHighlighted = "highlighted";
 
         [SerializeField] private Image image;
+        [SerializeField] private Color occupiedColor = new Color(0.74f, 0.81f, 1f);
+        [SerializeField] private Color shadowedColor = new Color(0.73f, 0.74f, 0.84f);
+        [SerializeField] private Color highlightedColor = new Color(0.46f, 1f, 0.65f);
 
         private CellViewModel _cellViewModel;
         private TweenStateMachine _stateMachine;
@@ -45,9 +48,9 @@ namespace GameScripts.UI
         private void InitializeStateMachine()
         {
             _stateMachine.AddState(StateNormal, image.TTColor(image.color, Duration));
-            _stateMachine.AddState(StateShadowed, image.TTColor(new Color(0.73f, 0.74f, 0.84f), Duration));
-            _stateMachine.AddState(StateOccupied, image.TTColor(new Color(0.74f, 0.81f, 1f), Duration));
-            _stateMachine.AddState(StateHighlighted, image.TTColor(new Color(0.46f, 1f, 0.65f), Duration));
+            _stateMachine.AddState(StateShadowed, image.TTColor(shadowedColor, Duration));
+            _stateMachine.AddState(StateOccupied, image.TTColor(occupiedColor, Duration));
+            _stateMachine.AddState(StateHighlighted, image.TTColor(highlightedColor, Duration));
 
             _stateMachine.AddTransition(StateNormal, StateOccupied, Occupied);
             _stateMachine.AddTransition(StateNormal, StateHighlighted, Highlighted);
