@@ -30,13 +30,78 @@ public partial class TrueShadow
         rendererMaterialProvider = GetComponent<ITrueShadowRendererMaterialProvider>();
         rendererMaterialModifier = GetComponent<ITrueShadowRendererMaterialModifier>();
         rendererMeshModifier     = GetComponent<ITrueShadowRendererMeshModifier>();
+
+        if (casterMaterialProvider != null)
+        {
+            casterMaterialProvider.materialReplaced += HandleCasterMaterialReplaced;
+            casterMaterialProvider.materialModified += HandleCasterMaterialModified;
+        }
+
+        if (rendererMaterialProvider != null)
+        {
+            rendererMaterialProvider.materialReplaced += HandleRendererMaterialReplaced;
+            rendererMaterialProvider.materialModified += HandleRendererMaterialModified;
+        }
+    }
+
+    void TerminatePlugins()
+    {
+        if (casterMaterialProvider != null)
+        {
+            casterMaterialProvider.materialReplaced -= HandleCasterMaterialReplaced;
+            casterMaterialProvider.materialModified -= HandleCasterMaterialModified;
+        }
+
+        if (rendererMaterialProvider != null)
+        {
+            rendererMaterialProvider.materialReplaced -= HandleRendererMaterialReplaced;
+            rendererMaterialProvider.materialModified -= HandleRendererMaterialModified;
+        }
+    }
+
+    public void RefreshPlugins()
+    {
+        TerminatePlugins();
+        InitializePlugins();
+    }
+
+    void HandleCasterMaterialReplaced()
+    {
+        SetTextureDirty();
+    }
+
+    void HandleRendererMaterialReplaced()
+    {
+        if (shadowRenderer)
+            shadowRenderer.UpdateMaterial();
+    }
+
+    void HandleCasterMaterialModified()
+    {
+        SetTextureDirty();
+    }
+
+    void HandleRendererMaterialModified()
+    {
+        if (shadowRenderer)
+            shadowRenderer.SetMaterialDirty();
     }
 
     public virtual Material GetShadowCastingMaterial()
     {
-        return casterMaterialProvider != null
-                   ? casterMaterialProvider.GetTrueShadowCasterMaterial()
-                   : Graphic.material;
+        Material provided = null;
+
+        if (casterMaterialProvider != null)
+            provided = casterMaterialProvider.GetTrueShadowCasterMaterial();
+
+#if TMP_PRESENT
+        else if (Graphic is TMPro.TextMeshProUGUI tmp)
+        {
+            provided = tmp.materialForRendering;
+        }
+#endif
+
+        return provided != null ? provided : Graphic.material;
     }
 
     public virtual void ModifyShadowCastingMaterialProperties(MaterialPropertyBlock propertyBlock)
@@ -54,7 +119,7 @@ public partial class TrueShadow
     }
 
     readonly List<Color32> meshColors       = new List<Color32>(4);
-    List<Color32>          meshColorsOpaque = new List<Color32>(4);
+    readonly List<Color32> meshColorsOpaque = new List<Color32>(4);
 
     void MakeOpaque(Mesh mesh)
     {
@@ -91,9 +156,10 @@ public partial class TrueShadow
         mesh.SetColors(meshColorsOpaque);
     }
 
-    public virtual Material GetShadowRenderingNormalMaterial()
+    public virtual Material GetShadowRenderingMaterial()
     {
-        return rendererMaterialProvider?.GetTrueShadowRendererMaterial();
+        var provided = rendererMaterialProvider?.GetTrueShadowRendererMaterial();
+        return provided != null ? provided : BlendMode.GetMaterial();
     }
 
     public virtual void ModifyShadowRendererMaterial(Material baseMaterial)
@@ -103,7 +169,7 @@ public partial class TrueShadow
 
     public virtual void ModifyShadowRendererMesh(VertexHelper vertexHelper)
     {
-        rendererMeshModifier?.ModifyTrueShadowRenderMesh(vertexHelper);
+        rendererMeshModifier?.ModifyTrueShadowRendererMesh(vertexHelper);
     }
 }
 }

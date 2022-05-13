@@ -3,18 +3,6 @@ using UnityEngine;
 
 namespace LeTai.TrueShadow.Editor
 {
-[CustomPropertyDrawer(typeof(InsetToggleAttribute))]
-public class InsetToggle : InlineToolbar
-{
-    static readonly Texture OUTER_SHADOW_TEXTURE = Utility.FindAsset<Texture>("Outer Shadow");
-    static readonly Texture INNER_SHADOW_TEXTURE = Utility.FindAsset<Texture>("Inner Shadow");
-
-    static InsetToggle()
-    {
-        textures = new[] {OUTER_SHADOW_TEXTURE, INNER_SHADOW_TEXTURE};
-    }
-}
-
 public class InlineToolbar : PropertyDrawer
 {
     protected static Texture[] textures;
@@ -57,11 +45,6 @@ public class InlineToolbar : PropertyDrawer
                     property.boolValue = isOn;
             }
         }
-    }
-
-    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-    {
-        return EditorGUIUtility.singleLineHeight * 2f;
     }
 }
 }

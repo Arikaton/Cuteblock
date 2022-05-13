@@ -97,8 +97,8 @@ public partial class TrueShadow
             ),
         };
 
-        Graphic.RegisterDirtyLayoutCallback(SetLayoutTextureDirty);
-        Graphic.RegisterDirtyVerticesCallback(SetLayoutTextureDirty);
+        Graphic.RegisterDirtyLayoutCallback(ForceLayoutTextureDirty);
+        Graphic.RegisterDirtyVerticesCallback(ForceLayoutTextureDirty);
         Graphic.RegisterDirtyMaterialCallback(OnGraphicMaterialDirty);
 
         CheckHierarchyDirtied();
@@ -109,15 +109,15 @@ public partial class TrueShadow
     {
         if (Graphic)
         {
-            Graphic.UnregisterDirtyLayoutCallback(SetLayoutTextureDirty);
-            Graphic.UnregisterDirtyVerticesCallback(SetLayoutTextureDirty);
+            Graphic.UnregisterDirtyLayoutCallback(ForceLayoutTextureDirty);
+            Graphic.UnregisterDirtyVerticesCallback(ForceLayoutTextureDirty);
             Graphic.UnregisterDirtyMaterialCallback(OnGraphicMaterialDirty);
         }
     }
 
     void OnGraphicMaterialDirty()
     {
-        SetLayoutTextureDirty();
+        ForceLayoutTextureDirty();
         shadowRenderer.UpdateMaterial();
     }
 
@@ -156,6 +156,11 @@ public partial class TrueShadow
     {
         base.Reset();
         ApplySerializedData();
+
+        if (ProjectSettings.Instance.UseGlobalAngleByDefault)
+        {
+            UseGlobalAngle = true;
+        }
     }
 #endif
 
@@ -175,7 +180,7 @@ public partial class TrueShadow
 
         if (!isActiveAndEnabled) return;
 
-        SetLayoutTextureDirty();
+        ForceLayoutTextureDirty();
     }
 
 
@@ -183,7 +188,7 @@ public partial class TrueShadow
     {
         if (!isActiveAndEnabled) return;
 
-        SetLayoutTextureDirty();
+        ForceLayoutTextureDirty();
     }
 
     public void ModifyMesh(Mesh mesh)
@@ -193,7 +198,7 @@ public partial class TrueShadow
         if (SpriteMesh) Utility.SafeDestroy(SpriteMesh);
         SpriteMesh = Instantiate(mesh);
 
-        SetLayoutTextureDirty();
+        ForceLayoutTextureDirty();
     }
 
     public void ModifyMesh(VertexHelper verts)
@@ -204,13 +209,22 @@ public partial class TrueShadow
         if (!SpriteMesh) SpriteMesh = new Mesh();
         verts.FillMesh(SpriteMesh);
 
-        SetLayoutTextureDirty();
+        ForceLayoutTextureDirty();
     }
 
-    void SetLayoutTextureDirty()
+    void ForceLayoutTextureDirty()
     {
+#if TMP_PRESENT
+        if (Graphic is TMPro.TextMeshProUGUI tmp)
+        {
+            if (tmp.text.Length == 0)
+                SpriteMesh = null;
+            else
+                SpriteMesh = tmp.mesh;
+        }
+#endif
         SetLayoutDirty();
-        SetTextureDirty();
+        ForceTextureDirty();
     }
 }
 }

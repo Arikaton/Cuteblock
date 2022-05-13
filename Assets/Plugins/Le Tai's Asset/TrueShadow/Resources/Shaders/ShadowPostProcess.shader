@@ -59,7 +59,7 @@ Shader "Hidden/TrueShadow/PostProcess"
                 else
                     cutOut = tex2D(_MainTex, cutoutUv).a;
 
-                shadow *= 1 - cutOut;
+                shadow *= saturate(1 - cutOut*cutOut);
 
                 return shadow;
             }

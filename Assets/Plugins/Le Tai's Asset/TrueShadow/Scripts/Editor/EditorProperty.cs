@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Reflection;
 using UnityEditor;
+using UnityEngine;
 
 namespace LeTai.TrueShadow.Editor
 {
@@ -22,16 +23,17 @@ public class EditorProperty
         dirtyFlag          = serializedObject.FindProperty("modifiedFromInspector");
     }
 
-    public void Draw()
+    public void Draw(params GUILayoutOption[] options)
     {
         using (var scope = new EditorGUI.ChangeCheckScope())
         {
-            EditorGUILayout.PropertyField(serializedProperty);
+            EditorGUILayout.PropertyField(serializedProperty, options);
 
             if (!scope.changed)
                 return;
 
-            dirtyFlag.boolValue = true;
+            if (dirtyFlag != null)
+                dirtyFlag.boolValue = true;
             serializedObject.ApplyModifiedProperties();
 
             foreach (var target in serializedObject.targetObjects)
@@ -39,16 +41,16 @@ public class EditorProperty
                 switch (serializedProperty.propertyType)
                 {
                 case SerializedPropertyType.Float:
-                    propertySetter.Invoke(target, new object[] {serializedProperty.floatValue});
+                    propertySetter.Invoke(target, new object[] { serializedProperty.floatValue });
                     break;
                 case SerializedPropertyType.Enum:
-                    propertySetter.Invoke(target, new object[] {serializedProperty.enumValueIndex});
+                    propertySetter.Invoke(target, new object[] { serializedProperty.enumValueIndex });
                     break;
                 case SerializedPropertyType.Boolean:
-                    propertySetter.Invoke(target, new object[] {serializedProperty.boolValue});
+                    propertySetter.Invoke(target, new object[] { serializedProperty.boolValue });
                     break;
                 case SerializedPropertyType.Color:
-                    propertySetter.Invoke(target, new object[] {serializedProperty.colorValue});
+                    propertySetter.Invoke(target, new object[] { serializedProperty.colorValue });
                     break;
                 default: throw new NotImplementedException();
                 }

@@ -152,7 +152,7 @@ public class InteractiveShadow : MonoBehaviour, IPointerEnterHandler, IPointerEx
         var start = Time.time;
         while (start + duration >= Time.time)
         {
-            shadow.SetTextureDirty();
+            shadow.ForceTextureDirty();
             yield return null;
         }
     }
