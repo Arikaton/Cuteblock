@@ -7,7 +7,7 @@ namespace GameScripts.Providers
         public ShapeSpritesCatalog cats1;
         public ShapeSpritesCatalog cats2;
 
-        private string _assetPackId = "cats_1";
+        private string _assetPackId = "cats_2";
 
         public Sprite GetShapeSprite(int uid)
         {

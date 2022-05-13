@@ -44,7 +44,7 @@ namespace GameScripts.UI
 
         private void InitializeStateMachine()
         {
-            _stateMachine.AddState(StateNormal, image.TTColor(Color.white, Duration));
+            _stateMachine.AddState(StateNormal, image.TTColor(image.color, Duration));
             _stateMachine.AddState(StateShadowed, image.TTColor(new Color(0.73f, 0.74f, 0.84f), Duration));
             _stateMachine.AddState(StateOccupied, image.TTColor(new Color(0.74f, 0.81f, 1f), Duration));
             _stateMachine.AddState(StateHighlighted, image.TTColor(new Color(0.46f, 1f, 0.65f), Duration));

@@ -93,6 +93,10 @@ namespace GameScripts.UI
 
         private void ShowWinPopup()
         {
+            foreach (var particle in FindObjectsOfType<ParticleSystem>())
+            {
+                particle.Play();
+            }
             UIManager.Instance.ShowPopup(UIViewId.PopupLevelCompleted);
         }
         
