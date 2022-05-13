@@ -31,13 +31,13 @@ namespace GameScripts.UI
         private FieldViewModel _fieldViewModel;
         private IShapeSpritesProvider _shapeSpritesProvider;
         private CellView[,] _cellViews;
-        private CompositeDisposable _disposables;
-        private CompositeDisposable _tempDisposables;
+        private CompositeDisposable _tempDisposables = new CompositeDisposable();
         
         [Inject]
         public void Construct(FieldViewModelContainer fieldViewModelContainer, IShapeSpritesProvider shapeSpritesProvider)
         {
             _fieldViewModelContainer = fieldViewModelContainer;
+            _fieldViewModelContainer.FieldViewModel.SkipLatestValueOnSubscribe().Subscribe(Initialize).AddTo(this);
             _shapeSpritesProvider = shapeSpritesProvider;
         }
 
@@ -49,13 +49,6 @@ namespace GameScripts.UI
         private void Awake()
         {
             _cellViews = new CellView[9, 9];
-            _disposables = new CompositeDisposable();
-            _tempDisposables = new CompositeDisposable();
-        }
-
-        private void Start()
-        {
-            _fieldViewModelContainer.FieldViewModel.SkipLatestValueOnSubscribe().Subscribe(Initialize).AddTo(_disposables);
         }
 
         private void Initialize(FieldViewModel fieldViewModel)
@@ -199,11 +192,6 @@ namespace GameScripts.UI
             backgroundShadowPanel.gameObject.SetActive(false);
             shapesContainerRect.SetAsLastSibling();
             availableShapesContainer.SetAsLastSibling();
-        }
-
-        private void OnDestroy()
-        {
-            _disposables.Dispose();
         }
     }
 }
