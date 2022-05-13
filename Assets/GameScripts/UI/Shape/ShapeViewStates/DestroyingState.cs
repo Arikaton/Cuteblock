@@ -12,7 +12,7 @@ namespace GameScripts.UI
 
         public override void OnEnter()
         {
-            if (shapeView.ShapeUid == -1)
+            if (shapeView.ShapeUid < 0)
             {
                 shapeView.transform.SetParent(shapeView.gemsAnimationTarget);
                 var sequence = DOTween.Sequence();

@@ -5,13 +5,13 @@ namespace LeTai.TrueShadow.Editor
 {
 public static class Utility
 {
-    public static T FindAsset<T>(string assetName) where T : UnityEngine.Object
+    internal static T FindEditorResource<T>(string assetName) where T : Object
     {
         var guids = AssetDatabase.FindAssets("l:TrueShadowEditorResources " + assetName);
         if (guids.Length == 0)
         {
-            Debug.LogError($"Asset \"{assetName}\" not found. " +
-                           $"Make sure it have the label \"TrueShadowEditorResources\"");
+            Debug.LogError(
+                $"Asset \"{assetName}\" not found. Make sure it have the label \"TrueShadowEditorResources\"");
             return null;
         }
 

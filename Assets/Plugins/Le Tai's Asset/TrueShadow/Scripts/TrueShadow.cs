@@ -14,7 +14,7 @@ namespace LeTai.TrueShadow
 [ExecuteAlways]
 public partial class TrueShadow : UIBehaviour, IMeshModifier, ICanvasElement
 {
-    static readonly Color DEFAULT_COLOR = new Color(0, 0, 0, .3f);
+    static readonly Color DEFAULT_COLOR = new Color(0, 0, 0, .6f);
 
     [Tooltip("Size of the shadow")]
     [SerializeField] float size = 32;
@@ -23,12 +23,14 @@ public partial class TrueShadow : UIBehaviour, IMeshModifier, ICanvasElement
     [SpreadSlider]
     [SerializeField] float spread = 0;
 
+    [SerializeField] bool useGlobalAngle = false;
+
     [Tooltip("Direction to offset the shadow toward")]
     [Knob]
     [SerializeField] float offsetAngle = 90;
 
     [Tooltip("How far to offset the shadow")]
-    [SerializeField] float offsetDistance = 8;
+    [SerializeField] float offsetDistance = 12;
 
     [SerializeField] Vector2 offset = Vector2.zero;
 
@@ -49,9 +51,12 @@ public partial class TrueShadow : UIBehaviour, IMeshModifier, ICanvasElement
     [Tooltip("Ignore the shadow caster's color, so you can choose specific color for your shadow")]
     [SerializeField] bool ignoreCasterColor = false;
 
-    [Tooltip(
-        "How to obtain the color of the area outside of the source image. Automatically set based on Blend Mode. You should only change this setting if you are using some very custom UI that require it")]
+    [Tooltip("How to obtain the color of the area outside of the source image. " +
+             "Automatically set based on Blend Mode. You should only change this setting if you are using some very custom UI that require it")]
     [SerializeField] ColorBleedMode colorBleedMode;
+
+    [Tooltip("Improve shadow fit on some sprites")]
+    [SerializeField] bool disableFitCompensation;
 
     [Tooltip("Position the shadow GameObject as previous sibling of the UI element")]
     [SerializeField] bool shadowAsSibling;
@@ -107,11 +112,40 @@ public partial class TrueShadow : UIBehaviour, IMeshModifier, ICanvasElement
         }
     }
 
+    public bool UseGlobalAngle
+    {
+        get => useGlobalAngle;
+        set
+        {
+            useGlobalAngle = value;
+
+            ProjectSettings.Instance.globalAngleChanged -= OnGlobalAngleChanged;
+            var globalAngle = ProjectSettings.Instance.GlobalAngle;
+            if (useGlobalAngle)
+            {
+                offset = Math.AngleDistanceVector(globalAngle, offset.magnitude, Vector2.right);
+                SetLayoutDirty();
+                if (Cutout)
+                    SetTextureDirty();
+
+                ProjectSettings.Instance.globalAngleChanged += OnGlobalAngleChanged;
+            }
+            else
+            {
+                var localAngle = offsetAngle;
+                OffsetAngle = globalAngle;
+                OffsetAngle = localAngle;
+            }
+        }
+    }
+
     public float OffsetAngle
     {
         get => offsetAngle;
         set
         {
+            if (UseGlobalAngle) return;
+
             var newValue = (value + 360f) % 360f;
             if (modifiedFromInspector || !Mathf.Approximately(offsetAngle, newValue))
             {
@@ -220,6 +254,7 @@ public partial class TrueShadow : UIBehaviour, IMeshModifier, ICanvasElement
             {
                 modifiedFromInspector = false;
 
+                SetLayoutDirty();
                 SetTextureDirty();
             }
 
@@ -261,8 +296,6 @@ public partial class TrueShadow : UIBehaviour, IMeshModifier, ICanvasElement
 
     /// <summary>
     /// How to obtain the color of the area outside of the source image. Automatically set based on Blend Mode. You should only change this setting if you are using some very custom UI that require it.
-    ///
-    /// <seealso cref="ClearColor"/>
     /// </summary>
     public ColorBleedMode ColorBleedMode
     {
@@ -275,6 +308,24 @@ public partial class TrueShadow : UIBehaviour, IMeshModifier, ICanvasElement
 
                 colorBleedMode = value;
                 SetTextureDirty();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Improve shadow fit on some sprites
+    /// </summary>
+    public bool DisableFitCompensation
+    {
+        get => disableFitCompensation;
+        set
+        {
+            if (modifiedFromInspector || disableFitCompensation != value)
+            {
+                modifiedFromInspector = false;
+
+                disableFitCompensation = value;
+                SetLayoutDirty();
             }
         }
     }
@@ -337,6 +388,52 @@ public partial class TrueShadow : UIBehaviour, IMeshModifier, ICanvasElement
         }
     }
 
+
+    /// <summary>
+    /// When using a Material that can modify the shadow shape,
+    /// use this to prevent caching caster that differ only in material property
+    /// </summary>
+    /// <example>
+    /// Take material properties into account when caching shadow
+    /// <code>
+    /// void Start()
+    /// {
+    ///     shadow = GetComponent&lt;TrueShadow&gt;();
+    /// }
+    ///
+    /// void Update()
+    /// {
+    ///     shadow.CustomHash = myMaterial.ComputeCRC();
+    /// }
+    /// </code>
+    ///
+    /// Alternatively, Generate a new shadow every frame. Useful for shaders that animates shape over time. This can be performance intensive
+    /// <br/>
+    /// <code>
+    /// void Update()
+    /// {
+    ///     shadow.CustomHash = Time.frameCount;
+    /// }
+    /// </code>
+    /// </example>
+    public int CustomHash
+    {
+        get => customHash;
+        set
+        {
+            if (customHash != value)
+                SetTextureDirty();
+
+            customHash = value;
+        }
+    }
+
+    public Vector2 Offset => offset;
+
+#if LETAI_TRUESHADOW_DEBUG
+    public bool alwaysRender;
+#endif
+
     /// <summary>
     /// Always true due to <see cref="ShadowAsSibling"/>. Do not use!
     /// </summary>
@@ -349,7 +446,6 @@ public partial class TrueShadow : UIBehaviour, IMeshModifier, ICanvasElement
 
     [SerializeField] List<Sprite> bakedShadows;
 
-    public Vector2 Offset => offset;
 
     internal ShadowRenderer shadowRenderer;
 
@@ -368,31 +464,38 @@ public partial class TrueShadow : UIBehaviour, IMeshModifier, ICanvasElement
                 var sprite = image.overrideSprite;
                 return sprite ? sprite.texture : null;
             case RawImage rawImage: return rawImage.texture;
-            default:                return Graphic.mainTexture;
+#if TMP_PRESENT
+            case TMPro.TextMeshProUGUI tmp: return tmp.materialForRendering.mainTexture;
+#endif
+            default: return Graphic.mainTexture;
             }
         }
     }
 
-    internal int TextureRevision { get; private set; }
 
-#if LETAI_TRUESHADOW_DEBUG
-    public bool alwaysRender;
-#endif
+    ShadowContainer          shadowContainer;
+    internal ShadowContainer ShadowContainer => shadowContainer;
 
-    ShadowContainer shadowContainer;
+    int customHash = 0;
 
-    internal ShadowContainer ShadowContainer
+    bool textureDirty;
+    bool layoutDirty;
+
+    internal bool HierachyDirty   { get; private set; }
+    internal int  TextureRevision { get; private set; }
+
+    void OnGlobalAngleChanged(float angle)
     {
-        get => shadowContainer;
-        private set => shadowContainer = value;
+        offset = Math.AngleDistanceVector(angle, offset.magnitude, Vector2.right);
+        SetLayoutDirty();
+        if (Cutout)
+            SetTextureDirty();
     }
-
-    bool          textureDirty;
-    bool          layoutDirty;
-    internal bool hierachyDirty;
 
     protected override void Awake()
     {
+        ShadowRenderer.QueueRedraw();
+
         if (ShadowAsSibling)
             ShadowSorter.Instance.Register(this);
     }
@@ -416,6 +519,12 @@ public partial class TrueShadow : UIBehaviour, IMeshModifier, ICanvasElement
         ShadowRenderer.Initialize(this, ref shadowRenderer);
 
         Canvas.willRenderCanvases += OnWillRenderCanvas;
+
+        if (UseGlobalAngle)
+        {
+            ProjectSettings.Instance.globalAngleChanged -= OnGlobalAngleChanged;
+            ProjectSettings.Instance.globalAngleChanged += OnGlobalAngleChanged;
+        }
 
         if (Graphic)
             Graphic.SetVerticesDirty();
@@ -449,8 +558,11 @@ public partial class TrueShadow : UIBehaviour, IMeshModifier, ICanvasElement
 
     protected override void OnDisable()
     {
+        ProjectSettings.Instance.globalAngleChanged -= OnGlobalAngleChanged;
+
         Canvas.willRenderCanvases -= OnWillRenderCanvas;
         TerminateInvalidator();
+        TerminatePlugins();
 
         if (shadowRenderer) shadowRenderer.gameObject.SetActive(false);
 
@@ -540,10 +652,18 @@ public partial class TrueShadow : UIBehaviour, IMeshModifier, ICanvasElement
     public void SetTextureDirty()
     {
         textureDirty = true;
+    }
+
+    static int nextTextureRevision = 1;
+
+    public void ForceTextureDirty()
+    {
         unchecked
         {
-            TextureRevision++;
+            TextureRevision = nextTextureRevision++;
         }
+
+        SetTextureDirty();
     }
 
     public void SetLayoutDirty()
@@ -553,12 +673,12 @@ public partial class TrueShadow : UIBehaviour, IMeshModifier, ICanvasElement
 
     public void SetHierachyDirty()
     {
-        hierachyDirty = true;
+        HierachyDirty = true;
     }
 
     internal void UnSetHierachyDirty()
     {
-        hierachyDirty = false;
+        HierachyDirty = false;
     }
 }
 }

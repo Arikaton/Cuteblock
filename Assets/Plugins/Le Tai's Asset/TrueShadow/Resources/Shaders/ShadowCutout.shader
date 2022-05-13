@@ -51,7 +51,10 @@ Shader "Hidden/TrueShadow/Cutout"
                 if (any(uv > 1) || any(uv < 0))
                     return _OverflowAlpha;
 
-                return fixed4(0, 0, 0, tex2D(_MainTex, uv).a);
+                half cutout = tex2D(_MainTex, uv).a;
+                cutout *= cutout;
+
+                return fixed4(0, 0, 0, cutout);
             }
             ENDCG
         }

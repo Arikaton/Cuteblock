@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using static UnityEditor.EditorGUILayout;
@@ -11,6 +12,7 @@ public class TrueShadowEditor : UnityEditor.Editor
     EditorProperty insetProp;
     EditorProperty sizeProp;
     EditorProperty spreadProp;
+    EditorProperty useGlobalAngleProp;
     EditorProperty angleProp;
     EditorProperty distanceProp;
     EditorProperty colorProp;
@@ -18,24 +20,36 @@ public class TrueShadowEditor : UnityEditor.Editor
     EditorProperty multiplyCasterAlphaProp;
     EditorProperty ignoreCasterColorProp;
     EditorProperty colorBleedModeProp;
+    EditorProperty disableFitCompensationProp;
+
+#if LETAI_TRUESHADOW_DEBUG
+    SerializedProperty alwayRenderProp;
+#endif
 
     GUIContent procrastinateLabel;
+    GUIContent editGlobalAngleLabel;
 
     static bool showExperimental;
     static bool showAdvanced;
 
     void OnEnable()
     {
-        insetProp               = new EditorProperty(serializedObject, nameof(TrueShadow.Inset));
-        sizeProp                = new EditorProperty(serializedObject, nameof(TrueShadow.Size));
-        spreadProp              = new EditorProperty(serializedObject, nameof(TrueShadow.Spread));
-        angleProp               = new EditorProperty(serializedObject, nameof(TrueShadow.OffsetAngle));
-        distanceProp            = new EditorProperty(serializedObject, nameof(TrueShadow.OffsetDistance));
-        colorProp               = new EditorProperty(serializedObject, nameof(TrueShadow.Color));
-        blendModeProp           = new EditorProperty(serializedObject, nameof(TrueShadow.BlendMode));
-        multiplyCasterAlphaProp = new EditorProperty(serializedObject, nameof(TrueShadow.UseCasterAlpha));
-        ignoreCasterColorProp   = new EditorProperty(serializedObject, nameof(TrueShadow.IgnoreCasterColor));
-        colorBleedModeProp      = new EditorProperty(serializedObject, nameof(TrueShadow.ColorBleedMode));
+        insetProp                  = new EditorProperty(serializedObject, nameof(TrueShadow.Inset));
+        sizeProp                   = new EditorProperty(serializedObject, nameof(TrueShadow.Size));
+        spreadProp                 = new EditorProperty(serializedObject, nameof(TrueShadow.Spread));
+        useGlobalAngleProp         = new EditorProperty(serializedObject, nameof(TrueShadow.UseGlobalAngle));
+        angleProp                  = new EditorProperty(serializedObject, nameof(TrueShadow.OffsetAngle));
+        distanceProp               = new EditorProperty(serializedObject, nameof(TrueShadow.OffsetDistance));
+        colorProp                  = new EditorProperty(serializedObject, nameof(TrueShadow.Color));
+        blendModeProp              = new EditorProperty(serializedObject, nameof(TrueShadow.BlendMode));
+        multiplyCasterAlphaProp    = new EditorProperty(serializedObject, nameof(TrueShadow.UseCasterAlpha));
+        ignoreCasterColorProp      = new EditorProperty(serializedObject, nameof(TrueShadow.IgnoreCasterColor));
+        colorBleedModeProp         = new EditorProperty(serializedObject, nameof(TrueShadow.ColorBleedMode));
+        disableFitCompensationProp = new EditorProperty(serializedObject, nameof(TrueShadow.DisableFitCompensation));
+
+#if LETAI_TRUESHADOW_DEBUG
+        alwayRenderProp = serializedObject.FindProperty(nameof(TrueShadow.alwaysRender));
+#endif
 
         if (EditorPrefs.GetBool("LeTai_TrueShadow_" + nameof(showExperimental)))
         {
@@ -43,24 +57,44 @@ public class TrueShadowEditor : UnityEditor.Editor
             showAdvanced     = EditorPrefs.GetBool("LeTai_TrueShadow_" + nameof(showAdvanced),     false);
         }
 
-        procrastinateLabel = new GUIContent("Procrastinate", "A bug that is too fun to fix");
+        procrastinateLabel   = new GUIContent("Procrastinate", "A bug that is too fun to fix");
+        editGlobalAngleLabel = new GUIContent("Edit...");
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
-        var ts = (TrueShadow) target;
+        var ts = (TrueShadow)target;
+
+        DrawPresetButtons(ts);
+
+        Space();
 
         insetProp.Draw();
         sizeProp.Draw();
         spreadProp.Draw();
-        angleProp.Draw();
+        useGlobalAngleProp.Draw(GUILayout.ExpandWidth(!ts.UseGlobalAngle));
+        if (ts.UseGlobalAngle)
+        {
+            var settingRect = GUILayoutUtility.GetLastRect();
+            settingRect.xMin  += EditorGUIUtility.labelWidth + EditorGUIUtility.singleLineHeight;
+            settingRect.width =  GUI.skin.button.CalcSize(editGlobalAngleLabel).x;
+            if (GUI.Button(settingRect, editGlobalAngleLabel))
+            {
+                SettingsService.OpenProjectSettings("Project/True Shadow");
+            }
+        }
+        else
+        {
+            angleProp.Draw();
+        }
+
         distanceProp.Draw();
         colorProp.Draw();
         if (ts.UsingRendererMaterialProvider)
         {
-            using(new EditorGUI.DisabledScope(true))
+            using (new EditorGUI.DisabledScope(true))
                 LabelField(blendModeProp.serializedProperty.displayName, "Custom Material");
         }
         else
@@ -68,6 +102,35 @@ public class TrueShadowEditor : UnityEditor.Editor
             blendModeProp.Draw();
         }
 
+        DrawAdvancedSettings();
+
+        serializedObject.ApplyModifiedProperties();
+    }
+
+    void DrawPresetButtons(TrueShadow ts)
+    {
+        if (!ProjectSettings.Instance.ShowQuickPresetsButtons) return;
+
+        using (new HorizontalScope())
+        {
+            var presets  = ProjectSettings.Instance.QuickPresets;
+            var selected = GUILayout.Toolbar(-1, presets.Select(p => p.name).ToArray());
+            if (selected != -1)
+            {
+                Undo.RecordObject(ts, "Apply Quick Preset on " + ts.name);
+                presets[selected].Apply(ts);
+                EditorApplication.QueuePlayerLoopUpdate();
+            }
+
+            if (GUILayout.Button("...", GUILayout.ExpandWidth(false)))
+            {
+                SettingsService.OpenProjectSettings("Project/True Shadow");
+            }
+        }
+    }
+
+    void DrawAdvancedSettings()
+    {
         using (var change = new EditorGUI.ChangeCheckScope())
         {
             showAdvanced = Foldout(showAdvanced, "Advanced Settings", true);
@@ -77,6 +140,7 @@ public class TrueShadowEditor : UnityEditor.Editor
                     multiplyCasterAlphaProp.Draw();
                     ignoreCasterColorProp.Draw();
                     colorBleedModeProp.Draw();
+                    disableFitCompensationProp.Draw();
 
                     if (KnobPropertyDrawer.procrastinationMode)
                     {
@@ -89,6 +153,10 @@ public class TrueShadowEditor : UnityEditor.Editor
                     {
                         KnobPropertyDrawer.procrastinationMode |= Toggle(procrastinateLabel, false);
                     }
+
+#if LETAI_TRUESHADOW_DEBUG
+                    PropertyField(alwayRenderProp);
+#endif
                 }
 
             if (change.changed)
@@ -97,8 +165,6 @@ public class TrueShadowEditor : UnityEditor.Editor
                 EditorPrefs.SetBool("LeTai_TrueShadow_" + nameof(showAdvanced),     showAdvanced);
             }
         }
-
-        serializedObject.ApplyModifiedProperties();
     }
 }
 }

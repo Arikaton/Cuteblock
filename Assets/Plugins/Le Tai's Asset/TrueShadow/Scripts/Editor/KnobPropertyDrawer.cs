@@ -12,8 +12,8 @@ public class KnobPropertyDrawer : PropertyDrawer
 {
     public static bool procrastinationMode = false;
 
-    static readonly Texture2D KNOB_BG_TEXTURE = Utility.FindAsset<Texture2D>("Knob_BG");
-    static readonly Texture2D KNOB_FG_TEXTURE = Utility.FindAsset<Texture2D>("Knob_FG");
+    static readonly Texture2D KNOB_BG_TEXTURE = Utility.FindEditorResource<Texture2D>("Knob_BG");
+    static readonly Texture2D KNOB_FG_TEXTURE = Utility.FindEditorResource<Texture2D>("Knob_FG");
 
     static readonly MethodInfo DO_FLOAT_FIELD_METHOD;
     static readonly FieldInfo  RECYCLED_EDITOR_PROPERTY;

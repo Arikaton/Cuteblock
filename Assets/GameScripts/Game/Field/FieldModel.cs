@@ -11,7 +11,7 @@ namespace GameScripts.Game
         public IReactiveProperty<int> Score;
         public IReactiveProperty<int> GemsLeftToCollect;
 
-        public FieldModel(List<Vector2Int> gems)
+        public FieldModel(List<Vector2Int> gems, int gemsShapeId)
         {
             Score = new ReactiveProperty<int>(0);
             AvailableShapes = new ShapeModel[3];
@@ -24,7 +24,7 @@ namespace GameScripts.Game
                     FieldMatrix[x, y] = new CellModel();
                     if (gems.Contains(new Vector2Int(x, y)))
                     {
-                        FieldMatrix[x, y].uid.Value = -1;
+                        FieldMatrix[x, y].uid.Value = gemsShapeId;
                         FieldMatrix[x, y].shapeRotation = Rotation.Deg0;
                         FieldMatrix[x, y].positionInShape = new Vector2Int(0, 0);
                     }

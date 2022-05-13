@@ -197,6 +197,10 @@ public class ShadowFactory
                             -1, 1)
         );
 
+        materialProps.SetVector("_ScreenParams", new Vector4(tw, th,
+                                                             1f + 1f / tw,
+                                                             1f + 1f / th));
+
         snapshot.shadow.ModifyShadowCastingMesh(snapshot.shadow.SpriteMesh);
         snapshot.shadow.ModifyShadowCastingMaterialProperties(materialProps);
         cmd.DrawMesh(snapshot.shadow.SpriteMesh,
@@ -248,7 +252,7 @@ public class ShadowFactory
             ShadowPostProcessMaterial.SetVector(ShaderId.OFFSET, relativeOffset);
             ShadowPostProcessMaterial.SetFloat(ShaderId.OVERFLOW_ALPHA, overflowAlpha);
             ShadowPostProcessMaterial.SetFloat(ShaderId.ALPHA_MULTIPLIER,
-                                               1f / Mathf.Max(1e-6f, 1f - snapshot.shadow.Spread));
+                                               1f / Mathf.Max(1f / ((1 << 16) - 1), 1f - snapshot.shadow.Spread));
 
             cmd.SetViewport(UNIT_RECT);
             cmd.Blit(blurSrc, shadowTex, ShadowPostProcessMaterial);

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,7 +6,9 @@ namespace LeTai.TrueShadow.PluginInterfaces
 {
 public interface ITrueShadowCasterMaterialProvider
 {
-    Material GetTrueShadowCasterMaterial();
+    event Action materialReplaced;
+    event Action materialModified;
+    Material     GetTrueShadowCasterMaterial();
 }
 
 public interface ITrueShadowCasterMeshModifier
@@ -25,7 +28,9 @@ public interface ITrueShadowCasterClearColorProvider
 
 public interface ITrueShadowRendererMaterialProvider
 {
-    Material GetTrueShadowRendererMaterial();
+    event Action materialReplaced;
+    event Action materialModified;
+    Material     GetTrueShadowRendererMaterial();
 }
 
 public interface ITrueShadowRendererMaterialModifier
@@ -35,6 +40,6 @@ public interface ITrueShadowRendererMaterialModifier
 
 public interface ITrueShadowRendererMeshModifier
 {
-    void ModifyTrueShadowRenderMesh(VertexHelper vertexHelper);
+    void ModifyTrueShadowRendererMesh(VertexHelper vertexHelper);
 }
 }

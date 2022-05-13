@@ -8,15 +8,27 @@ public class ScalableBlur : IBlurAlgorithm
     Material           material;
     ScalableBlurConfig config;
 
-    const int BLUR_PASS      = 0;
-    const int CROP_BLUR_PASS = 1;
+    static readonly int       BLUE_NOISE_ID  = Shader.PropertyToID("_BlueNoise");
+    static readonly int       TARGET_SIZE_ID = Shader.PropertyToID("_TargetSize");
+    readonly        Texture2D blueNoise;
+
+    const int BLUR_PASS        = 0;
+    const int CROP_BLUR_PASS   = 1;
+    const int DITHER_BLUR_PASS = 2;
+
+    public ScalableBlur()
+    {
+        blueNoise = Resources.Load<Texture2D>("True Shadow Blue Noise");
+    }
 
     Material Material
     {
         get
         {
             if (material == null)
-                Material = new Material(Shader.Find("Hidden/EfficientBlur"));
+            {
+                material = new Material(Shader.Find("Hidden/TrueShadow/Generate"));
+            }
 
             return material;
         }
@@ -35,7 +47,7 @@ public class ScalableBlur : IBlurAlgorithm
 
     public void Configure(BlurConfig config)
     {
-        this.config = (ScalableBlurConfig) config;
+        this.config = (ScalableBlurConfig)config;
     }
 
     public void Blur(CommandBuffer          cmd,
@@ -61,8 +73,10 @@ public class ScalableBlur : IBlurAlgorithm
             BlurAtDepth(cmd, i, target);
         }
 
+        Material.SetTexture(BLUE_NOISE_ID, blueNoise);
+        Material.SetVector(TARGET_SIZE_ID, new Vector4(target.width, target.height));
         // cmd.BlitFullscreenTriangle(ShaderProperties.intermediateRT[stepCount - 1], target, Material, BLUR_PASS);
-        cmd.Blit(ShaderProperties.intermediateRT[stepCount - 1], target, Material, BLUR_PASS);
+        cmd.Blit(ShaderProperties.intermediateRT[stepCount - 1], target, Material, DITHER_BLUR_PASS);
 
         CleanupIntermediateRT(cmd, stepCount);
     }
@@ -78,7 +92,7 @@ public class ScalableBlur : IBlurAlgorithm
             ShaderProperties.intermediateRT[depth - 1],
             ShaderProperties.intermediateRT[depth],
             Material,
-            0
+            BLUR_PASS
         );
     }
 

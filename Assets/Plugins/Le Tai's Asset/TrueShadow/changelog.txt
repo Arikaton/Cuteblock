@@ -1,3 +1,28 @@
+v1.1:
+ - Experimental support for TextMeshPro
+ - Improve shadow quality
+ - Fix quick preset can't be undone
+ - Improve demo shaders hardware compatibility
+
+v1.0.3:
+ - Improve interface on high dpi monitor.
+ - Fix error logging on import
+
+v1.0.2:
+ - Fix shader compatibility on some platforms.
+
+v1.0.1:
+ - Fix shader compatibility on some platforms.
+
+v1.0:
+ - Super charge design iteration with Quick Presets.
+ - Unify your UI with Global Angle.
+ - Simple component to set custom material on shadow, along with some cool sample shader.
+ - Colored shadow now works with rich Text.
+ - Reduce banding artifact.
+ - Custom shadow hash: custom shader that alters the caster shape can now be supported.
+ - Other minor fixes and quality improvement.
+
 v0.10.0:
     While the 1.0 release is being finalized, this release backport some commonly requested fixes.
  - More accurate shadow

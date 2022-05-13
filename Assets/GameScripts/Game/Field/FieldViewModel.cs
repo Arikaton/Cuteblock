@@ -223,7 +223,7 @@ namespace GameScripts.Game
         {
             foreach (var cell in cellsToDelete)
             {
-                if (_model.FieldMatrix[cell.x, cell.y].uid.Value == -1)
+                if (_model.FieldMatrix[cell.x, cell.y].uid.Value < 0)
                 {
                     _model.GemsLeftToCollect.Value -= 1;
                     if (_model.GemsLeftToCollect.Value == 0)

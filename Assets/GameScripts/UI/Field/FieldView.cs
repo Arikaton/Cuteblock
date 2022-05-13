@@ -1,3 +1,4 @@
+using System.Linq;
 using DG.Tweening;
 using GameScripts.Game;
 using UniRx;
@@ -24,6 +25,7 @@ namespace GameScripts.UI
         [SerializeField] private Transform backgroundShadowPanel;
         [SerializeField] private Transform availableShapesContainer;
         [SerializeField] private RectTransform gemsAnimationTarget;
+        [SerializeField] private Image gemReferenceImage;
 
         private FieldViewModelContainer _fieldViewModelContainer;
         private FieldViewModel _fieldViewModel;
@@ -89,10 +91,17 @@ namespace GameScripts.UI
                     _cellViews[x, y].Bind(_fieldViewModel.CellViewModels[x, y]);
                 }
             }
+
+            var gemsShapeId = _fieldViewModel.ShapesOnField.Select(x => x.Uid).First(x => x < 0);
+            gemReferenceImage.sprite = _shapeSpritesProvider.GetShapeSprite(gemsShapeId);
         }
 
         private void ShowWinPopup()
         {
+            foreach (var particle in FindObjectsOfType<ParticleSystem>())
+            {
+                particle.Play();
+            }
             UIManager.Instance.ShowPopup(UIViewId.PopupLevelCompleted);
         }
         

@@ -9,7 +9,6 @@ class ShadowSettingSnapshot
     public readonly TrueShadow    shadow;
     public readonly Canvas        canvas;
     public readonly RectTransform canvasRt;
-    public readonly bool          shouldAntialiasImprint;
     public readonly float         canvasScale;
     public readonly float         size;
     public readonly Vector2       canvasRelativeOffset;
@@ -21,9 +20,11 @@ class ShadowSettingSnapshot
         canvas      = shadow.Graphic.canvas;
         canvasRt    = (RectTransform)canvas.transform;
 
-        var meshBound = shadow.SpriteMesh.bounds;
-
-        shouldAntialiasImprint = canvas.renderMode != RenderMode.ScreenSpaceOverlay;
+        Bounds meshBound;
+        if (shadow.SpriteMesh)
+            meshBound = shadow.SpriteMesh.bounds;
+        else
+            meshBound = new Bounds(Vector3.zero, Vector3.zero);
 
         canvasScale = canvas.scaleFactor;
 
@@ -86,7 +87,8 @@ class ShadowSettingSnapshot
             offsetHash,
             dimensionHash,
             sizeHash,
-            spreadHash
+            spreadHash,
+            shadow.CustomHash
         );
 
         switch (graphic)

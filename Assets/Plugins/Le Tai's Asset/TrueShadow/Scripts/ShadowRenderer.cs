@@ -1,6 +1,8 @@
 using System;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 namespace LeTai.TrueShadow
 {
@@ -9,6 +11,14 @@ namespace LeTai.TrueShadow
 public partial class ShadowRenderer : MonoBehaviour, ILayoutIgnorer, IMaterialModifier, IMeshModifier
 {
     public bool ignoreLayout => true;
+
+    static bool needRedraw = false;
+
+    [Conditional("UNITY_EDITOR")]
+    internal static void QueueRedraw()
+    {
+        needRedraw = true;
+    }
 
     internal CanvasRenderer CanvasRenderer { get; private set; }
 
@@ -54,8 +64,6 @@ public partial class ShadowRenderer : MonoBehaviour, ILayoutIgnorer, IMaterialMo
         renderer.rt      = rt;
         renderer.graphic = graphic;
 
-        // renderer.RecreateGraphic(shadow.Baked ? GraphicType.Image : GraphicType.RawImage);
-
         renderer.UpdateMaterial();
 
         renderer.CanvasRenderer = obj.GetComponent<CanvasRenderer>();
@@ -70,8 +78,7 @@ public partial class ShadowRenderer : MonoBehaviour, ILayoutIgnorer, IMaterialMo
         if (shadow.Graphic is MaskableGraphic mg)
             graphic.maskable = mg.maskable;
 
-        var mat = shadow.BlendMode.GetMaterial();
-        graphic.material = mat ? mat : shadow.GetShadowRenderingNormalMaterial();
+        graphic.material = shadow.GetShadowRenderingMaterial();
     }
 
     internal void ReLayout()
@@ -92,7 +99,17 @@ public partial class ShadowRenderer : MonoBehaviour, ILayoutIgnorer, IMaterialMo
             return;
         }
 
-        var nudgeSize = !(shadow.Graphic is Text);
+        if (!shadow.SpriteMesh)
+        {
+            CanvasRenderer.SetAlpha(0);
+            return;
+        }
+
+        var nudgeSize = !(shadow.DisableFitCompensation || shadow.Graphic is Text);
+#if TMP_PRESENT
+        nudgeSize = nudgeSize && !(shadow.Graphic is TMPro.TextMeshProUGUI);
+#endif
+
         var container   = shadow.ShadowContainer;
         var canvasScale = container?.Snapshot?.canvasScale ?? graphic.canvas.scaleFactor;
 
@@ -108,9 +125,9 @@ public partial class ShadowRenderer : MonoBehaviour, ILayoutIgnorer, IMaterialMo
         if (nudgeSize)
         {
             if (shadow.Inset)
-                shadowTexSize += Vector2.one;
+                shadowTexSize += Vector2.one / canvasScale;
             else
-                shadowTexSize -= Vector2.one;
+                shadowTexSize -= Vector2.one / canvasScale;
         }
 
         rt.sizeDelta = shadowTexSize;
@@ -121,9 +138,9 @@ public partial class ShadowRenderer : MonoBehaviour, ILayoutIgnorer, IMaterialMo
         if (nudgeSize)
         {
             if (shadow.Inset)
-                paddingLS += .5f;
+                paddingLS += .5f / canvasScale;
             else
-                paddingLS -= .5f;
+                paddingLS -= .5f / canvasScale;
         }
 
         // pivot should be relative to the un-blurred part of the texture, not the whole mesh
@@ -184,6 +201,13 @@ public partial class ShadowRenderer : MonoBehaviour, ILayoutIgnorer, IMaterialMo
         // Destroy events are not consistently called for some reason, have to poll
         if (!shadow)
             Dispose();
+
+        if (willBeDestroyed || !gameObject) return;
+
+#if UNITY_EDITOR
+        if (!Application.isPlaying && needRedraw)
+            graphic.SetAllDirty();
+#endif
     }
 
     bool willBeDestroyed;
@@ -214,5 +238,13 @@ public partial class ShadowRenderer : MonoBehaviour, ILayoutIgnorer, IMaterialMo
             Destroy(gameObject);
 #endif
     }
+
+#if LETAI_TRUESHADOW_DEBUG && UNITY_EDITOR
+    void OnValidate()
+    {
+        if (shadow)
+            shadow.SetLayoutDirty();
+    }
+#endif
 }
 }
