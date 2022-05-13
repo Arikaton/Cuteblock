@@ -12,9 +12,9 @@ namespace GameScripts.UI
         private CurrentLevelProvider _currentLevelProvider;
 
         [Inject]
-        public void Construct(CurrentLevelProvider currentLevelProvider)
+        public void Construct(CurrentLevelProvider currentLevelProvider, LevelsProvider levelsProvider)
         {
-            currentLevelProvider.CurrentLevel.Subscribe(level => text.text = $"LEVEL {level.ToString()}");
+            currentLevelProvider.CurrentLevel.Subscribe(level => text.text = $"LEVEL {((level-1) % levelsProvider.LevelsCount + 1).ToString()}");
         }
     }
 }
