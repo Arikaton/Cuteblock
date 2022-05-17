@@ -10,9 +10,11 @@ namespace GameScripts.Game
         public ShapeModel[] AvailableShapes;
         public IReactiveProperty<int> Score;
         public IReactiveProperty<int> GemsLeftToCollect;
+        public int Level { get; }
 
-        public FieldModel(List<Vector2Int> gems, int gemsShapeId)
+        public FieldModel(List<Vector2Int> gems, int gemsShapeId, int level)
         {
+            Level = level;
             Score = new ReactiveProperty<int>(0);
             AvailableShapes = new ShapeModel[3];
             FieldMatrix = new Flat2DArray<CellModel>(9, 9);

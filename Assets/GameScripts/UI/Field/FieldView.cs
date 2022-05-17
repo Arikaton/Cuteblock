@@ -27,6 +27,10 @@ namespace GameScripts.UI
         [SerializeField] private RectTransform gemsAnimationTarget;
         [SerializeField] private Image gemReferenceImage;
 
+        [Space, Header("Hints")] 
+        [SerializeField] private GameObject[] hints;
+        [SerializeField] private GameObject hand;
+
         private FieldViewModelContainer _fieldViewModelContainer;
         private FieldViewModel _fieldViewModel;
         private IShapeSpritesProvider _shapeSpritesProvider;
@@ -87,6 +91,18 @@ namespace GameScripts.UI
 
             var gemsShapeId = _fieldViewModel.ShapesOnField.Select(x => x.Uid).First(x => x < 0);
             gemReferenceImage.sprite = _shapeSpritesProvider.GetShapeSprite(gemsShapeId);
+
+            ActivateHints();
+        }
+
+        private void ActivateHints()
+        {
+            hand.SetActive(_fieldViewModel.Level <= 3);
+            for (var i = 0; i < hints.Length; i++)
+            {
+                var hint = hints[i];
+                hint.SetActive(_fieldViewModel.Level == i + 1);
+            }
         }
 
         private void ShowWinPopup()
@@ -96,6 +112,7 @@ namespace GameScripts.UI
                 particle.Play();
             }
             UIManager.Instance.ShowPopup(UIViewId.PopupLevelCompleted);
+            hand.SetActive(false);
         }
         
         private void ShowOutOfMovesPopup()

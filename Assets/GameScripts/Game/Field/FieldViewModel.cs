@@ -19,7 +19,7 @@ namespace GameScripts.Game
         public ReactiveCommand OnGameWon;
         public ReactiveCommand OnGameLost;
         public ReactiveCommand OnModelChanged;
-
+        
         private IReactiveCollection<ShapeViewModel> _shapesOnField;
         private IReactiveCollection<ShapeViewModel> _availableShapes;
         private IReactiveProperty<bool> _highlightShapesOnField;
@@ -32,6 +32,8 @@ namespace GameScripts.Game
         private RectInt _rect = new RectInt(0, 0, 9, 9);
         private WeightsCatalog _weightsCatalog;
         private bool _gameWon;
+
+        public int Level => _model.Level;
 
         public FieldViewModel(FieldModel model, IShapeCatalog shapeCatalog, AbstractConsumableFactory consumableFactory, WeightsCatalog weightsCatalog)
         {
@@ -161,7 +163,10 @@ namespace GameScripts.Game
 
         public bool PlaceShape(int shapeIndex, Vector2Int cell)
         {
-            if (cell == new Vector2Int(-1, 1)) return false;
+            if (cell == new Vector2Int(-1, 1))
+                return false;
+            if (Level <= 3 && cell != new Vector2Int(4, 4))
+                return false;
             var shapeViewModel = _availableShapes[shapeIndex];
             if (!CanPlaceShape(shapeViewModel.Uid, shapeViewModel.Rotation.Value, cell))
                 return false;

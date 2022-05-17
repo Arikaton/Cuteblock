@@ -61,7 +61,7 @@ namespace GameScripts.Game
         private void StartLevelInternal(int level)
         {
             var levelData = _levelsProvider.GetLevelData(level);
-            var fieldModel = new FieldModel(levelData.cellsWithGems, Random.Range(-3, 0));
+            var fieldModel = new FieldModel(levelData.cellsWithGems, Random.Range(-3, 0), level);
             var weightsCatalog = new WeightsCatalog(_weightsProvider.Weights);
 
             var shapeIds = weightsCatalog.GetThreeUniqueRandomShapeId(0);
@@ -80,7 +80,7 @@ namespace GameScripts.Game
         private void StartLevelInternalOnlyOneCellCats(int level)
         {
             var levelData = _levelsProvider.GetLevelData(level);
-            var fieldModel = new FieldModel(levelData.cellsWithGems, Random.Range(-3, 0));
+            var fieldModel = new FieldModel(levelData.cellsWithGems, Random.Range(-3, 0), level);
             var weightsCatalog = new WeightsCatalog(_weightsProvider.Weights);
 
             var shapeData1 = _shapeCatalog.Shapes[1];

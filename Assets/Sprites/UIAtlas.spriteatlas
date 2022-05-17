@@ -79,6 +79,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: dc35f4d4f01e34635b510f6c711ae60f, type: 3}
   - {fileID: 21300000, guid: 8fbc07e43f4ed6a4bb33a9f3fb5e531d, type: 3}
   - {fileID: 21300000, guid: 2b13b2156dc1e154d9c7009fb22cfd4c, type: 3}
+  - {fileID: 21300000, guid: d410cb25ddf372040ac41d1b480c0deb, type: 3}
   - {fileID: 21300000, guid: 43db8f3537b440c43a1ed8d46274241e, type: 3}
   - {fileID: 21300000, guid: 7479ab75dcb26aa41811ea254fe0726f, type: 3}
   - {fileID: 21300000, guid: b06a68e5097cf4467a3203814863e4d3, type: 3}
@@ -111,6 +112,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: e1cac4eb88006b64482e4fd82d485583, type: 3}
   - {fileID: 21300000, guid: 3786e80c7a5941847ad68d3ef74aa400, type: 3}
   - {fileID: 21300000, guid: 6d7ceb3c6ea74484ba3c7aa05775fe23, type: 3}
+  - {fileID: 21300000, guid: 6e9d106c8bd9086438eb7238c8b71a2b, type: 3}
   - {fileID: 21300000, guid: 777d456c40a39bb48b26b19a3a020ce7, type: 3}
   - {fileID: 21300000, guid: d6f8f56c650d64fc59d2728435202b06, type: 3}
   - {fileID: 21300000, guid: 8f79bc8c8b9f41c42a2a8260def4ebe2, type: 3}
@@ -172,6 +174,7 @@ SpriteAtlas:
   - second_chance
   - square_mini
   - daily_reminder
+  - hand
   - chest
   - shop
   - royal_offer
@@ -204,6 +207,7 @@ SpriteAtlas:
   - price_bundle
   - button
   - Round50_Thickness5
+  - cat_tutor
   - Round10_Thickness5
   - plate_achievements
   - Rectangle white
