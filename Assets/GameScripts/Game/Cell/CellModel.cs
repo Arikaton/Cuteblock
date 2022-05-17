@@ -10,11 +10,13 @@ namespace GameScripts.Game
         public IReactiveProperty<int> hp;
         public Vector2Int positionInShape;
         public Rotation shapeRotation;
+        public Vector2Int positionOnField;
 
-        public CellModel()
+        public CellModel(Vector2Int positionOnField)
         {
             uid = new ReactiveProperty<int>(0);
             hp = new ReactiveProperty<int>(0);
+            this.positionOnField = positionOnField;
         }
 
         public CellModel(int uid, int hp, Vector2Int positionInShape, Rotation shapeRotation)

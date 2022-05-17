@@ -23,7 +23,7 @@ namespace GameScripts.Game
             {
                 for (int y = 0; y < 9; y++)
                 {
-                    FieldMatrix[x, y] = new CellModel();
+                    FieldMatrix[x, y] = new CellModel(new Vector2Int(x, y));
                     if (gems.Contains(new Vector2Int(x, y)))
                     {
                         FieldMatrix[x, y].uid.Value = gemsShapeId;

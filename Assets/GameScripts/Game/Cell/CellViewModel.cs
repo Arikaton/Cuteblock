@@ -1,4 +1,5 @@
 using UniRx;
+using UnityEngine;
 
 namespace GameScripts.Game
 {
@@ -12,6 +13,8 @@ namespace GameScripts.Game
         public IReadOnlyReactiveProperty<bool> Occupied;
         public IReadOnlyReactiveProperty<bool> Shadowed;
         public IReadOnlyReactiveProperty<bool> Highlighted;
+
+        public Vector2Int PositionOnField => _model.positionOnField;
 
         public CellViewModel(CellModel model)
         {

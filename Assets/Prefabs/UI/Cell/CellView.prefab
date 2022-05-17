@@ -53,6 +53,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 2090421825302035207}
+  normalColor: {r: 0.73333335, g: 0.89019614, b: 0.98823535, a: 1}
+  normalDarkColor: {r: 0.6745098, g: 0.85490197, b: 0.9647059, a: 1}
   occupiedColor: {r: 0.6497864, g: 0.8208521, b: 0.9245283, a: 1}
   shadowedColor: {r: 0.6226415, g: 0.7503629, b: 0.8301887, a: 1}
   highlightedColor: {r: 0.61209506, g: 0.990566, b: 0.7464797, a: 1}
