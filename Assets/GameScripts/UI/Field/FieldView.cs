@@ -103,6 +103,10 @@ namespace GameScripts.UI
                 var hint = hints[i];
                 hint.SetActive(_fieldViewModel.Level == i + 1);
             }
+            foreach (var hint in hints)
+            {
+                hint.transform.Find("Mask").gameObject.SetActive(true);
+            }
         }
 
         private void ShowWinPopup()
@@ -113,6 +117,10 @@ namespace GameScripts.UI
             }
             UIManager.Instance.ShowPopup(UIViewId.PopupLevelCompleted);
             hand.SetActive(false);
+            foreach (var hint in hints)
+            {
+                hint.transform.Find("Mask").gameObject.SetActive(false);
+            }
         }
         
         private void ShowOutOfMovesPopup()
