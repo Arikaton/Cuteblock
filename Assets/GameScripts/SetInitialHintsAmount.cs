@@ -20,8 +20,8 @@ namespace GameScripts
             if (!PlayerPrefs.HasKey("FirstLaunch"))
             {
                 PlayerPrefs.SetInt("FirstLaunch", 0);
-                _resourceStorage.Add<DeleteHint>(3);
                 _resourceStorage.Add<ReplacementHint>(3);
+                _resourceStorage.Add<RotateHint>(3);
             }
         }
     }
